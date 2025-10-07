@@ -12,6 +12,6 @@
 
 ### 4) Ali Gamal Abdullah
 
-### 4) Mohamed Abou-Elkheir
+### 5) Mohamed Aboelkhair
 
-### 4) Amr Ezzat
+### 6) Amr Ezzatt
