@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const crypto = require("crypto");
+const Token = require("../models/Token");
 const Joi = require("joi");
+const sendEmail =require('../controllers/sendemail');
 
 
 const registerSchema = Joi.object({
@@ -15,13 +18,11 @@ const registerSchema = Joi.object({
 
 const user_register = async (req, res) => {
   try {
-
     const { error } = registerSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-
-    const { name, email, password } = req.body; 
+    const { name, email, password,addresses} = req.body; 
 
     if (!name || !email || !password) {
       return res.status(400).json({ error: "All fields are required" });
@@ -45,6 +46,26 @@ const user_register = async (req, res) => {
 
     await newuser.save();
 
+    const verifyToken = crypto.randomBytes(32).toString("hex");
+    const tokenHash = crypto.createHash("sha256").update(verifyToken).digest("hex");
+
+    await Token.create({
+      userId: newuser._id,
+      type: "verify",
+      tokenHash,
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000), 
+      used: false,
+    });
+    const verifyLink = `http://localhost:3000/api/auth/verify/${verifyToken}`;
+
+    const html = `
+        <h2>Email Verification</h2>
+        <p>Click the link below to verify your email:</p>
+        <a href="${verifyLink}" target="_blank">${verifyLink}</a>
+        <p>This link will expire in 15 minutes.</p>
+      `;
+
+    await sendEmail(newuser.email, "Verify your email address", html);
 
     res.status(201).json({
       message: "User registered successfully",
@@ -58,7 +79,8 @@ const user_register = async (req, res) => {
       },
     });
 
-
+    // console.log("Verification link:", verifyLink);
+    
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
