@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-let Address =[] ;
+const Address = require("./userAddress");
 const validator = require("validator");
 
 const userSchema = new mongoose.Schema(
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       validate: {
-        validator: validator.isEmail, 
+        validator: validator.isEmail,
         message: "Invalid email format",
       },
     },

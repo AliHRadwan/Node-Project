@@ -14,6 +14,22 @@ const registerSchema = Joi.object({
     .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$"))
     .message("Password must contain at least one uppercase, one lowercase, and one number")
     .required(),
+  addresses: Joi.array()
+    .items(
+      Joi.object({
+        label: Joi.string().required(),
+        fullName: Joi.string().required(),
+        phone: Joi.string().required(),
+        line1: Joi.string().required(),
+        line2: Joi.string().allow(""),
+        city: Joi.string().required(),
+        state: Joi.string().required(),
+        country: Joi.string().required(),
+        postalCode: Joi.string().required(),
+        isDefault: Joi.boolean().default(false)
+      })
+    )
+    .default([]) // lwa mafeesh address yeb2a empty array 3ady
 });
 
 const user_register = async (req, res) => {
@@ -22,9 +38,9 @@ const user_register = async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-    const { name, email, password,addresses} = req.body; 
+    const { name, email, password, addresses } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password ) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -41,7 +57,7 @@ const user_register = async (req, res) => {
       passwordHash: hashed_password,
       role: "user",
       isVerified: false,
-      addresses: []
+      addresses,
     });
 
     await newuser.save();
@@ -75,12 +91,10 @@ const user_register = async (req, res) => {
         email: newuser.email,
         role: newuser.role,
         isVerified: newuser.isVerified,
-        addresses: []
+        addresses: newuser.addresses,
       },
     });
 
-    // console.log("Verification link:", verifyLink);
-    
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
