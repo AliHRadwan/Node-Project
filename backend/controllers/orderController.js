@@ -2,6 +2,19 @@ import Order from "../models/Order.js";
 //import Order from "../models/Order.js";
 import mongoose from "mongoose";
 
+//create an order  
+export const postOrder = async (req, res) => {
+    try {
+
+    }catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "❌ An error occurred while displaying the orders",
+        });
+    }
+}
+
+
 // get all orders for a user 
 export const getUserOrders = async (req, res) => {
     try {
