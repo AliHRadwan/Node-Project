@@ -14,6 +14,7 @@ const orderSchema = new mongoose.Schema(
         },
         items: [
             {
+                _id: false, // ⛔ ده أهم سطر
                 bookId: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Book",//reference Book model 
