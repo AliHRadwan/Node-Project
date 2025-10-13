@@ -2,15 +2,18 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./models/db.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import cartRoutes from './routes/cart.routes.js';
 
 dotenv.config();
-connectDB(); // connect database
+connectDB(); // connect database
 
 //express
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+
+app.use('/api/cart', cartRoutes);  
 
 app.get("/", (req, res) => {
     res.status(200).json({ "message": "Welcome to the API" });
