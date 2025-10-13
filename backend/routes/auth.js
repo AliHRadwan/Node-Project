@@ -4,7 +4,7 @@ const register  = require("../controllers/registerController");
 const verifyEmail = require("../controllers/verifyemail");
 const pass_forgot = require("../controllers/forget_passwordController");
 const pass_reset = require("../controllers/reset_passwordController"); 
-const path = require("path");
+const changePassword = require("../controllers/change_passwordController");
 
 router.post("/register", register);
 router.get('/verify/:token', verifyEmail);
@@ -111,6 +111,8 @@ router.get("/reset-password/:token", (req, res) => {
     </html>
   `);
 });
+
+router.post("/change-password", changePassword);
 
 
 

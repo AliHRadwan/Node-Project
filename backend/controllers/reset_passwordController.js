@@ -11,33 +11,28 @@ const resetpassSchema = Joi.object({
     .message("Password must contain at least one uppercase, one lowercase, and one number")
     .required(),
 });
-
+ 
 const pass_reset = async (req, res) => {
   try {
     const { token } = req.params;
-    const { error, value } = resetpassSchema.validate(req.body);
 
+    const { error, value } = resetpassSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-
     const { password } = value;
 
     const hashed_token = crypto.createHash("sha256").update(token).digest("hex");
-
     const tokenDoc = await Token.findOne({ tokenHash: hashed_token, type: "reset" });
     if (!tokenDoc) {
       return res.status(400).json({ error: "Invalid Reset Link" });
     }
-
     if (tokenDoc.used) {
       return res.status(400).json({ error: "This reset link has already been used." });
     }
-
     if (tokenDoc.expiresAt < new Date()) {
       return res.status(400).json({ error: "Reset link expired." });
     }
-
     const user = await User.findById(tokenDoc.userId);
     if (!user) {
       return res.status(404).json({ error: "User not found." });
