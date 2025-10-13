@@ -2,7 +2,10 @@ import Order from "../models/Order.js";
 //import Book from "../models/Book.js";
 import mongoose from "mongoose";
 
-//create an order  
+//create an order 
+    // ✅ 1. Validate data (cart, items, etc.)
+    // ✅ 2. Calculate totals (itemsTotal, shippingCost, discount)
+    // ⬇️ 3. هنا هييجي مكان الـ payment handling 
 export const placeOrder = async (req, res) => {
     try {
         const userId = req.user?._id || req.query.userId;
@@ -96,6 +99,8 @@ export const placeOrder = async (req, res) => {
         res.status(500).json({ message: "❌ An error occurred while placing the order." });
     }
 }
+
+
 
 
 
