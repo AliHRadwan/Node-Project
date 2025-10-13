@@ -1,5 +1,5 @@
 import Cart from '../models/cart.model.js';
-// import Book from '../models/book.model.js'; // تأكد من اسم الـ model عندك
+// import Book from '../models/book.model.js'; // هنفعله لما يبقى جاهز
 import mongoose from 'mongoose';
 
 // ============================================
@@ -7,8 +7,6 @@ import mongoose from 'mongoose';
 // ============================================
 export const getCart = async (req, res) => {
   try {
-    // مؤقتاً: ناخد الـ userId من الـ params
-    // لما الـ auth يبقى جاهز: req.user.id
     const userId = req.params.userId || req.user?.id;
     
     if (!userId) {
@@ -18,7 +16,6 @@ export const getCart = async (req, res) => {
       });
     }
 
-    // التحقق من صحة الـ ObjectId
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
         success: false,
@@ -26,19 +23,17 @@ export const getCart = async (req, res) => {
       });
     }
 
-    // البحث عن الـ Cart بناءً على الـ userId
-    const cart = await Cart.findOne({ user: userId })
-      .populate('items.book', 'title author price image'); // جلب معلومات الكتاب
+    const cart = await Cart.findOne({ userId: userId });
+      // .populate('items.bookId', 'title author price image');
 
-    // لو مفيش cart، نرجع cart فاضية بدل error
     if (!cart) {
       return res.status(200).json({
         success: true,
         message: 'Cart is empty',
         data: {
-          user: userId,
+          userId: userId,
           items: [],
-          totalPrice: 0
+          totals: { subTotal: 0 }
         }
       });
     }
@@ -48,7 +43,7 @@ export const getCart = async (req, res) => {
       data: cart
     });
   } catch (error) {
-    console.error('Error in getCart:', error); // للـ debugging
+    console.error('Error in getCart:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching cart',
@@ -62,9 +57,7 @@ export const getCart = async (req, res) => {
 // ============================================
 export const addToCart = async (req, res) => {
   try {
-    // مؤقتاً: ناخد الـ userId من الـ body
-    // لما الـ auth يبقى جاهز: req.user.id
-    const { userId, bookId, quantity = 1 } = req.body;
+    const { userId, items } = req.body;
     
     if (!userId) {
       return res.status(400).json({
@@ -73,66 +66,70 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // التحقق من وجود الكتاب
-    const book = await Book.findById(bookId);
-    if (!book) {
-      return res.status(404).json({
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({
         success: false,
-        message: 'Book not found'
+        message: 'Items array is required and must not be empty'
       });
     }
 
-    // التحقق من الـ stock
-    if (book.stock < quantity) {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
         success: false,
-        message: 'Not enough stock available'
+        message: 'Invalid User ID format'
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(items[0].bookId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid Book ID format'
       });
     }
 
     // البحث عن الـ Cart أو إنشاء واحدة جديدة
-    let cart = await Cart.findOne({ user: userId });
+    let cart = await Cart.findOne({ userId: userId });
 
     if (!cart) {
-      // إنشاء cart جديدة
       cart = new Cart({
-        user: userId,
-        items: []
+        userId: userId,
+        items: [],
+        totals: { subTotal: 0 }
       });
     }
 
     // التحقق إذا الكتاب موجود في الـ Cart
     const existingItemIndex = cart.items.findIndex(
-      item => item.book.toString() === bookId
+      item => item.bookId.toString() === items[0].bookId
     );
 
     if (existingItemIndex > -1) {
       // الكتاب موجود، زود الكمية
-      cart.items[existingItemIndex].quantity += quantity;
+      cart.items[existingItemIndex].qty += parseInt(items[0].qty);
     } else {
       // الكتاب مش موجود، ضيفه
       cart.items.push({
-        book: bookId,
-        quantity: quantity,
-        price: book.price
+        bookId: items[0].bookId,
+        qty: parseInt(items[0].qty),
+        priceAtAdd: items[0].priceAtAdd
       });
     }
 
     // احسب الـ Total Price
-    cart.calculateTotal();
+    cart.totals.subTotal = cart.items.reduce((total, item) => {
+      return total + (item.priceAtAdd * item.qty);
+    }, 0);
 
-    // احفظ الـ Cart
-    await cart.save();
-
-    // جيب الـ Cart مع معلومات الكتب
-    await cart.populate('items.book', 'title author price image');
+    const savedCart = await cart.save();
+    await savedCart.populate('items.bookId', 'title author price image');
 
     res.status(200).json({
       success: true,
       message: 'Book added to cart successfully',
-      data: cart
+      data: savedCart
     });
   } catch (error) {
+    console.error('Error in addToCart:', error);
     res.status(500).json({
       success: false,
       message: 'Error adding to cart',
@@ -146,25 +143,23 @@ export const addToCart = async (req, res) => {
 // ============================================
 export const updateCartItem = async (req, res) => {
   try {
-    // مؤقتاً: ناخد الـ userId من الـ body
-    const { userId, bookId, quantity } = req.body;
+    const { userId, bookId, qty } = req.body;
     
-    if (!userId) {
+    if (!userId || !bookId) {
       return res.status(400).json({
         success: false,
-        message: 'User ID is required'
+        message: 'User ID and Book ID are required'
       });
     }
 
-    if (quantity < 1) {
+    if (qty < 1) {
       return res.status(400).json({
         success: false,
         message: 'Quantity must be at least 1'
       });
     }
 
-    // البحث عن الـ Cart
-    const cart = await Cart.findOne({ user: userId });
+    const cart = await Cart.findOne({ userId: userId });
 
     if (!cart) {
       return res.status(404).json({
@@ -173,9 +168,8 @@ export const updateCartItem = async (req, res) => {
       });
     }
 
-    // البحث عن الكتاب في الـ Cart
     const itemIndex = cart.items.findIndex(
-      item => item.book.toString() === bookId
+      item => item.bookId.toString() === bookId
     );
 
     if (itemIndex === -1) {
@@ -185,23 +179,16 @@ export const updateCartItem = async (req, res) => {
       });
     }
 
-    // التحقق من الـ stock
-    const book = await Book.findById(bookId);
-    if (book.stock < quantity) {
-      return res.status(400).json({
-        success: false,
-        message: 'Not enough stock available'
-      });
-    }
-
     // تحديث الكمية
-    cart.items[itemIndex].quantity = quantity;
+    cart.items[itemIndex].qty = qty;
 
     // احسب الـ Total Price
-    cart.calculateTotal();
+    cart.totals.subTotal = cart.items.reduce((total, item) => {
+      return total + (item.priceAtAdd * item.qty);
+    }, 0);
 
     await cart.save();
-    await cart.populate('items.book', 'title author price image');
+    await cart.populate('items.bookId', 'title author price image');
 
     res.status(200).json({
       success: true,
@@ -209,6 +196,7 @@ export const updateCartItem = async (req, res) => {
       data: cart
     });
   } catch (error) {
+    console.error('Error in updateCartItem:', error);
     res.status(500).json({
       success: false,
       message: 'Error updating cart',
@@ -222,18 +210,16 @@ export const updateCartItem = async (req, res) => {
 // ============================================
 export const removeFromCart = async (req, res) => {
   try {
-    // مؤقتاً: ناخد الـ userId من الـ params
     const { userId, bookId } = req.params;
     
-    if (!userId) {
+    if (!userId || !bookId) {
       return res.status(400).json({
         success: false,
-        message: 'User ID is required'
+        message: 'User ID and Book ID are required'
       });
     }
 
-    // البحث عن الـ Cart
-    const cart = await Cart.findOne({ user: userId });
+    const cart = await Cart.findOne({ userId: userId });
 
     if (!cart) {
       return res.status(404).json({
@@ -244,14 +230,16 @@ export const removeFromCart = async (req, res) => {
 
     // حذف الكتاب من الـ items
     cart.items = cart.items.filter(
-      item => item.book.toString() !== bookId
+      item => item.bookId.toString() !== bookId
     );
 
     // احسب الـ Total Price
-    cart.calculateTotal();
+    cart.totals.subTotal = cart.items.reduce((total, item) => {
+      return total + (item.priceAtAdd * item.qty);
+    }, 0);
 
     await cart.save();
-    await cart.populate('items.book', 'title author price image');
+    await cart.populate('items.bookId', 'title author price image');
 
     res.status(200).json({
       success: true,
@@ -259,6 +247,7 @@ export const removeFromCart = async (req, res) => {
       data: cart
     });
   } catch (error) {
+    console.error('Error in removeFromCart:', error);
     res.status(500).json({
       success: false,
       message: 'Error removing from cart',
@@ -272,7 +261,6 @@ export const removeFromCart = async (req, res) => {
 // ============================================
 export const clearCart = async (req, res) => {
   try {
-    // مؤقتاً: ناخد الـ userId من الـ params
     const userId = req.params.userId || req.user?.id;
     
     if (!userId) {
@@ -281,8 +269,8 @@ export const clearCart = async (req, res) => {
         message: 'User ID is required'
       });
     }
-    
-    const cart = await Cart.findOne({ user: userId });
+
+    const cart = await Cart.findOne({ userId: userId });
 
     if (!cart) {
       return res.status(404).json({
@@ -292,7 +280,7 @@ export const clearCart = async (req, res) => {
     }
 
     cart.items = [];
-    cart.totalPrice = 0;
+    cart.totals.subTotal = 0;
 
     await cart.save();
 
@@ -302,6 +290,7 @@ export const clearCart = async (req, res) => {
       data: cart
     });
   } catch (error) {
+    console.error('Error in clearCart:', error);
     res.status(500).json({
       success: false,
       message: 'Error clearing cart',
