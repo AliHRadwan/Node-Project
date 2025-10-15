@@ -5,7 +5,7 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 
 import connectDB from "./models/db.js";
-const auth = require("./routes/auth");
+//const auth = require("./routes/auth");
 import orderRoutes from "./routes/orderRoutes.js";
 import cartRoutes from "./routes/cart.routes.js";
 import authRoutes from "./routes/auth.js";

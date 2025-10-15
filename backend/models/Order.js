@@ -12,6 +12,12 @@ const orderSchema = new mongoose.Schema(
             enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
             default: "pending",
         },
+        cancelledAt: { type: Date },
+        cancelledBy: {
+                     id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                     role: { type: String, enum: ["user", "admin"] }
+                    },
+        cancelReason: { type: String },
         items: [
             {
                 _id: false, // ⛔ ده أهم سطر

@@ -11,7 +11,8 @@ export const placeOrder = async (req, res) => {
   try {
     
     // from auth middleware
-    const userId = req.user._id;
+    const userId = req.user?._id || req.user?.id;
+    //const userId = req.user._id;
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "❌ Invalid or missing userId" });
     }
@@ -39,11 +40,19 @@ export const placeOrder = async (req, res) => {
 
     // collect items and calculate total
     for (const item of items) {
+      if (isNaN(item.price) || isNaN(item.qty)) {
+        return res
+          .status(400)
+          .json({ message: "❌ Invalid price or quantity in cart." });
+      }
       itemsTotal += item.price * item.qty;
     }
+    
+    // payment info from body or default
+    const payment = req.body.payment || { method: "cash", status: "unpaid" };
 
-    // shipping cost logic 
 
+     // shipping cost logic
      let shippingCost = 30; // default 
      const city = shippingAddress?.city?.toLowerCase();
      const country = shippingAddress?.country?.toLowerCase();
@@ -73,7 +82,9 @@ export const placeOrder = async (req, res) => {
      if (itemsTotal > 500) shippingCost = 0;
 
      // discunt logic
+
       let discount = 0;
+      
       // status one 
       if (payment?.couponCode === "BOOK10") {
          discount = itemsTotal * 0.1; // %10
@@ -83,15 +94,9 @@ export const placeOrder = async (req, res) => {
       discount = 50; // 50 EGP 
       }
 
-        const grandTotal = itemsTotal + shippingCost - discount;
+      const grandTotal = itemsTotal + shippingCost - discount;
       
-    // 💰 بيانات الدفع (من البودي أو ديفولت)
-    const payment = req.body.payment || {
-      method: "cash",
-      status: "unpaid",
-    };
-
-    // 🧾 إنشاء الطلب
+     // create order
     const newOrder = new Order({
       userId,
       items,
@@ -109,7 +114,9 @@ export const placeOrder = async (req, res) => {
 
     await newOrder.save();
 
-    // 🧹 فضي الكارت بعد ما الطلب يتعمل
+    // const savedOrder = await newOrder.save(); // فعلياً اتحفظ في MongoDB
+
+    // clear cart
     await Cart.findOneAndUpdate({ userId }, { items: [] });
 
     res.status(201).json({
@@ -247,9 +254,59 @@ export const getUserOrders = async (req, res) => {
     }
 };
 
+//=========================================================================================
+
+// cancel order by user
+export const cancelOrderByUser = async (req, res) => {
+  try {
+    const userId = req.user?._id || req.user?.id;
+    const { orderId } = req.params;
+    const { reason } = req.body || {};
+
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      return res.status(400).json({ message: "Invalid orderId" });
+    }
+    
+    // Check order existence and ownership
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    if (String(order.userId) !== String(userId)) {
+      return res.status(403).json({ message: "You cannot cancel someone else's order" });
+    }
+    
+    // Check if already cancelled or not eligible for cancellation
+    if (order.status === "cancelled") {
+      return res.status(400).json({ message: "Order is already cancelled" });
+    } 
+    if (["shipped", "delivered"].includes(order.status)) {
+      return res.status(400).json({ message: `Order is already ${order.status} and cannot be cancelled` });
+    }
+
+    // لو مدفوع Online وعايزين Refund… (Placeholder)
+    // if (order.payment?.status === "paid" && order.payment?.method !== "cash") {
+    //   await refundGateway(order.payment.txId, order.amounts.grandTotal)
+    // }
+
+    order.status = "cancelled";
+    order.cancelledAt = new Date();
+    order.cancelledBy = { id: userId, role: "user" };
+    if (reason) order.cancelReason = reason;
+
+    await order.save();
+
+    return res.status(200).json({
+      message: " ✅ Order cancelled successfully",
+      order,
+    });
+  } catch (err) {
+    console.error("cancelOrderByUser error:", err);
+    return res.status(500).json({ message: "Error cancelling order", error: err.message });
+  }
+};
+
 //==========================================================================================================
 
-//get all orders 
+//get all orders to dashboard 
 export const getAllOrders = async (req, res) => {
     try {
         const allOrders = await Order.find().sort({ placedAt: -1 });
@@ -266,4 +323,60 @@ export const getAllOrders = async (req, res) => {
             message: "❌ An error occurred while displaying the orders",
         });
     }
+};
+
+//========================================================================================
+
+// cancel order by admin
+export const cancelOrderByAdmin = async (req, res) => {
+  try {
+    const adminId = req.user?._id; // لازم يكون role=admin
+    const { orderId } = req.params;
+    const { reason } = req.body || {};
+
+    // admin check 
+    if (req.user?.role !== "admin") {
+      return res.status(403).json({ message: "Admins only" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      return res.status(400).json({ message: "Invalid orderId" });
+    }
+
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    
+    // Check if already cancelled or not eligible for cancellation
+    if (order.status === "cancelled") {
+      return res.status(400).json({ message: "Order is already cancelled" });
+    } 
+    if (order.status === "delivered") {
+      return res.status(400).json({ message: "Delivered order cannot be cancelled" });
+    }
+    
+    // check shipped status
+    if (order.status === "shipped") {
+      return res.status(400).json({ message: "Shipped order requires return process, not cancellation" });
+    }
+
+    // Refund لو مدفوع Online (Placeholder)
+    // if (order.payment?.status === "paid" && order.payment?.method !== "cash") {
+    //   await refundGateway(order.payment.txId, order.amounts.grandTotal)
+    // }
+
+    order.status = "cancelled";
+    order.cancelledAt = new Date();
+    order.cancelledBy = { id: adminId, role: "admin" };
+    order.cancelReason = reason || "Cancelled by admin";
+
+    await order.save();
+
+    return res.status(200).json({
+      message: "Order cancelled by admin",
+      order,
+    });
+  } catch (err) {
+    console.error("cancelOrderByAdmin error:", err);
+    return res.status(500).json({ message: "Error cancelling order", error: err.message });
+  }
 };
