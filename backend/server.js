@@ -1,7 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./models/db.js";
-const auth = require("./routes/auth");
+// const auth = require("./routes/auth");
+import auth from "./routes/auth.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import cartRoutes from './routes/cart.routes.js';
 

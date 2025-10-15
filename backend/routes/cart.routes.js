@@ -1,6 +1,6 @@
 import express from 'express';
 import * as cartController from '../controllers/cart.controller.js';
-// import { protect } from '../middleware/auth.js'; // هنفعلها لما الـ auth يبقى جاهز
+import  verifyJWT  from '../middleware/verifyJWT.js'; // هنفعلها لما الـ auth يبقى جاهز
 
 const router = express.Router();
 
@@ -10,28 +10,29 @@ const router = express.Router();
 // ============================================
 // GET /api/cart/:userId - عرض الـ Cart
 // ============================================
-router.get('/:userId', cartController.getCart);
+// router.get('/:userId', cartController.getCart);
+router.get('/',verifyJWT, cartController.getCart);
 
 // ============================================
 // POST /api/cart - إضافة كتاب للـ Cart
 // ============================================
 // Body: { userId, bookId, quantity }
-router.post('/', cartController.addToCart);
+router.post('/', verifyJWT, cartController.addToCart);
 
 // ============================================
 // PUT /api/cart - تحديث كمية كتاب
 // ============================================
 // Body: { userId, bookId, quantity }
-router.put('/', cartController.updateCartItem);
+router.put('/', verifyJWT, cartController.updateCartItem);
 
 // ============================================
 // DELETE /api/cart/:userId/:bookId - حذف كتاب من الـ Cart
 // ============================================
-router.delete('/:userId/:bookId', cartController.removeFromCart);
+router.delete('/:userId/:bookId', verifyJWT, cartController.removeFromCart);
 
 // ============================================
 // DELETE /api/cart/:userId - مسح الـ Cart كلها
 // ============================================
-router.delete('/:userId', cartController.clearCart);
+router.delete('/:userId', verifyJWT, cartController.clearCart);
 
 export default router;
