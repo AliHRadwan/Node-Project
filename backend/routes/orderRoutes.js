@@ -1,16 +1,16 @@
 import express from "express";
 import { getUserOrders , getAllOrders, placeOrder } from "../controllers/orderController.js";// import functions from controller 
-//import { protect } from "../middleware/authMiddleware.js";// import middelware auth 
+import verifyJWT from "../middleware/verifyJWT.js";// import middelware auth 
 
 const router = express.Router();
 
 // route to create order
-router.post("/"/*, middelware */, placeOrder);
+router.post("/",verifyJWT, placeOrder);
 
 // route to get all orders  for user
-router.get("/"/*, middelware  */,getUserOrders);
+router.get("/", verifyJWT, getUserOrders);
 
 // route to get all orders to dashboard
-router.get("/all"/*, middelware  */,getAllOrders);
+router.get("/all", verifyJWT, getAllOrders);
 
 export default router ;

@@ -1,105 +1,129 @@
 import Order from "../models/Order.js";
-//import Book from "../models/Book.js";
+import Cart from "../models/cart.model.js";
 import mongoose from "mongoose";
 
 //create an order 
     // ✅ 1. Validate data (cart, items, etc.)
     // ✅ 2. Calculate totals (itemsTotal, shippingCost, discount)
     // ⬇️ 3. هنا هييجي مكان الـ payment handling 
+
 export const placeOrder = async (req, res) => {
-    try {
-        const userId = req.user?._id || req.query.userId;
-        const { items, shippingAddress, payment } = req.body;
-
-        //Validate request data
-        if (!items || items.length === 0) {
-            return res.status(400).json({ message: "❌ No items found in the order." });
-        }
-
-        let itemsTotal = 0;
-        const orderItems = [];
-
-        //Calculate total and update book stock
-        for (const item of items) {
-            const book = await Book.findById(item.bookId);
-            if (!book) {
-                return res.status(404).json({ message: `❌ Book with ID ${item.bookId} not found.` });
-            }
-
-            if (book.stock < item.qty) {
-                return res.status(400).json({ message: `❌ Not enough stock for book: ${book.title}` });
-            }
-
-            const itemTotal = book.price * item.qty;
-            itemsTotal += itemTotal;
-
-            // Deduct the quantity from stock and save the book
-            //book.stock -= item.qty;
-
-            await book.save();
-
-            orderItems.push({
-                bookId: book._id,
-                titleSnapshot: book.title,
-                price: book.price,
-                qty: item.qty,
-            });
-        }
-
-        // Dynamic shipping cost
-        let shippingCost = 30; // Default
-        if (shippingAddress?.city && shippingAddress.city.toLowerCase() !== "cairo") {
-            shippingCost = 50; // Other cities cost more
-        }
-        if (itemsTotal > 500) {
-            shippingCost = 0; // Free shipping for large orders
-        }
-
-        // Dynamic discount
-        let discount = 0;
-        if (payment?.couponCode === "BOOK10") {
-            discount = itemsTotal * 0.1; // 10% off
-        }
-
-        const totalQty = items.reduce((sum, i) => sum + i.qty, 0);
-        if (totalQty >= 5) {
-            discount += 20; // Extra 20 off for bulk orders
-        }
-
-        // Final total
-        const grandTotal = itemsTotal + shippingCost - discount;
-
-        // Create the order
-        const newOrder = new Order({
-            userId,
-            items: orderItems,
-            shippingAddress,
-            payment,
-            amounts: {
-                itemsTotal,
-                shipping: shippingCost,
-                discount,
-                grandTotal,
-            },
-            placedAt: new Date(),
-            status: "pending",
-        });
-
-        // Save to database
-        await newOrder.save();
-
-        // Return response
-        res.status(201).json({
-            message: "✅ Order placed successfully",
-            order: newOrder,
-        });
-
-    } catch (err) {
-        console.error("❌ Error placing order:", err);
-        res.status(500).json({ message: "❌ An error occurred while placing the order." });
+  try {
+    
+    // from auth middleware
+    const userId = req.user._id;
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "❌ Invalid or missing userId" });
     }
-}
+    
+    // shipping address from body or default from user 
+    let shippingAddress = req.body.shippingAddress;
+    if (!shippingAddress) {
+      shippingAddress =
+        req.user.addresses?.find((a) => a.isDefault) || req.user.addresses?.[0];
+    }
+    if (!shippingAddress) {
+      return res.status(400).json({
+        message: "❌ No shipping address found. Please add one in your profile.",
+      });
+    }
+    
+    // Cart of the user
+    const cart = await Cart.findOne({ userId });
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({ message: "❌ Your cart is empty." });
+    }
 
+    const items = cart.items; 
+    let itemsTotal = 0;
+
+    // collect items and calculate total
+    for (const item of items) {
+      itemsTotal += item.price * item.qty;
+    }
+
+    // shipping cost logic 
+
+     let shippingCost = 30; // default 
+     const city = shippingAddress?.city?.toLowerCase();
+     const country = shippingAddress?.country?.toLowerCase();
+     
+     // وجه بحري 
+     let zoneA =["alexandria", "beheira", "gharbia", "monufia", "kafr el-sheikh", "damietta", "dakahlia", "sharqia"]
+     // وجه قبلي
+     let zoneB =["fayoum", "bani sweif", "minya", "assiut", "sohag", "qena", "luxor", "aswan"];
+     // سيناء
+     let zoneC =["north sinai", "south sinai"];
+     // القاهره الكبري 
+     let zoneD =["cairo", "giza", "qalyubia", "alexandria", "6th of october", "sheikh zayed"];
+
+     if (country !== "egypt"){
+        shippingCost = 1000; // international
+     }else if (zoneD.includes(city)) {
+        shippingCost = 30; // القاهره الكبري 
+     } else if (zoneA.includes(city)) {
+        shippingCost = 50; // وجه بحري 
+     } else if (zoneB.includes(city)) {
+        shippingCost = 70; // وجه قبلي
+     } else if (zoneC.includes(city)) {
+        shippingCost = 100; // سيناء
+     } else {
+        shippingCost = 60; // باقي المحافظات 
+     }
+     if (itemsTotal > 500) shippingCost = 0;
+
+     // discunt logic
+      let discount = 0;
+      // status one 
+      if (payment?.couponCode === "BOOK10") {
+         discount = itemsTotal * 0.1; // %10
+      }
+      //status one 
+      else if (itemsTotal > 1000) {
+      discount = 50; // 50 EGP 
+      }
+
+        const grandTotal = itemsTotal + shippingCost - discount;
+      
+    // 💰 بيانات الدفع (من البودي أو ديفولت)
+    const payment = req.body.payment || {
+      method: "cash",
+      status: "unpaid",
+    };
+
+    // 🧾 إنشاء الطلب
+    const newOrder = new Order({
+      userId,
+      items,
+      shippingAddress,
+      payment,
+      amounts: {
+        itemsTotal,
+        shipping: shippingCost,
+        discount,
+        grandTotal,
+      },
+      placedAt: new Date(),
+      status: "pending",
+    });
+
+    await newOrder.save();
+
+    // 🧹 فضي الكارت بعد ما الطلب يتعمل
+    await Cart.findOneAndUpdate({ userId }, { items: [] });
+
+    res.status(201).json({
+      message: "✅ Order placed successfully",
+      order: newOrder,
+    });
+  } catch (err) {
+    console.error("❌ Error placing order:", err);
+    res.status(500).json({
+      message: "❌ An error occurred while placing the order.",
+      error: err.message,
+    });
+  }
+};
 
 
 
@@ -195,8 +219,9 @@ export const getUserOrders = async (req, res) => {
     try {
         //const userId = req.user.id; 
         //const userId = req.user._id;
+        // const userId = req.user?._id || req.query.userId;
 
-        const userId = req.user?._id || req.query.userId;
+        const userId = req.user._id; 
 
         if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ message: "❌ invalid or missing userId" });

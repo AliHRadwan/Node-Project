@@ -6,6 +6,7 @@ const pass_forgot = require("../controllers/forget_passwordController");
 const pass_reset = require("../controllers/reset_passwordController"); 
 const changePassword = require("../controllers/change_passwordController");
 
+
 router.post("/register", register);
 router.get('/verify/:token', verifyEmail);
 

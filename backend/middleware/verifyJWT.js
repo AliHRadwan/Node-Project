@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
 const verifyJWT = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -19,4 +19,5 @@ const verifyJWT = async (req, res, next) => {
   }
 };
 
-module.exports = verifyJWT;
+// module.exports = verifyJWT;
+export default verifyJWT ;
