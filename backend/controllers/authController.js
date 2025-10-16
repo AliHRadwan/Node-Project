@@ -1,40 +1,72 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const User = require("../models/User");
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import Session from '../models/Session.js';
 
-exports.login = async (req, res) => {
-  const { email, password } = req.body;
+// Login function
+const login = async (req, res) => {
   try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid email" });
+    const { email, password } = req.body;
 
-    const validPass = await bcrypt.compare(password, user.passwordHash);
-    if (!validPass) return res.status(400).json({ message: "Invalid password" });
+    // Check if user exists
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
 
-    if (user.activeToken) return res.status(403).json({ message: "User already logged in" });
+    if (!user.isVerified) {
+      return res.status(401).json({ error: 'Please verify your email first' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    await Session.deleteMany({ userId: user._id });
 
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      { id: user._id, email: user.email, addresses: user.addresses, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: '24h' }
     );
 
-    user.activeToken = token;
-    await user.save();
+    await Session.create({
+      userId: user._id,
+      token: token,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+    });
 
-    res.json({ message: "Login successful", token });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.json({
+      message: 'Login successful',
+      token: token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        addresses: user.addresses,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
-exports.logout = async (req, res) => {
+const logout = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    user.activeToken = null;
-    await user.save();
-    res.json({ message: "Logged out" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const userId = req.user.id;
+    const token = req.headers.authorization?.split(' ')[1];
+
+    await Session.deleteOne({ userId: userId, token: token });
+
+    res.json({ message: 'Logout successful' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 };
+
+export { login, logout };
