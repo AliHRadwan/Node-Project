@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const Address = require("./userAddress");
-const validator = require("validator");
+import mongoose from "mongoose";
+import validator from "validator";
+import Address from "./userAddress.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -45,5 +45,5 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);
 

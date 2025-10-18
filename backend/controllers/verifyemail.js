@@ -1,6 +1,6 @@
-const crypto = require("crypto");
-const Token = require("../models/Token");
-const User = require("../models/User");
+import crypto from "crypto";
+import Token from "../models/Token.js";
+import User from "../models/User.js";
 
 const verifyEmail = async (req, res) => {
   try {
@@ -36,4 +36,4 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-module.exports = verifyEmail;
+export default verifyEmail;

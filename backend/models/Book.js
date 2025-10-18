@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+
 const { Schema } = mongoose;
 
 const ImageSchema = new Schema(
@@ -55,4 +56,4 @@ BookSchema.index({ isActive: 1, createdAt: -1 });
 BookSchema.index({ ratingAvg: -1 });
 BookSchema.index({ stock: 1 });
 
-module.exports = mongoose.model("Book", BookSchema);
+export default mongoose.model("Book", BookSchema);

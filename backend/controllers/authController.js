@@ -1,7 +1,7 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import Session from '../models/Session.js';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import Session from "../models/Session.js";
 
 // Login function
 const login = async (req, res) => {
