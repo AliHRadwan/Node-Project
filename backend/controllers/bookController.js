@@ -1,6 +1,6 @@
 // backend/controllers/bookController.js
-const mongoose = require("mongoose");
-const Book = require("../models/Book");
+import mongoose from "mongoose";
+import Book from "../models/Book.js";
 
 // -------------------- BUILD FILTERS --------------------
 const buildFilters = (q) => {
@@ -34,7 +34,7 @@ const buildFilters = (q) => {
 
 // -------------------- LIST BOOKS (pagination + filters + projection + safe sort) --------------------
 // GET /api/books
-const listBooks = async (req, res) => {
+export const listBooks = async (req, res) => {
   try {
     // pagination
     const page = Math.max(parseInt(req.query.page) || 1, 1);
@@ -82,7 +82,7 @@ const listBooks = async (req, res) => {
 };
 
 // -------------------- OTHER CRUD HANDLERS (unchanged) --------------------
-const getBook = async (req, res) => {
+export const getBook = async (req, res) => {
   try {
     const book = await Book.findById(req.params.id)
       .populate("authors", "name")
@@ -94,7 +94,7 @@ const getBook = async (req, res) => {
   }
 };
 
-const createBook = async (req, res) => {
+export const createBook = async (req, res) => {
   try {
     const payload = req.body;
     if (!payload.title || payload.price === undefined || payload.stock === undefined) {
@@ -107,7 +107,7 @@ const createBook = async (req, res) => {
   }
 };
 
-const updateBook = async (req, res) => {
+export const updateBook = async (req, res) => {
   try {
     const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -120,7 +120,7 @@ const updateBook = async (req, res) => {
   }
 };
 
-const deleteBook = async (req, res) => {
+export const deleteBook = async (req, res) => {
   try {
     const hard = req.query.hard === "true";
     if (hard) {
@@ -140,5 +140,3 @@ const deleteBook = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-module.exports = { listBooks, getBook, createBook, updateBook, deleteBook };

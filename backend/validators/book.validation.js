@@ -1,5 +1,5 @@
 // backend/validators/book.validation.js
-const Joi = require("joi");
+import Joi from "joi";
 
 const objectId = Joi.string().hex().length(24);
 const url = Joi.string().uri({ scheme: ["http", "https"] });
@@ -9,7 +9,7 @@ const imageSchema = Joi.object({
   key: Joi.string().trim().optional(),
 });
 
-const createBook = Joi.object({
+export const createBook = Joi.object({
   title: Joi.string().trim().min(1).max(200).required(),
   description: Joi.string().trim().max(2000).allow("", null),
   price: Joi.number().min(0).required(),
@@ -34,7 +34,7 @@ const createBook = Joi.object({
   ratingCount: Joi.number().integer().min(0).optional(),
 });
 
-const updateBook = Joi.object({
+export const updateBook = Joi.object({
   title: Joi.string().trim().min(1).max(200),
   description: Joi.string().trim().max(2000).allow("", null),
   price: Joi.number().min(0),
@@ -56,5 +56,3 @@ const updateBook = Joi.object({
   ratingAvg: Joi.number().min(0).max(5),
   ratingCount: Joi.number().integer().min(0),
 }).min(1); // require at least one field on updates
-
-module.exports = { createBook, updateBook };

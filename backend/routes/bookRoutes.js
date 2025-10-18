@@ -1,15 +1,15 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   listBooks,
   getBook,
   createBook,
   updateBook,
   deleteBook,
-} = require("../controllers/bookController");
-const { requireAuth, requireAdmin } = require("../middleware/auth");
-const { validateBody, validateQuery } = require("../middleware/validate");
-const { createBook: createSchema, updateBook: updateSchema } = require("../validators/book.validation");
-const { listBooksQuery } = require("../validators/book.query.validation");
+} from "../controllers/bookController.js";
+import { requireAuth, requireAdmin } from "../middleware/auth.js";
+import { validateBody, validateQuery } from "../middleware/validate.js";
+import { createBook as createSchema, updateBook as updateSchema } from "../validators/book.validation.js";
+import { listBooksQuery } from "../validators/book.query.validation.js";
 
 const router = express.Router();
 
@@ -22,4 +22,4 @@ router.post("/", requireAuth, requireAdmin, validateBody(createSchema), createBo
 router.put("/:id", requireAuth, requireAdmin, validateBody(updateSchema), updateBook);
 router.delete("/:id", requireAuth, requireAdmin, deleteBook);
 
-module.exports = router;
+export default router ;

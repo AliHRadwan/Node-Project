@@ -1,11 +1,11 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 const getTokenFromHeader = (req) => {
   const h = req.headers.authorization || "";
   return h.startsWith("Bearer ") ? h.slice(7) : null;
 };
 
-const requireAuth = (req, res, next) => {
+export const requireAuth = (req, res, next) => {
   const token = getTokenFromHeader(req);
   if (!token) return res.status(401).json({ message: "No token provided" });
 
@@ -19,11 +19,9 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-const requireAdmin = (req, res, next) => {
+export const requireAdmin = (req, res, next) => {
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({ message: "Admin access required" });
   }
   next();
 };
-
-module.exports = { requireAuth, requireAdmin };
