@@ -1,5 +1,5 @@
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
+import session from "express-session";
+import MongoStore from "connect-mongo";
 
 // Simple session configuration
 const sessionConfig = session({

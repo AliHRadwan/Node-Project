@@ -1,10 +1,9 @@
-const bcrypt = require('bcrypt');
-const User = require('../models/User');
-const crypto = require("crypto");
-const Token = require("../models/Token");
-const Joi = require("joi");
-const sendEmail =require('../controllers/sendemail');
-
+import crypto from "crypto";
+import bcrypt from "bcrypt";
+import Joi from "joi";
+import User from "../models/User.js";
+import Token from "../models/Token.js";
+import sendEmail from "../controllers/sendemail.js";
 
 const registerSchema = Joi.object({
   name: Joi.string().min(2).max(50).required(),
@@ -101,4 +100,4 @@ const user_register = async (req, res) => {
   }
 };
 
-module.exports = user_register;
+export default user_register;

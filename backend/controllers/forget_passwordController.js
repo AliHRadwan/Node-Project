@@ -1,7 +1,7 @@
-const crypto = require("crypto");
-const Token = require("../models/Token");
-const User = require("../models/User");
-const sendEmail = require("./sendemail");
+import crypto from "crypto";
+import Token from "../models/Token.js";
+import User from "../models/User.js";
+import sendEmail from "./sendemail.js";
 
 const pass_forgot = async (req, res) => {
   try {
@@ -40,4 +40,4 @@ const pass_forgot = async (req, res) => {
   }
 };
 
-module.exports = pass_forgot;
+export default pass_forgot;

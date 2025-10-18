@@ -1,10 +1,10 @@
-const express = require("express");
-const { requireAuth, requireAdmin } = require("../middleware/auth");
-const {
+import express from "express";
+import { requireAuth, requireAdmin } from "../middleware/auth.js";
+import {
   listAuthors, getAuthor, createAuthor, updateAuthor, deleteAuthor
-} = require("../controllers/authorController");
-const { validateBody } = require("../middleware/validate");
-const { createAuthor: createSchema, updateAuthor: updateSchema } = require("../validators/author.validation");
+} from "../controllers/authorController.js";
+import { validateBody } from "../middleware/validate.js";
+import { createBook as createSchema, updateBook as updateSchema } from "../validators/book.validation.js";
 
 const router = express.Router();
 
@@ -14,4 +14,4 @@ router.post("/", requireAuth, requireAdmin, validateBody(createSchema), createAu
 router.put("/:id", requireAuth, requireAdmin, validateBody(updateSchema), updateAuthor);
 router.delete("/:id", requireAuth, requireAdmin, deleteAuthor);
 
-module.exports = router;
+export default router;
