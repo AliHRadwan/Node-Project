@@ -1,10 +1,14 @@
-const express = require("express");
-const { requireAuth, requireAdmin } = require("../middleware/auth");
-const {
-  listCategories, getCategory, createCategory, updateCategory, deleteCategory,
-} = require("../controllers/categoryController");
-const { validateBody } = require("../middleware/validate");
-const { createCategory: createSchema, updateCategory: updateSchema } = require("../validators/category.validation");
+import express from "express";
+import { requireAuth, requireAdmin } from "../middleware/auth.js";
+import {
+  listCategories,
+  getCategory,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from "../controllers/categoryController.js";
+import { validateBody } from "../middleware/validate.js";
+import { createCategory as createSchema, updateCategory as updateSchema } from "../validators/category.validation.js";
 
 const router = express.Router();
 
@@ -15,4 +19,4 @@ router.post("/", requireAuth, requireAdmin, validateBody(createSchema), createCa
 router.put("/:id", requireAuth, requireAdmin, validateBody(updateSchema), updateCategory);
 router.delete("/:id", requireAuth, requireAdmin, deleteCategory);
 
-module.exports = router;
+export default router ;

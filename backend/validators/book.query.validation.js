@@ -1,8 +1,8 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const objectId = Joi.string().hex().length(24);
 
-const listBooksQuery = Joi.object({
+export const listBooksQuery = Joi.object({
   q: Joi.string().trim().max(200),                      // text search
   isActive: Joi.boolean().truthy("true").falsy("false"),
   author: objectId,                                     // filter by authorId
@@ -19,5 +19,3 @@ const listBooksQuery = Joi.object({
   // projection (optional): comma-separated fields, e.g. "title,price"
   fields: Joi.string().pattern(/^[a-zA-Z0-9_, ]*$/).optional()
 });
-
-module.exports = { listBooksQuery };

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
+
 const addressSchema = new mongoose.Schema({
   label: { type: String },
   fullName: { type: String },
@@ -12,4 +13,4 @@ const addressSchema = new mongoose.Schema({
   isDefault: { type: Boolean, default: false },
 }, { _id: false });
 
-module.exports = addressSchema;
+export default addressSchema;

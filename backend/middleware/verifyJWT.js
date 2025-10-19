@@ -1,23 +1,37 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import Session from "../models/Session.js";
 
-const verifyJWT = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Access denied" });
-
+// Simple JWT verification middleware
+export default async function verifyJWT(req, res, next) {
   try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    
+    const session = await Session.findOne({
+      userId: decoded.id,
+      token: token,
+      expiresAt: { $gt: new Date() }
+    });
 
-    if (!user || user.activeToken !== token)
-      return res.status(403).json({ message: "Invalid or expired session" });
+    if (!session) {
+      return res.status(401).json({ error: "Session expired. Please login again." });
+    }
 
-    req.user = decoded; 
+    req.user = decoded;
     next();
-  } catch (err) {
-    res.status(403).json({ message: "Invalid token" });
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(403).json({ error: "Invalid token" });
+    } else if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: "Token expired. Please login again." });
+    } else {
+      console.error('JWT verification error:', error);
+      return res.status(500).json({ error: "Server error" });
+    }
   }
-};
-
-// module.exports = verifyJWT;
-export default verifyJWT;
+}

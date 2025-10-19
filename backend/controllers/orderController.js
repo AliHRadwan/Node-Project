@@ -1,6 +1,6 @@
+import mongoose from "mongoose";
 import Order from "../models/Order.js";
 //import Book from "../models/Book.js";
-import mongoose from "mongoose";
 
 //create an order 
     // ✅ 1. Validate data (cart, items, etc.)

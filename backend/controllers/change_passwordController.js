@@ -1,6 +1,6 @@
-const bcrypt = require("bcrypt");
-const User = require("../models/User");
-const Joi = require("joi");
+import bcrypt from "bcrypt";
+import Joi from "joi";
+import User from "../models/User.js";
 
 const newpasswordSchema = Joi.object({
   new_password: Joi.string()
@@ -44,4 +44,4 @@ const password_change = async (req, res) => {
   }
 };
 
-module.exports = password_change;
+export default password_change;

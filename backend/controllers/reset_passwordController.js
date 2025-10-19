@@ -1,8 +1,8 @@
-const User = require("../models/User");
-const Joi = require('joi');
-const Token = require('../models/Token');
-const crypto = require('crypto');
-const bcrypt = require("bcrypt");
+import crypto from "crypto";
+import bcrypt from "bcrypt";
+import Joi from "joi";
+import User from "../models/User.js";
+import Token from "../models/Token.js";
 
 const resetpassSchema = Joi.object({
   password: Joi.string()
@@ -52,4 +52,4 @@ const pass_reset = async (req, res) => {
   }
 };
 
-module.exports = pass_reset;
+export default pass_reset;
