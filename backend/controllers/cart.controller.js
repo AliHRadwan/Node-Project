@@ -1,5 +1,6 @@
 import Cart from '../models/cart.model.js';
-// import Book from '../models/book.model.js'; // هنفعله لما يبقى جاهز
+import Book from '../models/Book.js';
+import User from '../models/User.js';
 import mongoose from 'mongoose';
 
 // ============================================
@@ -7,19 +8,12 @@ import mongoose from 'mongoose';
 // ============================================
 export const getCart = async (req, res) => {
   try {
-    const userId = req.params.userId || req.user?.id;
-
-    if (!userId) {
+    const userId = req.params.userId;
+    
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
         success: false,
-        message: 'User ID is required'
-      });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid User ID format'
+        message: 'Valid User ID is required'
       });
     }
 
@@ -89,11 +83,11 @@ export const getCartAuth = async (req, res) => {
 export const addToCart = async (req, res) => {
   try {
     const { userId, items } = req.body;
-
-    if (!userId) {
+    
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
         success: false,
-        message: 'User ID is required'
+        message: 'Valid User ID is required'
       });
     }
 
@@ -104,13 +98,6 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid User ID format'
-      });
-    }
-
     if (!mongoose.Types.ObjectId.isValid(items[0].bookId)) {
       return res.status(400).json({
         success: false,
@@ -118,7 +105,6 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // البحث عن الـ Cart أو إنشاء واحدة جديدة
     let cart = await Cart.findOne({ userId: userId });
 
     if (!cart) {
@@ -129,16 +115,13 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // التحقق إذا الكتاب موجود في الـ Cart
     const existingItemIndex = cart.items.findIndex(
       item => item.bookId.toString() === items[0].bookId
     );
 
     if (existingItemIndex > -1) {
-      // الكتاب موجود، زود الكمية
       cart.items[existingItemIndex].qty += parseInt(items[0].qty);
     } else {
-      // الكتاب مش موجود، ضيفه
       cart.items.push({
         bookId: items[0].bookId,
         qty: parseInt(items[0].qty),
@@ -146,13 +129,11 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    // احسب الـ Total Price
     cart.totals.subTotal = cart.items.reduce((total, item) => {
       return total + (item.priceAtAdd * item.qty);
     }, 0);
 
     const savedCart = await cart.save();
-    await savedCart.populate('items.bookId', 'title author price image');
 
     res.status(200).json({
       success: true,
@@ -233,7 +214,7 @@ export const addToCartAuth = async (req, res) => {
 export const updateCartItem = async (req, res) => {
   try {
     const { userId, bookId, qty } = req.body;
-
+    
     if (!userId || !bookId) {
       return res.status(400).json({
         success: false,
@@ -268,16 +249,13 @@ export const updateCartItem = async (req, res) => {
       });
     }
 
-    // تحديث الكمية
     cart.items[itemIndex].qty = qty;
 
-    // احسب الـ Total Price
     cart.totals.subTotal = cart.items.reduce((total, item) => {
       return total + (item.priceAtAdd * item.qty);
     }, 0);
 
     await cart.save();
-    await cart.populate('items.bookId', 'title author price image');
 
     res.status(200).json({
       success: true,
@@ -355,7 +333,7 @@ export const updateCartItemAuth = async (req, res) => {
 export const removeFromCart = async (req, res) => {
   try {
     const { userId, bookId } = req.params;
-
+    
     if (!userId || !bookId) {
       return res.status(400).json({
         success: false,
@@ -372,18 +350,15 @@ export const removeFromCart = async (req, res) => {
       });
     }
 
-    // حذف الكتاب من الـ items
     cart.items = cart.items.filter(
       item => item.bookId.toString() !== bookId
     );
 
-    // احسب الـ Total Price
     cart.totals.subTotal = cart.items.reduce((total, item) => {
       return total + (item.priceAtAdd * item.qty);
     }, 0);
 
     await cart.save();
-    await cart.populate('items.bookId', 'title author price image');
 
     res.status(200).json({
       success: true,
@@ -399,6 +374,7 @@ export const removeFromCart = async (req, res) => {
     });
   }
 };
+
 
 
 export const removeFromCartAuth = async (req, res) => {
@@ -445,8 +421,8 @@ export const removeFromCartAuth = async (req, res) => {
 // ============================================
 export const clearCart = async (req, res) => {
   try {
-    const userId = req.params.userId || req.user?.id;
-
+    const userId = req.params.userId;
+    
     if (!userId) {
       return res.status(400).json({
         success: false,
