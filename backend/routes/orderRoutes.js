@@ -1,5 +1,8 @@
 import express from "express";
-import { getUserOrders , getAllOrders, placeOrder , cancelOrderByAdmin , cancelOrderByUser} from "../controllers/orderController.js";// import functions from controller 
+import { getUserOrders , getAllOrders, placeOrder , cancelOrderByAdmin , cancelOrderByUser , 
+  markAsPaid , markAsShipped , markAsDelivered 
+} from "../controllers/orderController.js";// import functions from controller 
+
 import verifyJWT from "../middleware/verifyJWT.js";// import middelware auth 
 
 const router = express.Router();
@@ -20,12 +23,15 @@ router.get("/", verifyJWT, getUserOrders);
 router.post("/:orderId/cancel", verifyJWT, cancelOrderByUser);
 
 
-// ----------dashboard admin routes-----------------------
+// ----------dashboard admin routes (end points)-----------------------
 
 // route to get all orders to dashboard
-router.get("/admin", verifyJWT, getAllOrders);
+router.get("/admin", verifyJWT,requireAdmin, getAllOrders);
 // cancel order by admin
 router.post("/admin/:orderId/cancel", verifyJWT, requireAdmin ,cancelOrderByAdmin); 
+router.post("/admin/:orderId/paid", verifyJWT, requireAdmin, markAsPaid);
+router.post("/admin/:orderId/shipped", verifyJWT, requireAdmin, markAsShipped);
+router.post("/admin/:orderId/delivered", verifyJWT, requireAdmin, markAsDelivered);
 
 
 export default router ;
