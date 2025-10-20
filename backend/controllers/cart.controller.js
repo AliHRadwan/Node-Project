@@ -1,14 +1,14 @@
-import mongoose from "mongoose";
 import Cart from "../models/cart.model.js";
-// import Book from "../models/book.model.js"; // هنفعله لما يبقى جاهز
+import Book from "../models/Book.js";
+import mongoose from "mongoose";
 
 // ============================================
-// 1️⃣ عرض الـ Cart الخاصة بالـ User
+// 1️⃣ عرض الـ Cart (Public)
 // ============================================
 export const getCart = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    
+    const { userId } = req.params;
+
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
         success: false,
@@ -16,7 +16,9 @@ export const getCart = async (req, res) => {
       });
     }
 
-    const cart = await Cart.findOne({ userId: userId });
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const cart = await Cart.findOne({ userId: userObjectId })
+      .populate('items.bookId', 'title price'); // ✅ جيب بيانات الكتاب
 
     if (!cart) {
       return res.status(200).json({
@@ -44,18 +46,22 @@ export const getCart = async (req, res) => {
   }
 };
 
+// ============================================
+// 1️⃣ عرض الـ Cart (Auth)
+// ============================================
 export const getCartAuth = async (req, res) => {
   try {
-    const userId = req.user.id; // من الـ JWT token
-
-    const cart = await Cart.findOne({ userId: userId });
+    const userObjectId = new mongoose.Types.ObjectId(req.user.id);
+    
+    const cart = await Cart.findOne({ userId: userObjectId })
+      .populate('items.bookId', 'title price author');
 
     if (!cart) {
       return res.status(200).json({
         success: true,
         message: 'Cart is empty',
         data: {
-          userId: userId,
+          userId: req.user.id,
           items: [],
           totals: { subTotal: 0 }
         }
@@ -77,12 +83,12 @@ export const getCartAuth = async (req, res) => {
 };
 
 // ============================================
-// 2️⃣ إضافة كتاب للـ Cart
+// 2️⃣ إضافة كتاب للـ Cart (Public)
 // ============================================
 export const addToCart = async (req, res) => {
   try {
     const { userId, items } = req.body;
-    
+
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
         success: false,
@@ -97,32 +103,46 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(items[0].bookId)) {
+    const bookId = items[0].bookId;
+
+    if (!mongoose.Types.ObjectId.isValid(bookId)) {
       return res.status(400).json({
         success: false,
         message: 'Invalid Book ID format'
       });
     }
 
-    let cart = await Cart.findOne({ userId: userId });
+    // ✅ تحقق من وجود الكتاب
+    const bookObjectId = new mongoose.Types.ObjectId(bookId);
+    const bookExists = await Book.findById(bookObjectId);
+    
+    if (!bookExists) {
+      return res.status(404).json({
+        success: false,
+        message: 'Book not found in database'
+      });
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    let cart = await Cart.findOne({ userId: userObjectId });
 
     if (!cart) {
       cart = new Cart({
-        userId: userId,
+        userId: userObjectId,
         items: [],
         totals: { subTotal: 0 }
       });
     }
 
     const existingItemIndex = cart.items.findIndex(
-      item => item.bookId.toString() === items[0].bookId
+      item => item.bookId.toString() === bookObjectId.toString()
     );
 
     if (existingItemIndex > -1) {
       cart.items[existingItemIndex].qty += parseInt(items[0].qty);
     } else {
       cart.items.push({
-        bookId: items[0].bookId,
+        bookId: bookObjectId,
         qty: parseInt(items[0].qty),
         priceAtAdd: items[0].priceAtAdd
       });
@@ -132,12 +152,12 @@ export const addToCart = async (req, res) => {
       return total + (item.priceAtAdd * item.qty);
     }, 0);
 
-    const savedCart = await cart.save();
+    await cart.save();
 
     res.status(200).json({
       success: true,
       message: 'Book added to cart successfully',
-      data: savedCart
+      data: cart
     });
   } catch (error) {
     console.error('Error in addToCart:', error);
@@ -149,45 +169,61 @@ export const addToCart = async (req, res) => {
   }
 };
 
-
+// ============================================
+// 2️⃣ إضافة كتاب للـ Cart (Auth)
+// ============================================
 export const addToCartAuth = async (req, res) => {
   try {
-    const userId = req.user.id; // من الـ JWT token
-    const { bookId, qty, priceAtAdd } = req.body;
+    const userObjectId = new mongoose.Types.ObjectId(req.user.id);
+    const bookObjectId = new mongoose.Types.ObjectId(req.body.bookId);
+    const qtyValue = parseInt(req.body.qty || 1);
+    const priceAtAdd = req.body.priceAtAdd;
 
-    if (!bookId || !priceAtAdd) {
+    if (!priceAtAdd) {
       return res.status(400).json({
         success: false,
-        message: 'Book ID and price are required'
+        message: 'Price is required'
       });
     }
 
-    let cart = await Cart.findOne({ userId: userId });
+    // ✅ تحقق من وجود Book
+    const bookExists = await Book.findById(bookObjectId);
+    
+    if (!bookExists) {
+      return res.status(404).json({
+        success: false,
+        message: 'Book not found in database'
+      });
+    }
+
+    // ✅ جيب أو اعمل Cart
+    let cart = await Cart.findOne({ userId: userObjectId });
 
     if (!cart) {
       cart = new Cart({
-        userId: userId,
+        userId: userObjectId,
         items: [],
         totals: { subTotal: 0 }
       });
     }
 
     const existingItemIndex = cart.items.findIndex(
-      item => item.bookId.toString() === bookId
+      item => item.bookId.toString() === bookObjectId.toString()
     );
 
     if (existingItemIndex > -1) {
-      cart.items[existingItemIndex].qty += parseInt(qty || 1);
+      cart.items[existingItemIndex].qty += qtyValue;
     } else {
       cart.items.push({
-        bookId: bookId,
-        qty: parseInt(qty || 1),
+        bookId: bookObjectId,
+        qty: qtyValue,
         priceAtAdd: priceAtAdd
       });
     }
 
+    // ✅ احسب Subtotal
     cart.totals.subTotal = cart.items.reduce((total, item) => {
-      return total + (item.priceAtAdd * item.qty);
+      return total + item.priceAtAdd * item.qty;
     }, 0);
 
     await cart.save();
@@ -208,12 +244,14 @@ export const addToCartAuth = async (req, res) => {
 };
 
 // ============================================
-// 3️⃣ تحديث كمية كتاب في الـ Cart
+// 3️⃣ تحديث كمية كتاب (Public)
 // ============================================
+
+
 export const updateCartItem = async (req, res) => {
   try {
     const { userId, bookId, qty } = req.body;
-    
+
     if (!userId || !bookId) {
       return res.status(400).json({
         success: false,
@@ -228,7 +266,10 @@ export const updateCartItem = async (req, res) => {
       });
     }
 
-    const cart = await Cart.findOne({ userId: userId });
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const bookObjectId = new mongoose.Types.ObjectId(bookId);
+
+    const cart = await Cart.findOne({ userId: userObjectId });
 
     if (!cart) {
       return res.status(404).json({
@@ -238,7 +279,7 @@ export const updateCartItem = async (req, res) => {
     }
 
     const itemIndex = cart.items.findIndex(
-      item => item.bookId.toString() === bookId
+      item => item.bookId.toString() === bookObjectId.toString()
     );
 
     if (itemIndex === -1) {
@@ -271,9 +312,15 @@ export const updateCartItem = async (req, res) => {
   }
 };
 
+
+// ============================================
+// 3️⃣ تحديث كمية كتاب (Auth)
+// ============================================
+
+
 export const updateCartItemAuth = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userObjectId = new mongoose.Types.ObjectId(req.user.id);
     const { bookId, qty } = req.body;
 
     if (!bookId || qty < 1) {
@@ -283,7 +330,8 @@ export const updateCartItemAuth = async (req, res) => {
       });
     }
 
-    const cart = await Cart.findOne({ userId: userId });
+    const bookObjectId = new mongoose.Types.ObjectId(bookId);
+    const cart = await Cart.findOne({ userId: userObjectId });
 
     if (!cart) {
       return res.status(404).json({
@@ -293,7 +341,7 @@ export const updateCartItemAuth = async (req, res) => {
     }
 
     const itemIndex = cart.items.findIndex(
-      item => item.bookId.toString() === bookId
+      item => item.bookId.toString() === bookObjectId.toString()
     );
 
     if (itemIndex === -1) {
@@ -317,6 +365,7 @@ export const updateCartItemAuth = async (req, res) => {
       data: cart
     });
   } catch (error) {
+    console.error('Error in updateCartItemAuth:', error);
     res.status(500).json({
       success: false,
       message: 'Error updating cart',
@@ -327,12 +376,12 @@ export const updateCartItemAuth = async (req, res) => {
 
 
 // ============================================
-// 4️⃣ حذف كتاب من الـ Cart
+// 4️⃣ حذف كتاب من الـ Cart (Public)
 // ============================================
 export const removeFromCart = async (req, res) => {
   try {
     const { userId, bookId } = req.params;
-    
+
     if (!userId || !bookId) {
       return res.status(400).json({
         success: false,
@@ -340,7 +389,10 @@ export const removeFromCart = async (req, res) => {
       });
     }
 
-    const cart = await Cart.findOne({ userId: userId });
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const bookObjectId = new mongoose.Types.ObjectId(bookId);
+
+    const cart = await Cart.findOne({ userId: userObjectId });
 
     if (!cart) {
       return res.status(404).json({
@@ -350,7 +402,7 @@ export const removeFromCart = async (req, res) => {
     }
 
     cart.items = cart.items.filter(
-      item => item.bookId.toString() !== bookId
+      item => item.bookId.toString() !== bookObjectId.toString()
     );
 
     cart.totals.subTotal = cart.items.reduce((total, item) => {
@@ -374,14 +426,23 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
-
-
+// ============================================
+// 4️⃣ حذف كتاب من الـ Cart (Auth)
+// ============================================
 export const removeFromCartAuth = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userObjectId = new mongoose.Types.ObjectId(req.user.id);
     const { bookId } = req.params;
 
-    const cart = await Cart.findOne({ userId: userId });
+    if (!bookId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Book ID is required'
+      });
+    }
+
+    const bookObjectId = new mongoose.Types.ObjectId(bookId);
+    const cart = await Cart.findOne({ userId: userObjectId });
 
     if (!cart) {
       return res.status(404).json({
@@ -391,7 +452,7 @@ export const removeFromCartAuth = async (req, res) => {
     }
 
     cart.items = cart.items.filter(
-      item => item.bookId.toString() !== bookId
+      item => item.bookId.toString() !== bookObjectId.toString()
     );
 
     cart.totals.subTotal = cart.items.reduce((total, item) => {
@@ -406,6 +467,7 @@ export const removeFromCartAuth = async (req, res) => {
       data: cart
     });
   } catch (error) {
+    console.error('Error in removeFromCartAuth:', error);
     res.status(500).json({
       success: false,
       message: 'Error removing from cart',
@@ -414,14 +476,13 @@ export const removeFromCartAuth = async (req, res) => {
   }
 };
 
-
 // ============================================
-// 5️⃣ مسح الـ Cart كلها
+// 5️⃣ مسح الـ Cart كلها (Public)
 // ============================================
 export const clearCart = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    
+    const { userId } = req.params;
+
     if (!userId) {
       return res.status(400).json({
         success: false,
@@ -429,7 +490,8 @@ export const clearCart = async (req, res) => {
       });
     }
 
-    const cart = await Cart.findOne({ userId: userId });
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const cart = await Cart.findOne({ userId: userObjectId });
 
     if (!cart) {
       return res.status(404).json({
@@ -458,11 +520,13 @@ export const clearCart = async (req, res) => {
   }
 };
 
+// ============================================
+// 5️⃣ مسح الـ Cart كلها (Auth)
+// ============================================
 export const clearCartAuth = async (req, res) => {
   try {
-    const userId = req.user.id;
-
-    const cart = await Cart.findOne({ userId: userId });
+    const userObjectId = new mongoose.Types.ObjectId(req.user.id);
+    const cart = await Cart.findOne({ userId: userObjectId });
 
     if (!cart) {
       return res.status(404).json({
@@ -482,6 +546,7 @@ export const clearCartAuth = async (req, res) => {
       data: cart
     });
   } catch (error) {
+    console.error('Error in clearCartAuth:', error);
     res.status(500).json({
       success: false,
       message: 'Error clearing cart',

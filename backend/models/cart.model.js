@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
-
+import Book from "../models/Book.js";
 const cartSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
+    unique: true
   },
 
   items: [

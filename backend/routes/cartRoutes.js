@@ -8,22 +8,17 @@ const router = express.Router();
 // 🔓 Routes بدون Authentication (للتجربة فقط)
 // ============================================
 
-// GET /api/cart/test/:userId - عرض الـ Cart
-router.get('/test/:userId', cartController.getCart);
+// router.get('/test/:userId', cartController.getCart);
 
-// POST /api/cart/test - إضافة كتاب للـ Cart
-// Body: { userId, items: [{ bookId, qty, priceAtAdd }] }
-router.post('/test', cartController.addToCart);
+// // Body: { userId, items: [{ bookId, qty, priceAtAdd }] }
+// router.post('/test', cartController.addToCart);
 
-// PUT /api/cart/test - تحديث كمية كتاب
-// Body: { userId, bookId, qty }
-router.put('/test', cartController.updateCartItem);
+// // Body: { userId, bookId, qty }
+// router.put('/test', cartController.updateCartItem);
 
-// DELETE /api/cart/test/:userId/:bookId - حذف كتاب من الـ Cart
-router.delete('/test/:userId/:bookId', cartController.removeFromCart);
+// router.delete('/test/:userId/:bookId', cartController.removeFromCart);
 
-// DELETE /api/cart/test/:userId - مسح الـ Cart كلها
-router.delete('/test/:userId', cartController.clearCart);
+// router.delete('/test/:userId', cartController.clearCart);
 
 // ============================================
 // 🔒 Routes مع Authentication (للإنتاج)
