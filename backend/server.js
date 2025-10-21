@@ -26,10 +26,10 @@ app.use(sessionMiddleware);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/cart", cartRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/authors", authorRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/cart", cartRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the Node Project API" });
