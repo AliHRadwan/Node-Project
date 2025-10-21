@@ -9,6 +9,7 @@ import {login, logout} from "../controllers/authController.js";
 
 const router = express.Router();
 
+
 router.post("/register", register);
 router.get('/verify/:token', verifyEmail);
 

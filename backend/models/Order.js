@@ -12,6 +12,19 @@ const orderSchema = new mongoose.Schema(
             enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
             default: "pending",
         },
+        cancelledAt: { type: Date },
+        cancelledBy: {
+                     id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                     role: { type: String, enum: ["user", "admin"] }
+                    },
+        cancelReason: { type: String },
+        paidAt: { type: Date },
+        shippedAt: { type: Date },
+        deliveredAt: { type: Date },
+        trackingNumber: { type: String },
+        carrier: { type: String },
+        adminNote: { type: String },
+        currency: { type: String, default: "EGP" },
         items: [
             {
                 _id: false, // ⛔ ده أهم سطر
@@ -21,7 +34,7 @@ const orderSchema = new mongoose.Schema(
                     required: true,
                 },
                 titleSnapshot: String,
-                price: { type: Number, min: 0, required: true },
+                priceAtAdd: { type: Number, min: 0, required: true , alias: "price" },
                 qty: { type: Number, min: 1, required: true },
             },
         ],
