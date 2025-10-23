@@ -13,7 +13,6 @@ const CategorySchema = new mongoose.Schema(
       type: String,
       trim: true,
       lowercase: true,
-      unique: true,
       required: [true, "Slug is required"],
       match: [/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be kebab-case (e.g. web-development)"],
     },

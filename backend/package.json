@@ -1,6 +1,7 @@
 {
   "name": "node-project-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend for the Node Project (Online Bookstore)",
   "main": "server.js",
   "scripts": {
