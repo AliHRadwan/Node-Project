@@ -11,7 +11,7 @@ import cartRoutes from "./routes/cartRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import authorRoutes from "./routes/authorRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
-
+import reviewRoutes from "./routes/reviewRoutes.js"
 
 dotenv.config();
 connectDB();
@@ -30,6 +30,7 @@ app.use("/api/books", bookRoutes);
 app.use("/api/authors", authorRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the Node Project API" });
