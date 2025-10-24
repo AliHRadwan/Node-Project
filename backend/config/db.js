@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { winstonLogger } from "./logger.js";
 
 dotenv.config();
 
@@ -8,11 +9,10 @@ const connectDB = async () => {
     const DB_URI = process.env.MONGO_URI;
 
     await mongoose.connect(DB_URI);
+    winstonLogger.info("MongoDB connected successfully");
 
-    console.log("MongoDB connected successfully");
-
-  } catch (err) {
-    console.error("MongoDB connection failed:", err.message);
+  } catch (error) {
+    winstonLogger.error("MongoDB connection failed:", error.message);
     process.exit(1);
   }
 };
