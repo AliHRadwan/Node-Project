@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./models/db.js";
+import connectDB from "./config/db.js";
+import { winstonLogger, winstonStream } from "./config/logger.js";
 import cors from "cors";
 import path from "path";
 import morgan from "morgan";
@@ -19,6 +20,8 @@ connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(morgan("combined", { stream: winstonStream }));
 
 app.use(cors());
 app.use(express.json());
@@ -41,5 +44,5 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server running on: http://localhost:${PORT}`);
+  winstonLogger.info(`Server running on: http://localhost:${PORT}`);
 });

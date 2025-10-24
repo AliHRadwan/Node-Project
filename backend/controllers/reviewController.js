@@ -1,6 +1,7 @@
 import Review from "../models/reviewModel.js";
 import Book from "../models/Book.js";
 import Order from "../models/Order.js";
+import { winstonLogger } from "../config/logger.js";
 
 const updateBookRating = async (bookId) => {
   try {
@@ -24,7 +25,7 @@ const updateBookRating = async (bookId) => {
       ratingCount,
     });
   } catch (error) {
- 
+    winstonLogger.error(`Failed to update book rating for ${bookId}:`, error);
     console.error(`Failed to update book rating for ${bookId}:`, error);
   }
 };
@@ -35,9 +36,7 @@ export const getReviews = async (req, res) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-
     const skip = (page - 1) * limit;
-    
     const filter = { bookId: bookId };
 
     const [reviews, totalItems] = await Promise.all([
@@ -46,7 +45,7 @@ export const getReviews = async (req, res) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
-      
+    
       Review.countDocuments(filter)
     ]);
 
@@ -63,6 +62,7 @@ export const getReviews = async (req, res) => {
     });
     
   } catch (error) {
+    winstonLogger.error("Server error on getReviews controller", error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -103,6 +103,7 @@ export const createReview = async (req, res) => {
 
     res.status(201).json(newReview);
   } catch (error) {
+    winstonLogger.error("Server error on createReview controller", error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -133,6 +134,7 @@ export const updateReview = async (req, res) => {
 
     res.status(200).json(reviewDoc);
   } catch (error) {
+    winstonLogger.error("Server error on updateReview controller", error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -159,9 +161,10 @@ export const deleteReview = async (req, res) => {
     await reviewDoc.deleteOne();
 
     await updateBookRating(bookId);
-
+  
     res.status(200).json({ message: 'Review deleted successfully' });
   } catch (error) {
+    winstonLogger.error("Server error on deleteReview controller", error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
