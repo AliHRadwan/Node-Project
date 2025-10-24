@@ -9,7 +9,16 @@ const orderSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
+             enum: [
+              "pending",     // تم إنشاء الطلب ولم يُدفع بعد
+              "paid",        // دُفع بنجاح
+              "processing",  // (اختياري) جاري التجهيز
+              "confirmed",   // (اختياري) تم التأكيد
+              "shipped",     // تم الشحن
+              "delivered",   // تم التسليم
+              "cancelled",   // تم الإلغاء قبل الشحن
+              "refunded"     // تم الاسترجاع بعد الدفع
+            ],
             default: "pending",
         },
         cancelledAt: { type: Date },
@@ -27,7 +36,7 @@ const orderSchema = new mongoose.Schema(
         currency: { type: String, default: "EGP" },
         items: [
             {
-                _id: false, // ⛔ ده أهم سطر
+                _id: false, 
                 bookId: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Book",//reference Book model 

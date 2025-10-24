@@ -3,6 +3,28 @@ import Order from "../models/Order.js";
 import Book from "../models/Book.js";
 import Cart from "../models/cart.model.js";
 import User from "../models/User.js";
+import Joi from "joi";
+import { cancelPendingOrder, refundPaidOrder } from "../services/orderCancel.js";
+import { releaseReservationBySessionId } from "../utils/reservationRelease.js";
+
+
+
+const PRICING_CURRENCY = (process.env.PRICING_CURRENCY || "USD").toUpperCase();
+const toObjectId = (v) =>
+  (v && mongoose.Types.ObjectId.isValid(v)) ? new mongoose.Types.ObjectId(v) : undefined;
+
+
+// shipping address validation schema
+const shippingAddressSchema = Joi.object({
+  fullName: Joi.string().min(3).max(60),
+  phone: Joi.string().pattern(/^[0-9+\-() ]+$/).min(6).max(20).required(),
+  line1: Joi.string().min(3).max(120).allow("", null),
+  line2: Joi.string().max(120).allow("", null),
+  city: Joi.string().min(2).max(60).required(),
+  state: Joi.string().max(60).allow("", null),
+  country: Joi.string().min(2).max(60).required(),
+  postalCode: Joi.string().max(20).allow("", null),
+});
 
 //create an order 
 export const placeOrder = async (req, res) => {
@@ -19,9 +41,22 @@ export const placeOrder = async (req, res) => {
         code: 400
       });
     }
+    if (req.body?.shippingAddress) {
+      const { error, value } = shippingAddressSchema.validate(req.body.shippingAddress, { abortEarly: false, stripUnknown: true });
+      if (error) {
+        return res.status(400).json({
+          message: "❌ Invalid shipping address",
+          details: error.details.map(d => d.message),
+        });
+      }
+      
+      req.body.shippingAddress = value;
+    }
 
     // shipping address from body or default from user 
-    let shippingAddress = req.body.shippingAddress;
+    // let shippingAddress = req.body.shippingAddress || {};
+    let shippingAddress = req.body?.shippingAddress || null;
+
     if (!shippingAddress) {
       const user = await User.findById(userId);
       if (user?.addresses && user.addresses.length > 0) {
@@ -35,6 +70,34 @@ export const placeOrder = async (req, res) => {
         status: "error",
         code: 400,
       });
+    }
+
+     if (!shippingAddress.fullName) {
+      const user = await User.findById(userId).select("name"); 
+      shippingAddress.fullName = user?.name || "Unknown User";
+     }
+
+
+    if (req.body?.shippingAddress) {
+      const user = await User.findById(userId);
+      if (user) {
+        const existingAddress = user.addresses.find(
+          (a) =>
+            a.line1 === shippingAddress.line1 &&
+            a.city === shippingAddress.city &&
+            a.country === shippingAddress.country
+        );
+
+       
+        if (!existingAddress) {
+          user.addresses.push({
+            label: "From order",
+            ...shippingAddress,
+            isDefault: user.addresses.length === 0, 
+          });
+          await user.save();
+        }
+      }
     }
 
     // Cart of the user
@@ -79,7 +142,7 @@ export const placeOrder = async (req, res) => {
 
     // payment info from body or default
 
-    const payment = req.body.payment || { method: "cash", status: "unpaid" };
+    const payment = req.body?.payment || { method: "cash", status: "unpaid" };
 
 
     // shipping cost logic
@@ -109,7 +172,7 @@ export const placeOrder = async (req, res) => {
     } else {
       shippingCost = 60; // باقي المحافظات 
     }
-    if (itemsTotal > 500) shippingCost = 0;
+    if (itemsTotal > 5000) shippingCost = 0;
 
     // discunt logic
 
@@ -138,6 +201,7 @@ export const placeOrder = async (req, res) => {
         discount,
         grandTotal,
       },
+      currency: PRICING_CURRENCY, 
       placedAt: new Date(),
       status: "pending",
     });
@@ -214,21 +278,21 @@ export const getUserOrders = async (req, res) => {
 // cancel order by user
 export const cancelOrderByUser = async (req, res) => {
   try {
-    const userId = req.user?._id || req.user?.id;
+    const rawUserId = req.user?._id || req.user?.id;
+    const userId = toObjectId(rawUserId);
     const { orderId } = req.params;
     const { reason } = req.body || {};
 
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
-      return res.status(400).json({
-        message: "Invalid orderId",
-        status: "error",
-        code: 400
-      });
+      return res.status(400).json({ message: "Invalid orderId", status: "error", code: 400 });
+    }
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized (invalid user id)", status: "error", code: 401 });
     }
 
-    // Check order existence and ownership
     const order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ message: "Order not found", status: "error", code: 404 });
+
     if (String(order.userId) !== String(userId)) {
       return res.status(403).json({
         message: "You cannot cancel someone else's order",
@@ -237,35 +301,44 @@ export const cancelOrderByUser = async (req, res) => {
       });
     }
 
-    // Check if already cancelled or not eligible for cancellation
-    if (order.status === "cancelled") {
+
+    if (["shipped", "delivered"].includes(order.status)) {
       return res.status(400).json({
-        message: "Order is already cancelled",
+        message: `Order is already ${order.status} and cannot be cancelled`,
         status: "error",
         code: 400
       });
     }
-    if (["shipped", "delivered"].includes(order.status)) {
-      return res.status(400).json({ message: `Order is already ${order.status} and cannot be cancelled`, status: "error", code: 400 });
+
+    // مسموح فقط لو PENDING
+    if (order.status !== "pending") {
+      return res.status(400).json({
+        message: `Order is ${order.status}. Refunds are handled by support.`,
+        status: "error",
+        code: 400
+      });
     }
 
-    // لو مدفوع Online وعايزين Refund… (Placeholder)
-    // if (order.payment?.status === "paid" && order.payment?.method !== "cash") {
-    //   await refundGateway(order.payment.txId, order.amounts.grandTotal)
-    // }
+    
+    const sessionId = order?.payment?.sessionId; 
+    if (sessionId) {
+      try { await releaseReservationBySessionId(sessionId); } catch (e) {
+        console.warn("releaseReservationBySessionId warn:", e?.message);
+      }
+    }
 
+   
     order.status = "cancelled";
     order.cancelledAt = new Date();
-    order.cancelledBy = { id: userId, role: "user" };
+    order.cancelledBy = { id: userId, role: "user" }; 
     if (reason) order.cancelReason = reason;
-
     await order.save();
 
     return res.status(200).json({
-      message: " ✅ Order cancelled successfully",
+      message: "✅ Order cancelled successfully",
       status: "success",
       code: 200,
-      order,
+      order
     });
   } catch (err) {
     console.error("cancelOrderByUser error:", err);
@@ -309,21 +382,18 @@ export const getAllOrders = async (req, res) => {
 // cancel order by admin
 export const cancelOrderByAdmin = async (req, res) => {
   try {
-    
     const rawAdminId = req.user?._id || req.user?.id;
-    if (!rawAdminId || !mongoose.Types.ObjectId.isValid(rawAdminId)) {
+    const adminId = toObjectId(rawAdminId);
+
+    if (!adminId) {
       return res.status(401).json({ message: "Unauthorized (invalid admin id)", status: "error", code: 401 });
     }
-    const adminId = new mongoose.Types.ObjectId(rawAdminId); 
-
+    if (req.user?.role !== "admin") {
+      return res.status(403).json({ message: "Admins only", status: "error", code: 403 });
+    }
 
     const { orderId } = req.params;
-    const { reason } = req.body || {};
-
-    // admin check 
-    if (req.user?.role !== "admin") {
-      return res.status(403).json({ message: "Admins only" });
-    }
+    const { reason, restock = true } = req.body || {};
 
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       return res.status(400).json({ message: "Invalid orderId", status: "error", code: 400 });
@@ -332,57 +402,94 @@ export const cancelOrderByAdmin = async (req, res) => {
     const order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ message: "Order not found", status: "error", code: 404 });
 
-    // Check if already cancelled or not eligible for cancellation
-    if (order.status === "cancelled") {
-      return res.status(400).json({ message: "Order is already cancelled", status: "error", code: 400 });
-    }
     if (order.status === "delivered") {
-      return res.status(400).json({ message: "Delivered order cannot be cancelled", status: "error", code: 400 });
+      return res.status(400).json({
+        message: "Delivered order cannot be cancelled; use return/refund process",
+        status: "error",
+        code: 400
+      });
     }
-
-    // check shipped status
     if (order.status === "shipped") {
-      return res.status(400).json({ message: "Shipped order requires return process, not cancellation", status: "error", code: 400 });
+      return res.status(400).json({
+        message: "Shipped order requires return process, not cancellation",
+        status: "error",
+        code: 400
+      });
     }
 
-    // Refund لو مدفوع Online (Placeholder)
-    // if (order.payment?.status === "paid" && order.payment?.method !== "cash") {
-    //   await refundGateway(order.payment.txId, order.amounts.grandTotal)
-    // }
+    if (order.status === "pending") {
+     
+      const sessionId = order?.payment?.sessionId;
+      if (sessionId) {
+        try { await releaseReservationBySessionId(sessionId); } catch (e) {
+          console.warn("releaseReservationBySessionId warn:", e?.message);
+        }
+      }
 
-    order.status = "cancelled";
-    order.cancelledAt = new Date();
-    order.cancelledBy = { id: adminId, role: "admin" };
-    if (reason) order.cancelReason = reason || "Cancelled by admin";
+      order.status = "cancelled";
+      order.cancelledAt = new Date();
+      order.cancelledBy = { id: adminId, role: "admin" }; // 👈 ObjectId
+      order.cancelReason = reason || "Cancelled by admin";
+      await order.save();
 
-    await order.save();
+      return res.status(200).json({
+        message: "✅ Order cancelled successfully by admin",
+        status: "success",
+        code: 200,
+        order
+      });
+    }
 
-    return res.status(200).json({
-      message: " ✅ Order cancelled successfully by admin",
-      status: "success",
-      code: 200,
-      order,
+    // paid → Refund (Stripe) + restock
+    if (order.status === "paid") {
+      const out = await refundPaidOrder({
+        orderId,
+        actor: "admin",
+        reason: reason || "Cancelled by admin",
+        restock: !!restock
+      });
+      return res.status(200).json({
+        message: "✅ Order refunded by admin",
+        status: "success",
+        code: 200,
+        order: out.order
+      });
+    }
+
+    return res.status(400).json({
+      message: `Order is ${order.status} and cannot be cancelled/refunded here`,
+      status: "error",
+      code: 400
     });
-  } catch (err) {
+
+  } 
+  catch (err) {
+    console.error("cancelOrderByAdmin error:", err);
     return res.status(500).json({
       message: "Error cancelling order",
       status: "error",
       code: 500,
       error: err.message
     });
+  //    if (err?.code === 121 && err?.errInfo?.details) {
+  //   console.error('Schema details:\n', JSON.stringify(err.errInfo.details, null, 2));
+  // }
   }
 };
+
+
 
 //==============================================================================================
 
 // mark order 
-const assertTransition = (from, to) => {
+export const assertTransition = (from, to) => {
   const allowed = {
     pending:   new Set(["paid", "cancelled"]),
     paid:      new Set(["shipped", "cancelled"]),
     shipped:   new Set(["delivered"]),
     delivered: new Set([]),
     cancelled: new Set([]),
+    refunded: new Set(["paid"]),
   };
   if (!allowed[from]?.has(to)) {
     throw new Error(`Invalid status transition: ${from} → ${to}`);
