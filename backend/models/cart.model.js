@@ -1,16 +1,13 @@
 import mongoose from "mongoose";
-
-// تعريف Cart Schema
+import Book from "../models/Book.js";
 const cartSchema = new mongoose.Schema({
-  // ربط الـ Cart بالـ User
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
-    // ملحوظة: تأكد إن الـ User موجود في الـ database
+    required: true,
+    unique: true
   },
 
-  // المنتجات (الكتب) في الـ Cart
   items: [
     {
       bookId: {
@@ -31,7 +28,6 @@ const cartSchema = new mongoose.Schema({
     }
   ],
 
-  // إجمالي السعر
   totals: {
     subTotal: {
       type: Number,

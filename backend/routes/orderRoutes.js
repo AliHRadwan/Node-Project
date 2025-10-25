@@ -1,17 +1,42 @@
 import express from "express";
-import { getUserOrders , getAllOrders, placeOrder } from "../controllers/orderController.js";// import functions from controller 
-//import { protect } from "../middleware/authMiddleware.js";// import middelware auth
-import { simpleCache, clearCacheOnWrite } from "../middleware/cache.js"; 
+import { simpleCache, clearCacheOnWrite } from "../middleware/cache.js";
+import verifyJWT from "../middleware/verifyJWT.js";// import middelware auth
+import { getUserOrders,
+        getAllOrders,
+        placeOrder,
+        cancelOrderByAdmin,
+        cancelOrderByUser, 
+        markAsPaid,
+        markAsShipped,
+        markAsDelivered } from "../controllers/orderController.js";// import functions from controller  
 
 const router = express.Router();
 
-// route to create order (no caching - always fresh)
-router.post("/"/*, middelware */, clearCacheOnWrite(), placeOrder);
+const requireAdmin = (req, res, next) => {
+  if (req.user?.role === "admin") {
+    return next();
+  }
+  return res.status(403).json({ message: "Admins only" });
+};
 
-// route to get all orders for user (cache for 10 minutes)
-router.get("/"/*, middelware  */, simpleCache(600), getUserOrders);
+// route to create order
+router.post("/",verifyJWT, clearCacheOnWrite(), placeOrder);
 
-// route to get all orders to dashboard (cache for 5 minutes)
-router.get("/all"/*, middelware  */, simpleCache(300), getAllOrders);
+// route to get all orders  for user
+router.get("/", verifyJWT, simpleCache(600), getUserOrders);
+
+router.post("/:orderId/cancel", verifyJWT, cancelOrderByUser);
+
+
+// ----------dashboard admin routes (end points)-----------------------
+
+// route to get all orders to dashboard
+router.get("/admin", verifyJWT,requireAdmin, simpleCache(300), getAllOrders);
+// cancel order by admin
+router.post("/admin/:orderId/cancel", verifyJWT, requireAdmin ,cancelOrderByAdmin); 
+router.post("/admin/:orderId/paid", verifyJWT, requireAdmin, markAsPaid);
+router.post("/admin/:orderId/shipped", verifyJWT, requireAdmin, markAsShipped);
+router.post("/admin/:orderId/delivered", verifyJWT, requireAdmin, markAsDelivered);
+
 
 export default router ;

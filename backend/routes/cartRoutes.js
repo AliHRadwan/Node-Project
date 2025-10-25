@@ -1,37 +1,44 @@
 import express from 'express';
 import * as cartController from '../controllers/cart.controller.js';
-// import { protect } from '../middleware/auth.js'; // هنفعلها لما الـ auth يبقى جاهز
+import verifyJWT from '../middleware/verifyJWT.js';
 
 const router = express.Router();
 
-// ⚠️ مؤقتاً: الـ routes بدون authentication للتجربة
-// لما الـ auth middleware يبقى جاهز، ضيف protect قبل كل controller
+// ============================================
+// 🔓 Routes بدون Authentication (للتجربة فقط)
+// ============================================
+
+// router.get('/test/:userId', cartController.getCart);
+
+// // Body: { userId, items: [{ bookId, qty, priceAtAdd }] }
+// router.post('/test', cartController.addToCart);
+
+// // Body: { userId, bookId, qty }
+// router.put('/test', cartController.updateCartItem);
+
+// router.delete('/test/:userId/:bookId', cartController.removeFromCart);
+
+// router.delete('/test/:userId', cartController.clearCart);
 
 // ============================================
-// GET /api/cart/:userId - عرض الـ Cart
+// 🔒 Routes مع Authentication (للإنتاج)
 // ============================================
-router.get('/:userId', cartController.getCart);
 
-// ============================================
+// GET /api/cart - عرض الـ Cart الخاصة بالـ User المسجل
+router.get('/', verifyJWT, cartController.getCartAuth);
+
 // POST /api/cart - إضافة كتاب للـ Cart
-// ============================================
-// Body: { userId, bookId, quantity }
-router.post('/', cartController.addToCart);
+// Body: { bookId, qty, priceAtAdd }
+router.post('/', verifyJWT, cartController.addToCartAuth);
 
-// ============================================
 // PUT /api/cart - تحديث كمية كتاب
-// ============================================
-// Body: { userId, bookId, quantity }
-router.put('/', cartController.updateCartItem);
+// Body: { bookId, qty }
+router.put('/', verifyJWT, cartController.updateCartItemAuth);
 
-// ============================================
-// DELETE /api/cart/:userId/:bookId - حذف كتاب من الـ Cart
-// ============================================
-router.delete('/:userId/:bookId', cartController.removeFromCart);
+// DELETE /api/cart/:bookId - حذف كتاب من الـ Cart
+router.delete('/:bookId', verifyJWT, cartController.removeFromCartAuth);
 
-// ============================================
-// DELETE /api/cart/:userId - مسح الـ Cart كلها
-// ============================================
-router.delete('/:userId', cartController.clearCart);
+// DELETE /api/cart - مسح الـ Cart كلها
+router.delete('/', verifyJWT, cartController.clearCartAuth);
 
 export default router;

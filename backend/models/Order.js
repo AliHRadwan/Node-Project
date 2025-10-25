@@ -9,19 +9,41 @@ const orderSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
+             enum: [
+              "pending",     // تم إنشاء الطلب ولم يُدفع بعد
+              "paid",        // دُفع بنجاح
+              "processing",  // (اختياري) جاري التجهيز
+              "confirmed",   // (اختياري) تم التأكيد
+              "shipped",     // تم الشحن
+              "delivered",   // تم التسليم
+              "cancelled",   // تم الإلغاء قبل الشحن
+              "refunded"     // تم الاسترجاع بعد الدفع
+            ],
             default: "pending",
         },
+        cancelledAt: { type: Date },
+        cancelledBy: {
+                     id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                     role: { type: String, enum: ["user", "admin"] }
+                    },
+        cancelReason: { type: String },
+        paidAt: { type: Date },
+        shippedAt: { type: Date },
+        deliveredAt: { type: Date },
+        trackingNumber: { type: String },
+        carrier: { type: String },
+        adminNote: { type: String },
+        currency: { type: String, default: "EGP" },
         items: [
             {
-                _id: false, // ⛔ ده أهم سطر
+                _id: false, 
                 bookId: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Book",//reference Book model 
                     required: true,
                 },
                 titleSnapshot: String,
-                price: { type: Number, min: 0, required: true },
+                priceAtAdd: { type: Number, min: 0, required: true , alias: "price" },
                 qty: { type: Number, min: 1, required: true },
             },
         ],
