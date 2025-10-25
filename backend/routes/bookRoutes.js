@@ -6,21 +6,23 @@ import {
   updateBook,
   deleteBook,
 } from "../controllers/bookController.js";
-import { requireAuth, requireAdmin } from "../middleware/auth.js";
+import verifyJWT from "../middleware/verifyJWT.js";
+import roleCheck from "../middleware/roleCheck.js";
 import { validateBody, validateQuery } from "../middleware/validate.js";
 import { createBook as createSchema, updateBook as updateSchema } from "../validators/book.validation.js";
 import { listBooksQuery } from "../validators/book.query.validation.js";
-import  verifyJWT  from "../middleware/verifyJWT.js";
+import { simpleCache, clearCacheOnWrite } from "../middleware/cache.js";
 
 const router = express.Router();
 
-// ✅ validate query for list endpoint
-router.get("/", verifyJWT, validateQuery(listBooksQuery), listBooks);
-router.get("/:id", verifyJWT, getBook);
+// GET routes with caching (30 minutes cache)
+router.get("/", simpleCache(1800), validateQuery(listBooksQuery), listBooks);
+router.get("/:id", simpleCache(1800), getBook);
 
-// ✅ admin-only write operations
-router.post("/", requireAuth, requireAdmin, validateBody(createSchema), createBook);
-router.put("/:id", requireAuth, requireAdmin, validateBody(updateSchema), updateBook);
-router.delete("/:id", requireAuth, requireAdmin, deleteBook);
+// Write routes with cache clearing
+router.post("/", verifyJWT, roleCheck(["admin"]), validateBody(createSchema), clearCacheOnWrite(), createBook);
+router.put("/:id", verifyJWT, roleCheck(["admin"]), validateBody(updateSchema), clearCacheOnWrite(), updateBook);
+router.delete("/:id", verifyJWT, roleCheck(["admin"]), clearCacheOnWrite(), deleteBook);
+
 
 export default router ;
