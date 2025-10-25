@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import Joi from "joi";
 import User from "../models/User.js";
+import sendEmail from "./sendemail.js";
 
 const newpasswordSchema = Joi.object({
   new_password: Joi.string()
@@ -36,6 +37,14 @@ const password_change = async (req, res) => {
 
     user.passwordHash = await bcrypt.hash(new_password, 10);
     await user.save();
+    
+    await sendEmail(
+      req.user.email,
+      "Password Changed Successfully",
+      `<h2>Your password has been changed successfully!</h2>
+       <p>You can now log in with your new password.</p>`
+    );
+
     res.json({ message: "Password updated successfully" });
 
   } catch (err) {

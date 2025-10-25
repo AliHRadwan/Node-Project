@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import Joi from "joi";
 import User from "../models/User.js";
 import Token from "../models/Token.js";
+import sendEmail from "./sendemail.js";
 
 const resetpassSchema = Joi.object({
   password: Joi.string()
@@ -44,6 +45,12 @@ const pass_reset = async (req, res) => {
 
     tokenDoc.used = true;
     await tokenDoc.save();
+      await sendEmail(
+      req.user.email,
+      "Password Reset Successfully",
+      `<h2>Your password has been reset successfully!</h2>
+       <p>You can now log in with your new password.</p>`
+    );
 
     res.status(200).json({ message: "Password reset successfully. You can now log in." });
   } catch (err) {

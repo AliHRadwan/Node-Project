@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Order from "../models/Order.js";
+import sendEmail from "../controllers/sendemail.js";
 //import Book from "../models/Book.js";
 
 //create an order 
@@ -87,6 +88,15 @@ export const placeOrder = async (req, res) => {
 
         // Save to database
         await newOrder.save();
+        
+        
+        await sendEmail(
+            req.user.email,
+            "Order Placed Successfully",
+            `<h2>Thank you for your order!</h2>
+             <p>Your order ID is: ${newOrder._id}</p>
+             <p>Status: ${newOrder.status}</p>`
+        );
 
         // Return response
         res.status(201).json({

@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import Session from "../models/Session.js";
+import sendemail from "../controllers/sendemail.js";
 
 // Login function
 const login = async (req, res) => {
@@ -36,7 +37,8 @@ const login = async (req, res) => {
       token: token,
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
     });
-
+    sendemail(user.email, 'New Login Alert', 'A new login to your account was detected.');
+    
     res.json({
       message: 'Login successful',
       token: token,
