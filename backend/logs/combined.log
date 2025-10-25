@@ -40,3 +40,360 @@
 {"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T02:29:36.074Z"}
 {"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T02:29:36.881Z"}
 {"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T02:29:37.160Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T17:37:23.529Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T17:37:24.219Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T17:37:24.981Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:08:04.597Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:08:05.184Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:08:05.216Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:27:07.661Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:27:08.252Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:27:08.263Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:18:27:29 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T18:27:29.123Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:30:46.964Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:30:47.521Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:30:47.549Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:18:30:53 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T18:30:53.598Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:31:34.125Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:31:34.707Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:31:34.720Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:18:31:39 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T18:31:39.211Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:42:14.089Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:42:14.680Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:42:14.843Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:42:28.218Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:42:28.788Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:42:28.970Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:43:13.785Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:43:14.359Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:43:15.019Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:18:43:16 +0000] \"POST /api/auth/login HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T18:43:16.697Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:45:21.549Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:45:22.103Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:45:22.138Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:18:45:26 +0000] \"POST /api/auth/login HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T18:45:26.337Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:45:43.647Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:45:44.170Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:45:44.197Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:18:45:49 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T18:45:49.083Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:47:46.345Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:47:46.868Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:47:46.936Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:55:52.861Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:55:53.448Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:55:53.453Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:56:45.978Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:56:46.543Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:56:46.627Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:18:56:48 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T18:56:48.971Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:57:37.626Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:57:38.214Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:57:38.493Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:18:57:40 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T18:57:40.988Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:58:02.129Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:58:02.643Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:58:02.694Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:18:58:14 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T18:58:14.934Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T18:59:05.334Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T18:59:05.917Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T18:59:06.543Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:04:10.856Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:04:11.410Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:04:11.441Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:04:16 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T19:04:16.999Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:18:41 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T19:18:41.800Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:21:11.412Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:21:11.961Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:21:11.980Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:21:16 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T19:21:16.129Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:21:34 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-10-25T19:21:34.143Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:21:52 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:21:52.262Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:21:53 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:21:53.554Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:25:05.445Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:25:06.030Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:25:06.360Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:27:46.827Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:27:47.361Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:27:47.410Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:27:55 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:27:55.933Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:28:39 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 200 54 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:28:39.966Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:29:06.529Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:29:07.034Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:29:07.105Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:19:29:13 +0000] \"GET /api/auth/reset-password/281240b4f4667897f188b34102fc718e371b0cb8e917cdcf476f4cc89d134360 HTTP/1.1\" 200 2834 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T19:29:13.661Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:19:29:14 +0000] \"GET /favicon.ico HTTP/1.1\" 404 1131 \"http://localhost:3000/api/auth/reset-password/281240b4f4667897f188b34102fc718e371b0cb8e917cdcf476f4cc89d134360\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T19:29:14.079Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:29:38.490Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:29:39.056Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:29:39.218Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:31:08.561Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:31:09.152Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:31:09.162Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:31:13 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 200 54 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:31:13.630Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:19:31:21 +0000] \"GET /api/auth/reset-password/ec91be710a664445571bc9311bdca5da57bfab9a6e8daade85b374d1a321866b HTTP/1.1\" 200 2834 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T19:31:21.323Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:19:31:36 +0000] \"POST /api/auth/reset-password/ec91be710a664445571bc9311bdca5da57bfab9a6e8daade85b374d1a321866b HTTP/1.1\" 500 24 \"http://localhost:3000/api/auth/reset-password/ec91be710a664445571bc9311bdca5da57bfab9a6e8daade85b374d1a321866b\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T19:31:36.511Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:34:24 +0000] \"POST /api/auth/change-password HTTP/1.1\" 401 29 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:34:24.537Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:34:37 +0000] \"POST /api/auth/change-password HTTP/1.1\" 400 34 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:34:37.578Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:34:46 +0000] \"POST /api/auth/change-password HTTP/1.1\" 200 43 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:34:46.144Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:38:00.530Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:38:01.105Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:38:01.112Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:38:16 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 404 26 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:38:16.426Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:38:57.970Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:38:58.528Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:38:58.721Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:39:02 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 404 26 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:39:02.888Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:39:15 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 404 26 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:39:15.470Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:39:16 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 404 26 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:39:16.004Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:39:16 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 404 26 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:39:16.316Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:39:16 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 404 26 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:39:16.660Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:40:57 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 404 26 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:40:57.277Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:41:10 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 200 54 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:41:10.344Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:19:41:20 +0000] \"GET /api/auth/reset-password/94c283bf05dafd3ee61fb39b82ee19067a2544e073dbfca55d5eafbf519400c0 HTTP/1.1\" 200 2834 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T19:41:20.005Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:19:41:30 +0000] \"POST /api/auth/reset-password/94c283bf05dafd3ee61fb39b82ee19067a2544e073dbfca55d5eafbf519400c0 HTTP/1.1\" 200 62 \"http://localhost:3000/api/auth/reset-password/94c283bf05dafd3ee61fb39b82ee19067a2544e073dbfca55d5eafbf519400c0\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T19:41:30.070Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:42:39.184Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:42:39.725Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:42:39.764Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:42:44 +0000] \"POST /api/auth/forgot-password HTTP/1.1\" 200 54 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:42:44.537Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:19:42:52 +0000] \"GET /api/auth/reset-password/6369363578c35042ea392e90d654b46d322a2b2dc9681f4b8e2781f82f1bb23f HTTP/1.1\" 200 2834 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T19:42:52.208Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:19:43:00 +0000] \"POST /api/auth/reset-password/6369363578c35042ea392e90d654b46d322a2b2dc9681f4b8e2781f82f1bb23f HTTP/1.1\" 200 62 \"http://localhost:3000/api/auth/reset-password/6369363578c35042ea392e90d654b46d322a2b2dc9681f4b8e2781f82f1bb23f\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T19:43:00.631Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:44:36.915Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:44:37.501Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:44:38.086Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:45:45 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:45:45.571Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:46:10 +0000] \"POST /api/auth/change-password HTTP/1.1\" 200 43 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:46:10.028Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:46:45.422Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:46:46.031Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:46:46.337Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:46:51 +0000] \"POST /api/auth/change-password HTTP/1.1\" 200 43 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:46:51.106Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:47:41.660Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:47:42.213Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:47:42.749Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:47:49 +0000] \"POST /api/auth/change-password HTTP/1.1\" 200 43 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:47:49.864Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:50:14.184Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:50:14.765Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:50:15.202Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:50:21 +0000] \"POST /api/auth/change-password HTTP/1.1\" 400 34 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:50:21.801Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [25/Oct/2025:19:50:38 +0000] \"POST /api/auth/change-password HTTP/1.1\" 200 43 \"-\" \"got (https://github.com/sindresorhus/got)\"","timestamp":"2025-10-25T19:50:38.351Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:53:24.618Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:53:25.150Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:53:25.199Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T19:53:32.781Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T19:53:33.345Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T19:53:33.390Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T20:05:37.917Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T20:05:38.521Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T20:05:38.553Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:44:14.509Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:44:15.143Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:44:15.809Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:45:24.208Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:45:24.783Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:45:25.454Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:46:26.114Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:46:26.655Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:46:27.299Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:46:41.335Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:46:41.932Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:46:42.500Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:46:51.486Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:46:52.532Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:46:52.632Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:56:42.580Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:56:43.176Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:56:47.136Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:56:47.717Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:56:48.323Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:58:39.432Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:58:39.986Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:58:40.635Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:58:57.809Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:59:01.290Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:59:01.860Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:59:02.468Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:59:09.897Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:59:10.445Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:59:11.059Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:59:18.621Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:59:19.181Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:59:19.816Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:59:42.150Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T21:59:45.601Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T21:59:46.175Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T21:59:46.771Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:00:04.863Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:00:05.423Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:00:06.055Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:00:10.238Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:00:10.867Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:00:14.716Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:00:24.828Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:00:25.426Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:00:25.993Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:00:39.194Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:00:39.868Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:00:40.358Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:02:13.538Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:02:14.091Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:02:14.708Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:02:18.685Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:02:19.235Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:02:19.876Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:03:48.402Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:03:48.983Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:03:49.587Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:03:55.509Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:03:56.055Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:03:56.670Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:04:07.154Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:04:07.697Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:04:08.338Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:04:17.206Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:04:17.763Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:04:18.365Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:04:35.387Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:04:35.899Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:04:36.583Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:05:01.826Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:05:02.387Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:05:03.022Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:05:17.396Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:05:17.920Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:05:18.598Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:06:09.191Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:06:09.727Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:06:10.388Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:06:55.995Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:06:56.577Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:06:57.184Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:07:28.630Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:07:29.158Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:07:29.827Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:07:36.867Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:07:37.380Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:07:38.030Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:08:07.730Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:08:08.265Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:08:08.927Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:08:16.551Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:08:17.750Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:08:17.799Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:08:42.071Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:08:42.591Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:08:43.289Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:10:09.400Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:10:10.007Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:10:15.907Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:10:16.491Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:10:17.099Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:10:23.576Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:10:24.120Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:10:24.755Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:10:41.167Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:10:41.701Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:10:42.366Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:10:45.777Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:10:46.323Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:10:46.936Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:10:51.655Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:10:52.202Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:10:52.857Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:22:37:11 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T22:37:11.790Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:37:31.803Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:37:32.374Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:37:33.008Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:22:37:40 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T22:37:40.069Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:22:38:15 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T22:38:15.770Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:38:41.768Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:38:42.310Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:38:43.007Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:22:38:58 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T22:38:58.551Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:43:51.027Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:44:00.762Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:44:17.413Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:44:17.948Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:44:18.591Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:44:28.151Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:44:28.744Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:44:29.373Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:45:03.821Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:45:04.372Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:45:05.002Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:46:08.249Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:46:08.815Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:46:09.483Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:46:18.040Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:46:18.579Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:46:19.240Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:47:08.155Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:47:08.727Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:47:09.373Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:47:47.129Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:47:47.714Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:47:51.776Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:47:52.341Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:48:06.486Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:48:07.036Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:48:07.660Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:48:16.651Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:48:17.205Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:48:17.859Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:48:23.109Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:48:23.661Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:48:24.297Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:22:48:44 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T22:48:44.825Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:50:26.014Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:50:26.544Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:50:27.235Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:51:20.461Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:51:20.964Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:51:21.637Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:22:51:29 +0000] \"POST /api/auth/register HTTP/1.1\" 400 32 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T22:51:29.261Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T22:51:45.263Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T22:51:45.762Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T22:51:46.476Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:22:51:49 +0000] \"POST /api/auth/register HTTP/1.1\" 201 179 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T22:51:49.675Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T23:27:21.759Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T23:27:22.366Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T23:27:22.372Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T23:27:48.287Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T23:27:48.852Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T23:27:48.864Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T23:31:58.180Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T23:31:58.732Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T23:31:58.783Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T23:34:03.600Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T23:34:04.149Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T23:34:04.188Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T23:34:45.869Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T23:34:46.382Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T23:34:46.426Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T23:35:19.906Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T23:35:20.433Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T23:35:20.469Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T23:35:26.631Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T23:35:27.168Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T23:35:27.206Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:36:27 +0000] \"GET /api/profile/profile HTTP/1.1\" 401 29 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:36:27.139Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:36:48 +0000] \"POST /api/auth/login HTTP/1.1\" 401 42 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:36:48.566Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:37:12 +0000] \"POST /api/auth/login HTTP/1.1\" 200 398 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:37:12.788Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:37:33 +0000] \"GET /api/profile/profile HTTP/1.1\" 200 250 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:37:33.329Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:40:20 +0000] \"GET /api/auth/verify/faa7d87fc1baa303b133fd767578031ea9efd507156b64a87f2d2f8f6a1402b7 HTTP/1.1\" 200 63 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T23:40:20.908Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:40:21 +0000] \"GET /favicon.ico HTTP/1.1\" 404 1131 \"http://localhost:3000/api/auth/verify/faa7d87fc1baa303b133fd767578031ea9efd507156b64a87f2d2f8f6a1402b7\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T23:40:21.360Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:40:35 +0000] \"POST /api/auth/login HTTP/1.1\" 200 408 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:40:35.296Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:41:03 +0000] \"GET /api/profile/profie HTTP/1.1\" 404 1128 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:41:03.310Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:41:23 +0000] \"GET /api/profile/profile HTTP/1.1\" 200 258 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:41:23.006Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:45:27 +0000] \"POST /api/profile/updateprofile HTTP/1.1\" 404 1142 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:45:27.652Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T23:45:37.917Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T23:45:38.508Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T23:45:38.632Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:45:40 +0000] \"POST /api/profile/updateprofile HTTP/1.1\" 404 1142 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:45:40.074Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:45:51 +0000] \"PUT /api/profile/updateprofile HTTP/1.1\" 200 218 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:45:51.732Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:46:00 +0000] \"PUT /api/profile/updateprofile HTTP/1.1\" 200 216 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:46:00.273Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:46:34 +0000] \"PUT /api/profile/updateprofile HTTP/1.1\" 200 219 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:46:34.031Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:46:55 +0000] \"PUT /api/profile/updateprofile HTTP/1.1\" 400 34 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:46:55.450Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:47:52 +0000] \"DELETE /api/profile/deleteprofile HTTP/1.1\" 500 24 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:47:52.451Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:48:29 +0000] \"DELETE /api/profile/deleteprofile HTTP/1.1\" 200 42 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:48:29.347Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:23:49:00 +0000] \"POST /api/auth/login HTTP/1.1\" 401 37 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-25T23:49:00.608Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T23:50:40.097Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T23:50:40.639Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T23:50:40.679Z"}

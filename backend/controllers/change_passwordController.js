@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import Joi from "joi";
 import User from "../models/User.js";
-import sendEmail from "./sendemail.js";
+import sendEmail from "../services/sendemail.js";
 
 const newpasswordSchema = Joi.object({
   new_password: Joi.string()
@@ -38,12 +38,41 @@ const password_change = async (req, res) => {
     user.passwordHash = await bcrypt.hash(new_password, 10);
     await user.save();
     
-    await sendEmail(
-      req.user.email,
-      "Password Changed Successfully",
-      `<h2>Your password has been changed successfully!</h2>
-       <p>You can now log in with your new password.</p>`
-    );
+  await sendEmail(
+    req.user.email,
+    "✅ Password Changed Successfully",
+    `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 10px; padding: 20px; background-color: #fafafa;">
+      <h2 style="color: #2c3e50; text-align: center;">✅ Password Changed Successfully</h2>
+      <p style="font-size: 16px; color: #555;">
+        Hello <strong>${user.name || "User"}</strong>,
+      </p>
+      <p style="font-size: 15px; color: #555;">
+        This is a confirmation that your account password was successfully changed.
+      </p>
+      <p style="font-size: 15px; color: #555;">
+        You can now sign in using your new password.
+      </p>
+
+      <div style="text-align: center; margin: 25px 0;">
+        <a href="https://yourapp.com/login" target="_blank" 
+          style="background-color: #28a745; color: white; text-decoration: none; padding: 12px 25px; border-radius: 5px; display: inline-block; font-weight: bold;">
+          Go to Login
+        </a>
+      </div>
+
+      <p style="font-size: 14px; color: #777;">
+        If you did not make this change, please 
+        <a href="https://yourapp.com/reset-password" style="color: #e74c3c; font-weight: bold; text-decoration: none;">reset your password immediately</a>.
+      </p>
+
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 25px 0;">
+      <p style="font-size: 12px; color: #aaa; text-align: center;">
+        © ${new Date().getFullYear()} Your Company Name. All rights reserved.
+      </p>
+    </div>
+    `
+  );
 
     res.json({ message: "Password updated successfully" });
 

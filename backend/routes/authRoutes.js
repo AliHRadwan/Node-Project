@@ -119,12 +119,4 @@ router.post("/change-password", verifyJWT, changePassword);
 router.post("/login", login);
 router.post("/logout", verifyJWT, logout);
 
-// Simple protected route
-router.get("/protected", verifyJWT, (req, res) => {
-  res.json({ 
-    message: "Access granted!",
-    user: req.user
-  });
-});
-
 export default router;
