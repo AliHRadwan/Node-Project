@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
+import { rateLimit } from "express-rate-limit";
 import connectDB from "./config/db.js";
 import { winstonLogger, winstonStream } from "./config/logger.js";
 import cors from "cors";
@@ -19,10 +20,19 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import downloadRoutes from "./routes/downloadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	limit: 100, // Limit each IP to 100 requests per window
+	standardHeaders: 'draft-8',
+	legacyHeaders: false,
+	ipv6Subnet: 56,
+})
+
 dotenv.config();
 connectDB();
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(limiter);
 app.use(cors());
 app.use(express.json());
 app.use(sessionMiddleware);
