@@ -1,6 +1,6 @@
-import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js";
+import express from "express";
+import connectDB from "./models/db.js";
 import { winstonLogger, winstonStream } from "./config/logger.js";
 import cors from "cors";
 import path from "path";
@@ -13,28 +13,34 @@ import bookRoutes from "./routes/bookRoutes.js";
 import authorRoutes from "./routes/authorRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
+import paymentRoutes from "./routes/payment.routes.js";
+import paymentWebhook from "./webhooks/stripe.webhook.js";
+import { verifyEmailTransport } from "./services/mailer.js";
+
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 connectDB();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-app.use(morgan("combined", { stream: winstonStream }));
-
 app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
 app.use(sessionMiddleware);
+
+verifyEmailTransport();
+app.use(morgan("combined", { stream: winstonStream }));
+app.post("/webhooks/stripe", express.raw({ type: "application/json" }), paymentWebhook);
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/authors", authorRoutes);
 app.use("/api/categories", categoryRoutes);
-app.use("/api/cart", cartRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/payments", paymentRoutes);
+
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the Node Project API" });

@@ -18,6 +18,7 @@ const BookSchema = new Schema(
       min: 0,
       validate: { validator: Number.isInteger, message: "Stock must be an integer" },
     },
+    reserved: { type: Number, required: true, min: 0, default: 0 },
     ratingAvg: { type: Number, min: 0, max: 5, default: 0 },
     ratingCount: { type: Number, min: 0, default: 0 },
     image: ImageSchema,
@@ -54,6 +55,6 @@ BookSchema.index({ isActive: 1, createdAt: -1 });
 
 //  Optional: sort + filter by rating or stock in future features
 BookSchema.index({ ratingAvg: -1 });
-BookSchema.index({ stock: 1 });
+BookSchema.index({ stock: 1, reserved: 1 });
 
 export default mongoose.model("Book", BookSchema);
