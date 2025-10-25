@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
-import connectDB from "./models/db.js";
+import connectDB from "./config/db.js";
 import { winstonLogger, winstonStream } from "./config/logger.js";
 import cors from "cors";
 import morgan from "morgan";
