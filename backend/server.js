@@ -19,6 +19,8 @@ import { verifyEmailTransport } from "./services/mailer.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import downloadRoutes from "./routes/downloadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import { connectRedis } from "./config/redis.js";
+import chatRoutes from "./routes/chatRoutes.groq.js";
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
@@ -28,8 +30,8 @@ const limiter = rateLimit({
 	ipv6Subnet: 56,
 })
 
-dotenv.config();
 connectDB();
+connectRedis();
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(limiter);
@@ -52,6 +54,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/download", downloadRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the Node Project API" });
