@@ -40,3 +40,15 @@
 {"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T02:29:36.074Z"}
 {"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T02:29:36.881Z"}
 {"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T02:29:37.160Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T02:57:52.026Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T02:57:52.832Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T02:57:53.138Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T15:52:41.342Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T15:52:41.951Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T15:52:42.238Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:15:54:00 +0000] \"GET / HTTP/1.1\" 200 45 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T15:54:00.380Z"}
+{"level":"http","message":"::1 - - [25/Oct/2025:15:54:00 +0000] \"GET /favicon.ico HTTP/1.1\" 404 1010 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-25T15:54:00.527Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-25T17:41:48.197Z"}
+{"level":"info","message":"Server running on: http://localhost:3000","timestamp":"2025-10-25T17:41:48.207Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-25T17:41:50.432Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-25T17:41:51.736Z"}

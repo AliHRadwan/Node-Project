@@ -1,4 +1,5 @@
 import { createClient } from 'redis';
+import { winstonLogger } from "./logger.js";
 
 // Redis client configuration
 const redisClient = createClient({
@@ -14,7 +15,7 @@ const redisClient = createClient({
       // End reconnecting after a specific timeout and flush all commands with a individual error
       return new Error('Retry time exhausted');
     }
-    if (options.attempt > 10) {
+    if (options.attempt > 5) {
       // End reconnecting with built in error
       return undefined;
     }
@@ -25,19 +26,19 @@ const redisClient = createClient({
 
 // Redis client event handlers
 redisClient.on('connect', () => {
-  console.log('✅ Redis client connected');
+  winstonLogger.info("Redis client connected");
 });
 
 redisClient.on('ready', () => {
-  console.log('✅ Redis client ready');
+  winstonLogger.info("Redis client ready");
 });
 
 redisClient.on('error', (err) => {
-  console.error('❌ Redis client error:', err);
+  winstonLogger.error("Redis client error:", err);
 });
 
 redisClient.on('end', () => {
-  console.log('📴 Redis client disconnected');
+  winstonLogger.info("Redis client disconnected");
 });
 
 // Connect to Redis
@@ -45,8 +46,7 @@ const connectRedis = async () => {
   try {
     await redisClient.connect();
   } catch (error) {
-    console.error('❌ Failed to connect to Redis:', error);
-    // Don't throw error - allow app to continue without Redis
+    winstonLogger.error("Failed to connect to Redis:", error);
   }
 };
 
@@ -63,7 +63,7 @@ const cacheUtils = {
       }
       return true;
     } catch (error) {
-      console.error('❌ Redis SET error:', error);
+      winstonLogger.error("Redis SET error:", error);
       return false;
     }
   },
@@ -74,7 +74,7 @@ const cacheUtils = {
       const value = await redisClient.get(key);
       return value ? JSON.parse(value) : null;
     } catch (error) {
-      console.error('❌ Redis GET error:', error);
+      winstonLogger.error("Redis GET error:", error);
       return null;
     }
   },
@@ -85,7 +85,7 @@ const cacheUtils = {
       await redisClient.del(key);
       return true;
     } catch (error) {
-      console.error('❌ Redis DEL error:', error);
+      winstonLogger.error("Redis DEL error:", error);
       return false;
     }
   },
@@ -99,7 +99,7 @@ const cacheUtils = {
       }
       return true;
     } catch (error) {
-      console.error('❌ Redis DEL PATTERN error:', error);
+      winstonLogger.error("Redis DEL PATTERN error:", error);
       return false;
     }
   },
@@ -110,7 +110,7 @@ const cacheUtils = {
       const result = await redisClient.exists(key);
       return result === 1;
     } catch (error) {
-      console.error('❌ Redis EXISTS error:', error);
+      winstonLogger.error("Redis EXISTS error:", error);
       return false;
     }
   },
@@ -120,7 +120,7 @@ const cacheUtils = {
     try {
       return await redisClient.ttl(key);
     } catch (error) {
-      console.error('❌ Redis TTL error:', error);
+      winstonLogger.error("Redis TTL error:", error);
       return -1;
     }
   }
