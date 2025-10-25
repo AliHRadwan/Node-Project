@@ -3,7 +3,6 @@ import express from "express";
 import connectDB from "./models/db.js";
 import { winstonLogger, winstonStream } from "./config/logger.js";
 import cors from "cors";
-import path from "path";
 import morgan from "morgan";
 import authRoutes from "./routes/authRoutes.js";
 import sessionMiddleware from "./middleware/sessionConfig.js";
@@ -16,7 +15,7 @@ import reviewRoutes from "./routes/reviewRoutes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 import paymentWebhook from "./webhooks/stripe.webhook.js";
 import { verifyEmailTransport } from "./services/mailer.js";
-
+import uploadRoutes from "./routes/uploadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
@@ -40,6 +39,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/upload", uploadRoutes);
 
 
 app.get("/", (req, res) => {
