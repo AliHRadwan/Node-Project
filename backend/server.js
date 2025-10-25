@@ -1,6 +1,9 @@
+// ✅ Load environment variables first
+import "dotenv/config";
+
 import express from "express";
-import dotenv from "dotenv";
 import connectDB from "./models/db.js";
+import { connectRedis } from "./config/redis.js";
 import cors from "cors";
 import path from "path";
 import morgan from "morgan";
@@ -11,10 +14,15 @@ import cartRoutes from "./routes/cartRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import authorRoutes from "./routes/authorRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import chatRoutes from "./routes/chatRoutes.groq.js";
 
 
-dotenv.config();
+
+// ✅ Connect to MongoDB (optional if not needed right now)
 connectDB();
+
+// ✅ Connect to Redis
+connectRedis();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,6 +38,9 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/authors", authorRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/chat", chatRoutes);
+
+console.log("✅ server file:", import.meta.url);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the Node Project API" });
