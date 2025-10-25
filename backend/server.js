@@ -23,6 +23,7 @@ import downloadRoutes from "./routes/downloadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { connectRedis } from "./config/redis.js";
 import chatRoutes from "./routes/chatRoutes.groq.js";
+import logsCleaner from "./utils/cron-jobs.js";
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
@@ -35,6 +36,7 @@ const limiter = rateLimit({
 dotenv.config();
 connectDB();
 connectRedis();
+logsCleaner();
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(limiter);
