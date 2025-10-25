@@ -16,6 +16,7 @@ import paymentRoutes from "./routes/payment.routes.js";
 import paymentWebhook from "./webhooks/stripe.webhook.js";
 import { verifyEmailTransport } from "./services/mailer.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import downloadRoutes from "./routes/downloadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
@@ -40,7 +41,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/upload", uploadRoutes);
-
+app.use("/api/download", downloadRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the Node Project API" });
