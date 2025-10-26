@@ -1,37 +1,64 @@
 import crypto from "crypto";
 import Token from "../models/Token.js";
 import User from "../models/User.js";
-import sendEmail from "./sendemail.js";
+import sendEmail from "../services/sendemail.js";
 
 const pass_forgot = async (req, res) => {
   try {
-    const { email } = req.body; 
+    const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user)
       return res.status(404).json({ error: "User Not Found" });
 
-    const reset_token = crypto.randomBytes(32).toString("hex"); 
+    const reset_token = crypto.randomBytes(32).toString("hex");
     const hashed_token = crypto.createHash("sha256").update(reset_token).digest("hex");
 
     await Token.create({
       userId: user._id,
       type: "reset",
-      tokenHash:hashed_token,
+      tokenHash: hashed_token,
       expiresAt: new Date(Date.now() + 15 * 60 * 1000),
       used: false,
     });
 
-    const resetLink = `http://localhost:3000/api/auth/reset-password/${reset_token}`;    
-    
+    const resetLink = `http://localhost:3000/api/auth/reset-password/${reset_token}`;
+
 
     const html = `
-      <h2>Password Reset</h2>
-      <p>Click the link below to reset your password:</p>
-      <a href="${resetLink}" target="_blank">${resetLink}</a>
-      <p>This link will expire in 15 minutes.</p>
-    `;
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 10px; padding: 20px; background-color: #fafafa;">
+      <h2 style="color: #2c3e50; text-align: center;">🔐 Password Reset Request</h2>
+      <p style="font-size: 16px; color: #555;">
+        Hello <strong>${user.name || "User"}</strong>,
+      </p>
+      <p style="font-size: 15px; color: #555;">
+        We received a request to reset your account password. If you made this request, please click the button below to set a new password.
+      </p>
 
-    await sendEmail(user.email, "Password Reset", html);
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${resetLink}" target="_blank" 
+          style="background-color: #007bff; color: white; text-decoration: none; padding: 12px 25px; border-radius: 5px; display: inline-block; font-weight: bold;">
+          Reset Password
+        </a>
+      </div>
+
+      <p style="font-size: 14px; color: #777;">
+        This link will expire in <strong>15 minutes</strong> for security reasons.
+      </p>
+
+      <p style="font-size: 14px; color: #777;">
+        If you didn’t request this change, you can safely ignore this email — your account will remain secure.
+      </p>
+
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 25px 0;">
+
+      <p style="font-size: 12px; color: #aaa; text-align: center;">
+        © ${new Date().getFullYear()} Your Company Name. All rights reserved.
+      </p>
+    </div>
+  `;
+
+    await sendEmail(user.email, "Password Reset Request", html);
+
 
     res.json({ message: "Reset Email Has been sent to your email." });
   } catch (err) {

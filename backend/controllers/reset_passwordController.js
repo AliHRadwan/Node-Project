@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import Joi from "joi";
 import User from "../models/User.js";
 import Token from "../models/Token.js";
+import sendEmail from "../services/sendemail.js";
 
 const resetpassSchema = Joi.object({
   password: Joi.string()
@@ -44,6 +45,27 @@ const pass_reset = async (req, res) => {
 
     tokenDoc.used = true;
     await tokenDoc.save();
+    
+    await sendEmail(
+      user.email,
+      "Password Reset Successfully",
+      ` <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h2 style="color: #2c3e50;">Password Reset Successful</h2>
+        <p>Hello ${user.name || "User"},</p>
+        <p>Your password has been <strong>reset successfully</strong>! 🎉</p>
+        <p>You can now log in with your new password:</p>
+        <a href="https://yourapp.com/login" 
+          style="background-color: #2ecc71; color: white; padding: 10px 16px; 
+                  text-decoration: none; border-radius: 5px; font-weight: bold;">
+          Log in Now
+        </a>
+        <br /><br />
+        <p>If you didn’t perform this action, please contact our support team immediately.</p>
+        <hr style="border: none; border-top: 1px solid #ccc; margin-top: 20px;" />
+        <small style="color: #888;">This is an automated message, please do not reply.</small>
+      </div>
+      `
+    );
 
     res.status(200).json({ message: "Password reset successfully. You can now log in." });
   } catch (err) {
