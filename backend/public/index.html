@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore</title>
+</head>
+<style>
+    body {
+        font-family: sans-serif;
+        padding: 20px;
+    }
+
+    #welcome-msg {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: 50px 0;
+    }
+
+    #notifications {
+        list-style: none;
+        padding: 0;
+    }
+
+    #notifications li {
+        background: #f0f7ff;
+        border: 1px solid #b3d7ff;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+
+    #status {
+        font-style: italic;
+    }
+</style>
+
+<body>
+    <div id="welcome-msg">
+        <h1>Welcome, everyone, to the greatest Bookstore ever.</h1>
+        <h4 id="server-msg"></h4>
+    </div>
+
+    <div>
+        <h3>Bookstore Notifications</h3>
+        <p>Status: <span id="status">Connecting...</span></p>
+
+        <ul id="notifications"></ul>
+    </div>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:3000");
+        
+        const messageElement = document.getElementById("server-msg");
+        const statusElement = document.getElementById("status");
+        const notificElement = document.getElementById("notifications");
+
+        socket.onopen = (event) => {
+            console.log("WebSocket connection established.");
+            statusElement.textContent = "Connected";
+        };
+
+        socket.onmessage = (event) => {
+            console.log("Message received from server:", event.data);
+
+            const data = JSON.parse(event.data);
+
+            if (data.type === "NEW_BOOK") {
+                const book = data.payload;
+                
+                const newItem = document.createElement("li");
+                newItem.innerHTML = `
+                    <strong>New Book Published!</strong><br>
+                    Title: ${book.title}<br>
+                    Author: ${book.author}
+                `;
+                notificElement.prepend(newItem);
+            }
+            
+            if (data.type === "WELCOME") {
+                const message = data.message;
+                messageElement.innerText = message;
+            }
+        };
+
+        socket.onclose = (event) => {
+            console.log("WebSocket connection closed.");
+            statusElement.textContent = "WebSocket disconnected.";
+        };
+
+        socket.onerror = (error) => {
+            console.error("WebSocket Error:", error);
+            statusElement.textContent = "Connection Error";
+        };
+
+    </script>
+</body>
+
+</html>

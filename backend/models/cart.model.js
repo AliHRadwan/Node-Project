@@ -39,7 +39,6 @@ const cartSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Method لحساب الـ Total Price
 cartSchema.methods.calculateTotal = function () {
   this.totals.subTotal = this.items.reduce((total, item) => {
     return total + (item.priceAtAdd * item.qty);

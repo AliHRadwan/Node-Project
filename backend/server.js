@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
+import { createServer } from "http";
+import { wssInit } from "./utils/websocket.js"
 import { rateLimit } from "express-rate-limit";
 import connectDB from "./config/db.js";
 import { winstonLogger, winstonStream } from "./config/logger.js";
@@ -22,23 +24,31 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { connectRedis } from "./config/redis.js";
 import chatRoutes from "./routes/chatRoutes.groq.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import logsCleaner from "./utils/cron-jobs.js";
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	limit: 100, // Limit each IP to 100 requests per window
-	standardHeaders: 'draft-8',
+	standardHeaders: "draft-8",
 	legacyHeaders: false,
 	ipv6Subnet: 56,
 })
 
+dotenv.config();
 connectDB();
 connectRedis();
+logsCleaner();
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(limiter);
 app.use(cors());
+
 app.use(express.json());
 app.use(sessionMiddleware);
+app.use(express.static("public"));
+
+const httpServer = createServer(app);
+wssInit(httpServer);
 
 verifyEmailTransport();
 app.use(morgan("combined", { stream: winstonStream }));
@@ -57,10 +67,6 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/download", downloadRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/profile", profileRoutes);
-
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Welcome to the Node Project API" });
-});
 
 app.use(notFound);
 app.use(errorHandler);
