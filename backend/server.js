@@ -23,55 +23,62 @@ import downloadRoutes from "./routes/downloadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { connectRedis } from "./config/redis.js";
 import chatRoutes from "./routes/chatRoutes.groq.js";
-import startLogCleaner from "./utils/cron-jobs.js";
+import startLogsCleanerSchedule from "./utils/cron-jobs.js";
 import profileRoutes from "./routes/profileRoutes.js";
-import logsCleaner from "./utils/cron-jobs.js";
 
-const limiter = rateLimit({
+const generalAPILimiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	limit: 100, // Limit each IP to 100 requests per window
 	standardHeaders: "draft-8",
 	legacyHeaders: false,
-	ipv6Subnet: 56,
-})
+	message: "Too many requests from this IP, please try again after 15 minutes."
+});
+
+const authAPILimiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	limit: 10, // Limit each IP to 10 auth attempts per window
+	standardHeaders: "draft-8",
+	legacyHeaders: false,
+	message: "Too many authentication attempts from this IP, please try again after 15 minutes."
+});
 
 dotenv.config();
 connectDB();
 connectRedis();
-startLogCleaner();
+startLogsCleanerSchedule();
+verifyEmailTransport();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.use(limiter);
-app.use(cors());
 
+app.use(cors());
 app.use(express.json());
 app.use(sessionMiddleware);
-app.use(express.static("public"));
-
-const httpServer = createServer(app);
-wssInit(httpServer);
-
-verifyEmailTransport();
 app.use(morgan("combined", { stream: winstonStream }));
+
+
+app.use(express.static("public"));
 app.post("/webhooks/stripe", express.raw({ type: "application/json" }), paymentWebhook);
 
-
-app.use("/api/auth", authRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/books", bookRoutes);
-app.use("/api/authors", authorRoutes);
-app.use("/api/categories", categoryRoutes);
-app.use("/api/reviews", reviewRoutes);
-app.use("/api/cart", cartRoutes);
-app.use("/api/payments", paymentRoutes);
-app.use("/api/upload", uploadRoutes);
-app.use("/api/download", downloadRoutes);
-app.use("/api/chat", chatRoutes);
-app.use("/api/profile", profileRoutes);
+app.use("/api/auth", authAPILimiter, authRoutes);
+app.use("/api/orders", generalAPILimiter, orderRoutes);
+app.use("/api/books", generalAPILimiter, bookRoutes);
+app.use("/api/authors", generalAPILimiter, authorRoutes);
+app.use("/api/categories", generalAPILimiter, categoryRoutes);
+app.use("/api/reviews", generalAPILimiter, reviewRoutes);
+app.use("/api/cart", generalAPILimiter, cartRoutes);
+app.use("/api/payments", generalAPILimiter, paymentRoutes);
+app.use("/api/upload", generalAPILimiter, uploadRoutes);
+app.use("/api/download", generalAPILimiter, downloadRoutes);
+app.use("/api/chat", generalAPILimiter, chatRoutes);
+app.use("/api/profile", generalAPILimiter, profileRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 
-httpServer.listen(PORT, () => { // <-- SOLUTION
+const httpServer = createServer(app);
+wssInit(httpServer);
+
+httpServer.listen(PORT, () => {
 	winstonLogger.info(`Server running on: http://localhost:${PORT}`);
 });
