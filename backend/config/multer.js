@@ -3,6 +3,7 @@ import multerS3 from "multer-s3";
 import path from "path";
 import s3 from "./s3.js";
 import dotenv from "dotenv";
+import { winstonLogger } from "./logger.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ export const multerUploadImage = multer({
     bucket: process.env.AWS_S3_BUCKET,
     key: (req, file, cb) => {
       cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+      winstonLogger.info(`Image was uploaded: ${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
     },
     contentType: multerS3.AUTO_CONTENT_TYPE,
   }),
@@ -53,6 +55,7 @@ export const multerUploadBook = multer({
     bucket: process.env.AWS_S3_BUCKET,
     key: (req, file, cb) => {
       cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+      winstonLogger.info(`Book was uploaded: ${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
     },
     contentType: multerS3.AUTO_CONTENT_TYPE,
   }),

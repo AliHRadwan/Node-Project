@@ -1,22 +1,22 @@
 import express from "express";
+import dotenv from "dotenv";
+import { winstonLogger } from "../config/logger.js";
+
 const router = express.Router();
+dotenv.config();
 
 const API_KEY = process.env.GROQ_API_KEY;
 const MODEL  = process.env.GROQ_MODEL || "llama-3.2-3b-preview";
 
 // Debug — prove which file is active
-console.log("🔌 [GROQ] chat route loaded with model:", MODEL);
-console.log("🔑 [GROQ] key present?", Boolean(API_KEY));
-console.log("🔑 [GROQ] key length:", API_KEY ? API_KEY.length : 0);
-console.log("📄 [GROQ] route file:", import.meta.url);
+winstonLogger.info(`[GROQ] chat route loaded with model: ${MODEL}`);
 
 // quick health endpoint so we can verify which route is mounted
 router.get("/_whoami", (req, res) => res.json({ route: "groq", model: MODEL }));
 
 router.post("/", async (req, res) => {
-  console.log("🚏 [GROQ] /api/chat hit", new Date().toISOString());
-  console.log("🔑 [GROQ] API_KEY available:", Boolean(API_KEY));
-  console.log("📝 [GROQ] Request body:", req.body);
+  winstonLogger.info("[GROQ] /api/chat hit", new Date().toISOString());
+  
   try {
     const { message } = req.body || {};
     if (!message) return res.status(400).json({ error: "message is required" });

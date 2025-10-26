@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const ImageSchema = new Schema(
-  { url: String, key: String },
+  { url: { type: String, required: true}, key: String },
   { _id: false }
 );
 
@@ -16,13 +16,12 @@ const BookSchema = new Schema(
       type: Number,
       required: true,
       min: 0,
-      validate: { validator: Number.isInteger, message: "Stock must be an integer" },
     },
-    reserved: { type: Number, required: true, min: 0, default: 0 },
+    reserved: { type: Number, min: 0, default: 0 },
     ratingAvg: { type: Number, min: 0, max: 5, default: 0 },
     ratingCount: { type: Number, min: 0, default: 0 },
     image: ImageSchema,
-    pdfUrl: { type: String, match: [/^https?:\/\/.+/, "Invalid URL format"] },
+    pdfUrl: { type: String, required: true },
     isbn: String,
     sku: String,
     publisher: String,
