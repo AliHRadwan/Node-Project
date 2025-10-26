@@ -23,6 +23,7 @@ import downloadRoutes from "./routes/downloadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { connectRedis } from "./config/redis.js";
 import chatRoutes from "./routes/chatRoutes.groq.js";
+import profileRoutes from "./routes/profileRoutes.js";
 import logsCleaner from "./utils/cron-jobs.js";
 
 const limiter = rateLimit({
@@ -65,6 +66,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/download", downloadRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/profile", profileRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
