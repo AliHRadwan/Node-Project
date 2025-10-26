@@ -9,12 +9,13 @@ const sessionConfig = session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
+    mongoUrl: process.env.MONGO_URI,
     collectionName: 'sessions'
   }),
   cookie: {
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 });
+
 
 export default sessionConfig;
