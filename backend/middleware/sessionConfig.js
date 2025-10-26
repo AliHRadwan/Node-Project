@@ -1,13 +1,15 @@
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import dotenv from "dotenv";
 
-// Simple session configuration
+dotenv.config();
+
 const sessionConfig = session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/your-database',
+    mongoUrl: process.env.MONGODB_URI,
     collectionName: 'sessions'
   }),
   cookie: {
