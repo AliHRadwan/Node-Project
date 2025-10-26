@@ -12,9 +12,10 @@
         padding: 20px;
     }
 
-    #welcome-msg {
+    .container {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
         width: 100%;
         margin: 50px 0;
     }
@@ -38,12 +39,12 @@
 </style>
 
 <body>
-    <div id="welcome-msg">
+    <div class="container">
         <h1>Welcome, everyone, to the greatest Bookstore ever.</h1>
         <h4 id="server-msg"></h4>
     </div>
 
-    <div>
+    <div class="container">
         <h3>Bookstore Notifications</h3>
         <p>Status: <span id="status">Connecting...</span></p>
 

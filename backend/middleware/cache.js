@@ -1,4 +1,5 @@
 import cacheUtils from '../config/redis.js';
+import { winstonLogger } from "../config/logger.js";
 
 // Simple cache middleware for GET requests only
 export const simpleCache = (expireInSeconds = 3600) => {
@@ -15,7 +16,7 @@ export const simpleCache = (expireInSeconds = 3600) => {
       // Check cache
       const cachedData = await cacheUtils.get(cacheKey);
       if (cachedData) {
-        console.log(`✅ Cache hit for: ${req.originalUrl}`);
+        winstonLogger.info(`Cache hit for: ${req.originalUrl}`);
         return res.json(cachedData);
       }
 
@@ -28,10 +29,10 @@ export const simpleCache = (expireInSeconds = 3600) => {
         if (res.statusCode === 200) {
           cacheUtils.set(cacheKey, data, expireInSeconds)
             .then(() => {
-              console.log(`✅ Cached: ${req.originalUrl}`);
+              winstonLogger.info(`Cached: ${req.originalUrl}`);
             })
             .catch(error => {
-              console.error('❌ Failed to cache:', error);
+              winstonLogger.error(`Failed to cache: ${error}`);
             });
         }
         
@@ -41,7 +42,7 @@ export const simpleCache = (expireInSeconds = 3600) => {
 
       next();
     } catch (error) {
-      console.error('❌ Cache middleware error:', error);
+      winstonLogger.error(`Cache middleware error: ${error}`);
       next(); // Continue without caching
     }
   };
@@ -60,10 +61,10 @@ export const clearCacheOnWrite = () => {
         // Clear all cache (simple approach)
         cacheUtils.delPattern('cache:*')
           .then(() => {
-            console.log(`✅ Cache cleared after ${req.method} operation`);
+            winstonLogger.info(`Cache cleared after ${req.method} operation`);
           })
           .catch(error => {
-            console.error('❌ Failed to clear cache:', error);
+            winstonLogger.info(`Failed to clear cache: ${error}`);
           });
       }
       

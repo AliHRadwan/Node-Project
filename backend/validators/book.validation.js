@@ -5,18 +5,18 @@ const objectId = Joi.string().hex().length(24);
 const url = Joi.string().uri({ scheme: ["http", "https"] });
 
 const imageSchema = Joi.object({
-  url: url.required(),
+  url: Joi.string().trim().min(5).max(200).required(),
   key: Joi.string().trim().optional(),
 });
 
-export const createBook = Joi.object({
+export const createBookSchema = Joi.object({
   title: Joi.string().trim().min(1).max(200).required(),
   description: Joi.string().trim().max(2000).allow("", null),
   price: Joi.number().min(0).required(),
   stock: Joi.number().integer().min(0).required(),
 
-  pdfUrl: url.optional(),
-  image: imageSchema.optional(),
+  pdfUrl: Joi.string().trim().min(5).max(200).required(),
+  image: imageSchema,
 
   isbn: Joi.string().trim().max(64).optional(),
   sku: Joi.string().trim().max(64).optional(),
@@ -34,7 +34,7 @@ export const createBook = Joi.object({
   ratingCount: Joi.number().integer().min(0).optional(),
 });
 
-export const updateBook = Joi.object({
+export const updateBookSchema = Joi.object({
   title: Joi.string().trim().min(1).max(200),
   description: Joi.string().trim().max(2000).allow("", null),
   price: Joi.number().min(0),

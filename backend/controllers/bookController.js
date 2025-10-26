@@ -98,7 +98,8 @@ export const getBook = async (req, res) => {
 export const createBook = async (req, res) => {
   try {
     const newBook = req.body;
-    if (!newBook.title || newBook.price === undefined || newBook.stock === undefined || newBook.pdfUrl === undefined || newBook.image.url === undefined) {
+    
+    if (!newBook.title || !newBook.price || !newBook.stock || !newBook.pdfUrl || !newBook.image.url) {
       return res.status(400).json({ message: "title, price, stock, pdfUrl, and image.url are required" });
     }
     const book = await Book.create(newBook);
