@@ -5,8 +5,8 @@ import roleCheck from "../middleware/roleCheck.js";
 
 const router = express.Router();
 
-router.post("/image", verifyJWT, roleCheck(["author"]), uploadImage);
+router.post("/image/:bookId", verifyJWT, roleCheck(["author", "admin"]), uploadImage);
 
-router.post("/book", verifyJWT, roleCheck(["author"]), uploadBook);
+router.post("/book/:bookId", verifyJWT, roleCheck(["author", "admin"]), uploadBook);
 
 export default router;

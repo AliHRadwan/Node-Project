@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const ImageSchema = new Schema(
-  { url: { type: String, required: true}, key: String },
+  { url: { type: String, default: "" }, key: String },
   { _id: false }
 );
 
@@ -21,15 +21,21 @@ const BookSchema = new Schema(
     ratingAvg: { type: Number, min: 0, max: 5, default: 0 },
     ratingCount: { type: Number, min: 0, default: 0 },
     image: ImageSchema,
-    pdfUrl: { type: String, required: true },
-    isbn: String,
-    sku: String,
-    publisher: String,
-    language: String,
-    publishedAt: Date,
+    pdfUrl: { type: String, default: "" },
+    isbn: { type: String, default: "" },
+    sku: { type: String, default: "" },
+    publisher: { type: String, default: "" },
+    language: { type: String, default: "" },
+    publishedAt: { type: Date, default: Date.now },
 
-    authors: [{ type: Schema.Types.ObjectId, ref: "Author" }],
-    categories: [{ type: Schema.Types.ObjectId, ref: "Category" }],
+    authors: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Author" }],
+      default: []
+    },
+    categories: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+      default: []
+    },
 
     isActive: { type: Boolean, default: true },
   },

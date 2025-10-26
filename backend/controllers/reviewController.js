@@ -74,8 +74,7 @@ export const createReview = async (req, res) => {
 
     const hasPurchased = await Order.findOne({
       userId: userId,
-      'items.bookId': bookId,
-      status: 'delivered',
+      'items.bookId': bookId
     });
 
     if (!hasPurchased) {
@@ -114,7 +113,7 @@ export const updateReview = async (req, res) => {
     const { rating, review } = req.body;
     const userId = req.user.id;
 
-    const reviewDoc = await Review.findById(reviewId);
+    let reviewDoc = await Review.findById(reviewId);
 
     if (!reviewDoc) {
       return res.status(404).json({ message: 'Review not found' });

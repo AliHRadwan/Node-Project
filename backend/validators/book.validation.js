@@ -5,7 +5,7 @@ const objectId = Joi.string().hex().length(24);
 const url = Joi.string().uri({ scheme: ["http", "https"] });
 
 const imageSchema = Joi.object({
-  url: Joi.string().trim().min(5).max(200).required(),
+  url: url.optional(),
   key: Joi.string().trim().optional(),
 });
 
@@ -15,8 +15,8 @@ export const createBookSchema = Joi.object({
   price: Joi.number().min(0).required(),
   stock: Joi.number().integer().min(0).required(),
 
-  pdfUrl: Joi.string().trim().min(5).max(200).required(),
-  image: imageSchema,
+  pdfUrl: url.optional(),
+  image: imageSchema.optional(),
 
   isbn: Joi.string().trim().max(64).optional(),
   sku: Joi.string().trim().max(64).optional(),

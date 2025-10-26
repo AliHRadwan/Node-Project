@@ -99,8 +99,8 @@ export const createBook = async (req, res) => {
   try {
     const newBook = req.body;
     
-    if (!newBook.title || !newBook.price || !newBook.stock || !newBook.pdfUrl || !newBook.image.url) {
-      return res.status(400).json({ message: "title, price, stock, pdfUrl, and image.url are required" });
+    if (!newBook.title || !newBook.price || !newBook.stock) {
+      return res.status(400).json({ message: "title, price, and stock are required" });
     }
     const book = await Book.create(newBook);
 

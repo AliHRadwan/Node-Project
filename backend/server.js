@@ -2,9 +2,9 @@ import dotenv from "dotenv";
 import express from "express";
 import { createServer } from "http";
 import { wssInit } from "./utils/websocket.js"
-import { rateLimit } from "express-rate-limit";
 import connectDB from "./config/db.js";
 import { winstonLogger, winstonStream } from "./config/logger.js";
+import { generalAPILimiter, authAPILimiter } from "./config/rateLimiter.js"
 import cors from "cors";
 import morgan from "morgan";
 import authRoutes from "./routes/authRoutes.js";
@@ -26,22 +26,6 @@ import chatRoutes from "./routes/chatRoutes.groq.js";
 import startLogsCleanerSchedule from "./utils/cron-jobs.js";
 import profileRoutes from "./routes/profileRoutes.js";
 
-const generalAPILimiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 100, // Limit each IP to 100 requests per window
-	standardHeaders: "draft-8",
-	legacyHeaders: false,
-	message: "Too many requests from this IP, please try again after 15 minutes."
-});
-
-const authAPILimiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 10, // Limit each IP to 10 auth attempts per window
-	standardHeaders: "draft-8",
-	legacyHeaders: false,
-	message: "Too many authentication attempts from this IP, please try again after 15 minutes."
-});
-
 dotenv.config();
 connectDB();
 connectRedis();
@@ -49,6 +33,7 @@ startLogsCleanerSchedule();
 verifyEmailTransport();
 
 const app = express();
+const HOST = process.env.HOST || "http://localhost";
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
@@ -80,5 +65,5 @@ const httpServer = createServer(app);
 wssInit(httpServer);
 
 httpServer.listen(PORT, () => {
-	winstonLogger.info(`Server running on: http://localhost:${PORT}`);
+	winstonLogger.info(`Server running on: ${HOST}:${PORT}`);
 });
