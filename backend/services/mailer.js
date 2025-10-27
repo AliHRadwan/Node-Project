@@ -1,6 +1,10 @@
 // services/mailer.js
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 import { winstonLogger } from "../config/logger.js";
+
+dotenv.config();
+
 const FROM =
   process.env.MAIL_FROM ||
   `"Bookstore" <${process.env.SMTP_USER || "12alidawood@gmail.com"}>`;
@@ -42,7 +46,7 @@ function getTransporter() {
   return transporter;
 }
 
-// إعادة بناء الترانسبورتر عند أخطاء الشبكة الشائعة
+
 function shouldRebuildTransport(err) {
   const code = (err && (err.code || err.responseCode)) || "";
   const msg  = (err && err.message) || "";

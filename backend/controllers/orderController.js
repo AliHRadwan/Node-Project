@@ -6,10 +6,12 @@ import User from "../models/User.js";
 import Joi from "joi";
 import { cancelPendingOrder, refundPaidOrder } from "../services/orderCancel.js";
 import { releaseReservationBySessionId } from "../utils/reservationRelease.js";
+import dotenv from "dotenv";
 
 
+dotenv.config();
 
-const PRICING_CURRENCY = (process.env.PRICING_CURRENCY || "USD").toUpperCase();
+const PRICING_CURRENCY = (process.env.STRIPE_CURRENCY || "EGP").toUpperCase();
 const toObjectId = (v) =>
   (v && mongoose.Types.ObjectId.isValid(v)) ? new mongoose.Types.ObjectId(v) : undefined;
 
@@ -310,7 +312,7 @@ export const cancelOrderByUser = async (req, res) => {
       });
     }
 
-    // مسموح فقط لو PENDING
+   
     if (order.status !== "pending") {
       return res.status(400).json({
         message: `Order is ${order.status}. Refunds are handled by support.`,

@@ -6,6 +6,10 @@ import ProcessedStripeEvent from "../models/ProcessedStripeEvent.js";
 import { finalizeReservationAndDeduct } from "../utils/reservationFinalize.js";
 import { releaseReservationBySessionId } from "../utils/reservationRelease.js";
 import { sendOrderEmail } from "../services/orderEmails.js";
+import dotenv from "dotenv";
+
+
+dotenv.config();
 
 //  Idempotency check
 async function ensureEventOnce(eventId) {
@@ -37,7 +41,7 @@ export default async function paymentWebhook(req, res) {
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  CHECKOUT SESSION COMPLETED (نجح الدفع)
+    //  CHECKOUT SESSION COMPLETED 
     // ═══════════════════════════════════════════════════════════
     if (event.type === "checkout.session.completed") {
       const sessionObj = event.data.object;
@@ -114,7 +118,7 @@ export default async function paymentWebhook(req, res) {
     }
 
     // ═══════════════════════════════════════════════════════════
-    // CHECKOUT SESSION EXPIRED (انتهت الصلاحية)
+    // CHECKOUT SESSION EXPIRED 
     // ═══════════════════════════════════════════════════════════
     if (event.type === "checkout.session.expired") {
       const sessionObj = event.data.object;
@@ -196,7 +200,7 @@ export default async function paymentWebhook(req, res) {
       // Send failure email
       if (orderId) {
         setImmediate(() => {
-          sendOrderEmail(orderId, "failed") // ✅ مُصلّح
+          sendOrderEmail(orderId, "failed") 
             .then(() => console.log("📧 Failed email sent"))
             .catch((e) => console.warn("⚠️ Email failed:", e?.message));
         });
