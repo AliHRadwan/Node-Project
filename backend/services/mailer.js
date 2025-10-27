@@ -1,5 +1,8 @@
 // services/mailer.js
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const FROM =
   process.env.MAIL_FROM ||
@@ -42,7 +45,7 @@ function getTransporter() {
   return transporter;
 }
 
-// إعادة بناء الترانسبورتر عند أخطاء الشبكة الشائعة
+
 function shouldRebuildTransport(err) {
   const code = (err && (err.code || err.responseCode)) || "";
   const msg  = (err && err.message) || "";
