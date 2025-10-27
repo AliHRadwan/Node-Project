@@ -1,6 +1,7 @@
 // backend/controllers/bookController.js
 import mongoose from "mongoose";
 import Book from "../models/Book.js";
+import { wssBroadcast } from "../utils/websocket.js";
 
 // -------------------- BUILD FILTERS --------------------
 const buildFilters = (q) => {
@@ -96,11 +97,18 @@ export const getBook = async (req, res) => {
 
 export const createBook = async (req, res) => {
   try {
-    const payload = req.body;
-    if (!payload.title || payload.price === undefined || payload.stock === undefined) {
-      return res.status(400).json({ message: "title, price and stock are required" });
+    const newBook = req.body;
+    
+    if (!newBook.title || !newBook.price || !newBook.stock) {
+      return res.status(400).json({ message: "title, price, and stock are required" });
     }
-    const book = await Book.create(payload);
+    const book = await Book.create(newBook);
+
+    wssBroadcast({
+      type: "NEW_BOOK",
+      payload: newBook
+    });
+
     res.status(201).json(book);
   } catch (err) {
     res.status(400).json({ message: err.message });

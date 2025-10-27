@@ -1,0 +1,19 @@
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-26T19:11:27.373Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-26T19:11:27.417Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-26T19:11:27.424Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-26T19:11:27.426Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-26T19:11:27.439Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-26T19:11:27.446Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-26T19:11:28.075Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-26T19:11:28.536Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-26T21:56:07.309Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-26T21:56:07.351Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-26T21:56:07.358Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-26T21:56:07.361Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-26T21:56:07.371Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-26T21:56:07.377Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-26T21:56:07.946Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-26T21:56:08.068Z"}
+{"level":"http","message":"::1 - - [26/Oct/2025:21:57:13 +0000] \"GET / HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-26T21:57:13.917Z"}
+{"level":"info","message":"A new client connected.","timestamp":"2025-10-26T21:57:13.987Z"}
+{"level":"http","message":"::1 - - [26/Oct/2025:21:58:09 +0000] \"POST /api/auth/login HTTP/1.1\" 200 398 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-26T21:58:09.431Z"}

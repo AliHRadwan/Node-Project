@@ -1,6 +1,7 @@
 // services/mailer.js
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { winstonLogger } from "../config/logger.js";
 
 dotenv.config();
 
@@ -61,11 +62,10 @@ export async function verifyEmailTransport() {
   try {
     const t = getTransporter();
     await t.verify();
-    console.log("✅ Email transporter verified successfully");
+    winstonLogger.info("Email transporter verified successfully");
     return true;
   } catch (error) {
-    console.error("❌ Email transporter verification failed:", error.message);
-    console.error("⚠️ تأكد من App Password وتفعيل 2FA، وأن FROM يطابق SMTP_USER");
+    winstonLogger.error("Email transporter verification failed:", error.message);
     return false;
   }
 }
@@ -74,10 +74,11 @@ async function sendWithRetry({ to, subject, html }, attempt = 1) {
   const t = getTransporter();
   try {
     const info = await t.sendMail({ to, subject, html, from: FROM, sender: FROM });
-    console.log(`📧 Email sent to ${to} (${subject}) id=${info.messageId}`);
+    winstonLogger.info(`Email sent to ${to} (${subject}) id=${info.messageId}`);
     return true;
   } catch (err) {
-    console.error(`✖️ sendMail failed (attempt ${attempt}):`, err.message);
+    winstonLogger.error(`sendMail failed (attempt ${attempt}):`, err.message);
+
     if (attempt >= 3 || !shouldRebuildTransport(err)) throw err;
 
    
@@ -90,7 +91,7 @@ async function sendWithRetry({ to, subject, html }, attempt = 1) {
 
 export async function sendMail({ to, subject, html }) {
   if (!to) {
-    console.warn("⚠️ No email recipient provided.");
+    winstonLogger.warn("No email recipient provided.");
     return;
   }
   return sendWithRetry({ to, subject, html });

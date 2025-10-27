@@ -1,35 +1,10 @@
 import crypto from "crypto";
 import bcrypt from "bcrypt";
-import Joi from "joi";
 import User from "../models/User.js";
+import Author from "../models/Author.js";
 import Token from "../models/Token.js";
-import sendEmail from "../controllers/sendemail.js";
-
-const registerSchema = Joi.object({
-  name: Joi.string().min(2).max(50).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string()
-    .min(8)
-    .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$"))
-    .message("Password must contain at least one uppercase, one lowercase, and one number")
-    .required(),
-  addresses: Joi.array()
-    .items(
-      Joi.object({
-        label: Joi.string().required(),
-        fullName: Joi.string().required(),
-        phone: Joi.string().required(),
-        line1: Joi.string().required(),
-        line2: Joi.string().allow(""),
-        city: Joi.string().required(),
-        state: Joi.string().required(),
-        country: Joi.string().required(),
-        postalCode: Joi.string().required(),
-        isDefault: Joi.boolean().default(false)
-      })
-    )
-    .default([]) // lwa mafeesh address yeb2a empty array 3ady
-});
+import sendEmail from "../services/sendemail.js";
+import { registerSchema } from "../validators/register.validation.js";
 
 const user_register = async (req, res) => {
   try {
@@ -37,7 +12,7 @@ const user_register = async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-    const { name, email, password, addresses } = req.body;
+    const { name, email, password, addresses , role } = req.body;
 
     if (!name || !email || !password ) {
       return res.status(400).json({ error: "All fields are required" });
@@ -91,7 +66,7 @@ const user_register = async (req, res) => {
         role: newuser.role,
         isVerified: newuser.isVerified,
         addresses: newuser.addresses,
-      },
+      }
     });
 
   } catch (err) {
