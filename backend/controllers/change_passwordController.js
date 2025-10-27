@@ -40,10 +40,10 @@ const password_change = async (req, res) => {
     
   await sendEmail(
     req.user.email,
-    "✅ Password Changed Successfully",
+    " Password Changed Successfully",
     `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 10px; padding: 20px; background-color: #fafafa;">
-      <h2 style="color: #2c3e50; text-align: center;">✅ Password Changed Successfully</h2>
+      <h2 style="color: #2c3e50; text-align: center;">Password Changed Successfully</h2>
       <p style="font-size: 16px; color: #555;">
         Hello <strong>${user.name || "User"}</strong>,
       </p>

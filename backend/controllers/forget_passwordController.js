@@ -21,7 +21,7 @@ const pass_forgot = async (req, res) => {
       used: false,
     });
 
-    const resetLink = `http://localhost:3000/api/auth/reset-password/${reset_token}`;
+    const resetLink = `http://18.184.165.152:3000/api/auth/reset-password/${reset_token}`;
 
 
     const html = `
