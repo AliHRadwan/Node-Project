@@ -4,6 +4,6 @@ import { getBook } from "../controllers/downloadController.js";
 
 const router = express.Router();
 
-router.get("/book", verifyJWT, getBook);
+router.get("/book/:bookId", verifyJWT, getBook);
 
 export default router;
