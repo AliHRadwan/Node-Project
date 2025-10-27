@@ -47,7 +47,7 @@ const BookSchema = new Schema(
 ------------------------------------------------------------------*/
 
 // Text search on title + description for `?q=`
-BookSchema.index({ title: "text", description: "text" });
+BookSchema.index({ title: "text", description: "text" }, { default_language: 'none' });
 
 // ⚡ Common filter fields
 BookSchema.index({ authors: 1 });
