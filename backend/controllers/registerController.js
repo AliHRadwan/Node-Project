@@ -46,7 +46,7 @@ const user_register = async (req, res) => {
       expiresAt: new Date(Date.now() + 60 * 60 * 1000), 
       used: false,
     });
-    const verifyLink = `http://localhost:3000/api/auth/verify/${verifyToken}`;
+    const verifyLink = `http://18.184.165.152:3000/api/auth/verify/${verifyToken}`;
 
     const html = `
         <h2>Email Verification</h2>
