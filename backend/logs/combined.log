@@ -17,3 +17,137 @@
 {"level":"http","message":"::1 - - [26/Oct/2025:21:57:13 +0000] \"GET / HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-26T21:57:13.917Z"}
 {"level":"info","message":"A new client connected.","timestamp":"2025-10-26T21:57:13.987Z"}
 {"level":"http","message":"::1 - - [26/Oct/2025:21:58:09 +0000] \"POST /api/auth/login HTTP/1.1\" 200 398 \"-\" \"PostmanRuntime/7.49.0\"","timestamp":"2025-10-26T21:58:09.431Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T20:51:52.848Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T20:51:53.465Z"}
+{"level":"error","message":"Error loading the Swagger documentation file: Error: ENOENT: no such file or directory, open 'D:\\GitHub\\Node-Project\\backend\\swagger.yaml'","timestamp":"2025-10-28T20:51:53.469Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T20:51:53.472Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T20:51:53.475Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T20:51:53.542Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T20:51:53.547Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T20:51:54.088Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T20:51:54.357Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T20:54:32.328Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T20:54:32.604Z"}
+{"level":"error","message":"Error loading the Swagger documentation file: Error: ENOENT: no such file or directory, open 'D:\\GitHub\\Node-Project\\swagger.yaml'","timestamp":"2025-10-28T20:54:32.609Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T20:54:32.612Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T20:54:32.616Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T20:54:32.673Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T20:54:32.679Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T20:54:33.195Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T20:54:33.340Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T20:54:35.363Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T20:54:35.663Z"}
+{"level":"error","message":"Error loading the Swagger documentation file: Error: ENOENT: no such file or directory, open 'D:\\GitHub\\Node-Project\\swagger\\swagger.yaml'","timestamp":"2025-10-28T20:54:35.671Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T20:54:35.676Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T20:54:35.680Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T20:54:35.744Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T20:54:35.749Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T20:54:36.217Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T20:54:36.246Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T20:58:28.977Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T20:58:29.234Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-10-28T20:58:29.248Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T20:58:29.251Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T20:58:29.255Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T20:58:29.306Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T20:58:29.312Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T20:58:29.787Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T20:58:30.028Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:20:59:04 +0000] \"GET / HTTP/1.1\" 200 2761 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T20:59:04.225Z"}
+{"level":"info","message":"A new client connected.","timestamp":"2025-10-28T20:59:04.286Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:20:59:04 +0000] \"GET /favicon.ico HTTP/1.1\" 404 991 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T20:59:04.357Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:20:59:36 +0000] \"GET /api-docs HTTP/1.1\" 404 985 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T20:59:36.175Z"}
+{"level":"info","message":"Client disconnected.","timestamp":"2025-10-28T20:59:36.223Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T21:00:57.429Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T21:00:57.709Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T21:00:57.716Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T21:00:57.719Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T21:00:57.776Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T21:00:57.782Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T21:00:58.237Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T21:00:58.487Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T21:03:00.691Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T21:03:00.953Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-10-28T21:03:00.969Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T21:03:00.972Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T21:03:00.975Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T21:03:01.031Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T21:03:01.036Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T21:03:01.517Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T21:03:01.700Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T21:05:42.656Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T21:05:42.909Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-10-28T21:05:42.923Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T21:05:42.924Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T21:05:42.928Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T21:05:42.982Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T21:05:42.987Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T21:05:43.445Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T21:05:43.610Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:21:05:49 +0000] \"GET /api-docs/ HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T21:05:49.863Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:21:05:49 +0000] \"GET /api-docs/swagger-ui.css HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T21:05:49.903Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:21:05:49 +0000] \"GET /api-docs/swagger-ui-init.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T21:05:49.921Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:21:05:49 +0000] \"GET /api-docs/swagger-ui-bundle.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T21:05:49.923Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:21:05:49 +0000] \"GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T21:05:49.926Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:21:05:50 +0000] \"GET /api-docs/favicon-32x32.png HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T21:05:50.095Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T22:01:04.008Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T22:01:04.264Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-10-28T22:01:04.285Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T22:01:04.287Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T22:01:04.290Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T22:01:04.345Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T22:01:04.350Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T22:01:05.127Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T22:01:05.209Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:01:28 +0000] \"GET /api-docs/ HTTP/1.1\" 200 3106 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:01:28.767Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:01:28 +0000] \"GET /api-docs/swagger-ui.css HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:01:28.827Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:01:28 +0000] \"GET /api-docs/swagger-ui-init.js HTTP/1.1\" 200 73147 \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:01:28.835Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:01:28 +0000] \"GET /api-docs/swagger-ui-bundle.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:01:28.838Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:01:28 +0000] \"GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:01:28.841Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T22:20:27.510Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T22:20:27.768Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-10-28T22:20:27.789Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T22:20:27.791Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T22:20:27.794Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T22:20:27.844Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T22:20:27.850Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T22:20:28.402Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T22:20:28.509Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:20:41 +0000] \"GET /api-docs/ HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:20:41.678Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:20:41 +0000] \"GET /api-docs/swagger-ui.css HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:20:41.746Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:20:41 +0000] \"GET /api-docs/swagger-ui-init.js HTTP/1.1\" 200 73251 \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:20:41.755Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:20:41 +0000] \"GET /api-docs/swagger-ui-bundle.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:20:41.758Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:20:41 +0000] \"GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:20:41.761Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:03 +0000] \"GET /api-docs/ HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:03.393Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:03 +0000] \"GET /api-docs/swagger-ui.css HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:03.445Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:03 +0000] \"GET /api-docs/swagger-ui-bundle.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:03.452Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:03 +0000] \"GET /api-docs/swagger-ui-init.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:03.454Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:03 +0000] \"GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:03.456Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:03 +0000] \"GET /api-docs/favicon-32x32.png HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:03.793Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-10-28T22:21:18.607Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-10-28T22:21:18.870Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-10-28T22:21:18.893Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-10-28T22:21:18.896Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-10-28T22:21:18.899Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-10-28T22:21:18.955Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-10-28T22:21:18.960Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-10-28T22:21:19.455Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-10-28T22:21:19.488Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:24 +0000] \"GET /api-docs/ HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:24.810Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:24 +0000] \"GET /api-docs/swagger-ui.css HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:24.857Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:24 +0000] \"GET /api-docs/swagger-ui-bundle.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:24.863Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:24 +0000] \"GET /api-docs/swagger-ui-init.js HTTP/1.1\" 200 73250 \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:24.869Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:24 +0000] \"GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:24.872Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:21:25 +0000] \"GET /api-docs/favicon-32x32.png HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:21:25.084Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:24 +0000] \"GET /api-docs/ HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:24.845Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:24 +0000] \"GET /api-docs/swagger-ui.css HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:24.897Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:24 +0000] \"GET /api-docs/swagger-ui-bundle.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:24.903Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:24 +0000] \"GET /api-docs/swagger-ui-init.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:24.905Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:24 +0000] \"GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:24.907Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:25 +0000] \"GET /api-docs/favicon-32x32.png HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:25.128Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:29 +0000] \"GET /api-docs/ HTTP/1.1\" 200 3106 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:29.080Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:29 +0000] \"GET /api-docs/swagger-ui-init.js HTTP/1.1\" 200 73250 \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:29.121Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:29 +0000] \"GET /api-docs/swagger-ui.css HTTP/1.1\" 200 155212 \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:29.130Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:29 +0000] \"GET /api-docs/swagger-ui-standalone-preset.js HTTP/1.1\" 200 250335 \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:29.133Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:29 +0000] \"GET /api-docs/swagger-ui-bundle.js HTTP/1.1\" 200 1510312 \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:29.144Z"}
+{"level":"http","message":"::1 - - [28/Oct/2025:22:38:29 +0000] \"GET /api-docs/favicon-32x32.png HTTP/1.1\" 304 - \"http://localhost:3000/api-docs/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0\"","timestamp":"2025-10-28T22:38:29.343Z"}
