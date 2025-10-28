@@ -1,12 +1,14 @@
 import express from "express";
+import dotenv from "dotenv";
 import mongoose from "mongoose";
 import verifyJWT from "../middleware/verifyJWT.js";
 import { stripe } from "../config/stripe.js";
 import Order from "../models/Order.js";
 import Payment from "../models/Payment.js";
 
+dotenv.config();
 const router = express.Router();
-const CURRENCY = (process.env.STRIPE_CURRENCY || "usd").toLowerCase();
+const CURRENCY = (process.env.STRIPE_CURRENCY || "EGP").toLowerCase();
 
 /**
  * A) to frontend in the future    ==?>>    client secret
@@ -128,8 +130,8 @@ router.post("/create-checkout/:orderId", verifyJWT, async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.FRONTEND_URL || "http://localhost:3000"}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.FRONTEND_URL || "http://localhost:3000"}/payment/cancel`,
+      success_url: `${process.env.FRONTEND_URL || "http://localhost:3000"}/payment/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.FRONTEND_URL || "http://localhost:3000"}/payment/cancel.html`,
       metadata: {
         orderId: String(order._id),
         userId: me,

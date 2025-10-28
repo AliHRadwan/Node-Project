@@ -25,6 +25,7 @@ import { connectRedis } from "./config/redis.js";
 import chatRoutes from "./routes/chatRoutes.groq.js";
 import startLogsCleanerSchedule from "./utils/cron-jobs.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import loadSwagger from "./swagger/swaggerLoader.js";
 
 dotenv.config();
 connectDB();
@@ -37,13 +38,13 @@ const HOST = process.env.HOST || "http://localhost";
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+app.post("/webhooks/stripe", express.raw({ type: "application/json" }), paymentWebhook);
 app.use(express.json());
 app.use(sessionMiddleware);
 app.use(morgan("combined", { stream: winstonStream }));
 
-
 app.use(express.static("public"));
-app.post("/webhooks/stripe", express.raw({ type: "application/json" }), paymentWebhook);
+loadSwagger(app);
 
 app.use("/api/auth", authAPILimiter, authRoutes);
 app.use("/api/orders", generalAPILimiter, orderRoutes);
