@@ -5,7 +5,6 @@ import Session from "../models/Session.js";
 import sendEmail from "../services/sendemail.js";
 
 
-
 // Login function
 const login = async (req, res) => {
   try {

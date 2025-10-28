@@ -17,7 +17,7 @@ const pass_forgot = async (req, res) => {
       userId: user._id,
       type: "reset",
       tokenHash: hashed_token,
-      expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000), 
       used: false,
     });
 
