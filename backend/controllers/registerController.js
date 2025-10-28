@@ -43,7 +43,7 @@ const user_register = async (req, res) => {
       userId: newuser._id,
       type: "verify",
       tokenHash,
-      expiresAt: new Date(Date.now() + 60 * 60 * 1000), 
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000),
       used: false,
     });
     const verifyLink = `http://18.184.165.152:3000/api/auth/verify/${verifyToken}`;
