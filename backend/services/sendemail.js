@@ -11,7 +11,7 @@ const sendEmail = async (to, subject, html) => {
     });
 
     const mailOptions = {
-      from: `"No Reply BookStore " <${process.env.EMAIL_USER}>`,
+      from: `"BookStore " <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
