@@ -2,7 +2,6 @@ import Cart from "../models/cart.model.js";
 import Book from "../models/Book.js";
 import mongoose from "mongoose";
 
-
 export const getCartAuth = async (req, res) => {
   try {
     const userObjectId = new mongoose.Types.ObjectId(req.user.id);
@@ -49,13 +48,11 @@ export const getCartAuth = async (req, res) => {
   }
 };
 
-
 export const addToCartAuth = async (req, res) => {
   try {
     const userObjectId = new mongoose.Types.ObjectId(req.user.id);
     const bookObjectId = new mongoose.Types.ObjectId(req.body.bookId);
     const qtyValue = parseInt(req.body.qty || 1);
-    const priceAtAdd = req.body.priceAtAdd;
 
     // Validate quantity
     if (qtyValue < 1) {
@@ -65,14 +62,7 @@ export const addToCartAuth = async (req, res) => {
       });
     }
 
-    if (!priceAtAdd) {
-      return res.status(400).json({
-        success: false,
-        message: 'Price is required'
-      });
-    }
-
-    // 🔥 Check if book exists and get stock
+    // 🔥 Get book from database (TRUSTED source for price)
     const book = await Book.findById(bookObjectId);
 
     if (!book) {
@@ -89,6 +79,9 @@ export const addToCartAuth = async (req, res) => {
         message: 'Book is not available for purchase'
       });
     }
+
+    // 🔥 Use price from DATABASE, not from user input!
+    const priceAtAdd = book.price;
 
     let cart = await Cart.findOne({ userId: userObjectId });
 
@@ -127,11 +120,13 @@ export const addToCartAuth = async (req, res) => {
     // Update cart
     if (existingItemIndex > -1) {
       cart.items[existingItemIndex].qty = newQuantity;
+      // 🔥 Update price in case it changed
+      cart.items[existingItemIndex].priceAtAdd = priceAtAdd;
     } else {
       cart.items.push({
         bookId: bookObjectId,
         qty: newQuantity,
-        priceAtAdd: priceAtAdd
+        priceAtAdd: priceAtAdd  // 🔥 From database
       });
     }
 
@@ -159,7 +154,6 @@ export const addToCartAuth = async (req, res) => {
     });
   }
 };
-
 
 export const updateCartItemAuth = async (req, res) => {
   try {
@@ -301,7 +295,6 @@ export const removeFromCartAuth = async (req, res) => {
     });
   }
 };
-
 
 export const clearCartAuth = async (req, res) => {
   try {
