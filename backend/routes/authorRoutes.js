@@ -5,7 +5,7 @@ import {
   listAuthors, getAuthor, createAuthor, updateAuthor, deleteAuthor
 } from "../controllers/authorController.js";
 import { validateBody } from "../middleware/validate.js";
-import { createBookSchema, updateBookSchema } from "../validators/book.validation.js";
+import { createAuthor,updateAuthor } from "../controllers/authorController.js";
 import { simpleCache, clearCacheOnWrite } from "../middleware/cache.js";
 
 const router = express.Router();
