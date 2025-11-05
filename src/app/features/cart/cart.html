@@ -1,0 +1,103 @@
+<div class="cart-page">
+  <div class="container">
+    <div class="cart-header">
+      <h2>Cart</h2>
+    </div>
+
+    <div class="cart-layout">
+      <!-- Cart Table -->
+      <div class="cart-table-wrapper">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th class="product-col">Product</th>
+              <th class="quantity-col">Quantity</th>
+              <th class="subtotal-col">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Cart Item 1 -->
+            <tr class="cart-item">
+              <td class="product-cell">
+                <div class="product-info">
+                  <button class="remove-btn" mat-icon-button>
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <img src="https://demo.templatesjungle.com/bookly/images/cart-item1.png" alt="Book" class="product-image">
+                  <div class="product-details">
+                    <h5 class="product-title">The Emerald Crown</h5>
+                    <p class="product-price">EGP 2,000.00</p>
+                  </div>
+                </div>
+              </td>
+              <td class="quantity-cell">
+                <div class="quantity-control">
+                  <button class="qty-btn minus" mat-icon-button>
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                  <input type="number" value="1" min="1" class="qty-input">
+                  <button class="qty-btn plus" mat-icon-button>
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              </td>
+              <td class="subtotal-cell">
+                <span class="subtotal-price">EGP 2,000.00</span>
+              </td>
+            </tr>
+
+            <!-- Cart Item 2 -->
+            <tr class="cart-item">
+              <td class="product-cell">
+                <div class="product-info">
+                  <button class="remove-btn" mat-icon-button>
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <img src="https://demo.templatesjungle.com/bookly/images/cart-item2.png" alt="Book" class="product-image">
+                  <div class="product-details">
+                    <h5 class="product-title">The Last Enchantment</h5>
+                    <p class="product-price">EGP 400.00</p>
+                  </div>
+                </div>
+              </td>
+              <td class="quantity-cell">
+                <div class="quantity-control">
+                  <button class="qty-btn minus" mat-icon-button>
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                  <input type="number" value="1" min="1" class="qty-input">
+                  <button class="qty-btn plus" mat-icon-button>
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              </td>
+              <td class="subtotal-cell">
+                <span class="subtotal-price">EGP 400.00</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Cart Actions -->
+        <div class="cart-actions">
+          <button mat-button class="update-cart-btn">Update Cart</button>
+          <button mat-button class="continue-shopping-btn">Continue Shopping</button>
+        </div>
+      </div>
+
+      <!-- Cart Totals -->
+      <div class="cart-totals">
+        <h3>Cart Totals</h3>
+        <div class="totals-row">
+          <span class="totals-label">Subtotal</span>
+          <span class="totals-value">EGP 2,400.00</span>
+        </div>
+        <div class="totals-row total-row">
+          <span class="totals-label">Total</span>
+          <span class="totals-value">EGP 2,400.00</span>
+        </div>
+        <button mat-raised-button color="primary" class="checkout-btn">Proceed To Checkout</button>
+      </div>
+    </div>
+  </div>
+</div>
