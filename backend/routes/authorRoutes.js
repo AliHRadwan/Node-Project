@@ -12,6 +12,7 @@ import {
   getMyAuthor,
   approveAuthor,
   rejectAuthor,
+  revokeAuthor,
   deleteAuthor
 } from "../controllers/authorController.js";
 
@@ -73,6 +74,15 @@ router.patch(
   clearCacheOnWrite(),
   rejectAuthor
 );
+// Revoke an approved author's privileges
+router.patch(
+  "/:id/revoke",
+  verifyJWT,
+  roleCheck(["admin"]),
+  clearCacheOnWrite(),
+  revokeAuthor
+);
+
 
 // Hard delete an author record
 router.delete(

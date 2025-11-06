@@ -31,7 +31,8 @@ const AuthorSchema = new Schema(
     // Workflow state
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
+      enum: ["pending", "approved", "rejected", "revoked"],
+
       default: "pending",
       index: true
     },

@@ -371,3 +371,21 @@
 {"level":"error","message":"Redis client error: AggregateError","timestamp":"2025-10-29T06:46:50.585Z"}
 {"level":"error","message":"Redis client error: AggregateError","timestamp":"2025-10-29T06:46:52.633Z"}
 {"level":"error","message":"Redis client error: AggregateError","timestamp":"2025-10-29T06:46:54.676Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T14:01:49.083Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T14:03:27.357Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T16:06:12.975Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T16:25:52.678Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T21:57:41.561Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T11:27:36.441Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T12:01:19.314Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T15:09:42.148Z"}
+{"level":"error","message":"Redis DEL PATTERN error: Error: MISCONF Redis is configured to save RDB snapshots, but it is currently not able to persist on disk. Commands that may modify the data set are disabled, because this instance is configured to report errors during writes if RDB snapshotting fails (stop-writes-on-bgsave-error option). Please check the Redis logs for details about the RDB error.","timestamp":"2025-11-06T16:03:13.167Z"}
+{"level":"error","message":"Redis DEL PATTERN error: Error: MISCONF Redis is configured to save RDB snapshots, but it is currently not able to persist on disk. Commands that may modify the data set are disabled, because this instance is configured to report errors during writes if RDB snapshotting fails (stop-writes-on-bgsave-error option). Please check the Redis logs for details about the RDB error.","timestamp":"2025-11-06T16:03:58.776Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:24:54.632Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:39:30.903Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:42:40.747Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:48:27.389Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:53:27.953Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:54:34.138Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:57:58.017Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T15:03:52.517Z"}

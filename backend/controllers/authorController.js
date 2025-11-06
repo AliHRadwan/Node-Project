@@ -1,5 +1,6 @@
 // controllers/authorController.js
 import Author from "../models/Author.js";
+import User from "../models/User.js"; // Added import to update user roles
 
 /** 
  * Helper to build filters for admin list
@@ -69,6 +70,7 @@ export const getAuthor = async (req, res) => {
 export const applyAsAuthor = async (req, res) => {
   try {
     const { name, bio } = req.body;
+
     const existing = await Author.findOne({ userId: req.user._id });
     if (existing) {
       return res.status(400).json({
@@ -107,7 +109,7 @@ export const getMyAuthor = async (req, res) => {
 
 /**
  * PATCH /api/authors/:id/approve
- * Admin approves an author
+ * Admin approves an author and updates user's role
  */
 export const approveAuthor = async (req, res) => {
   try {
@@ -128,7 +130,11 @@ export const approveAuthor = async (req, res) => {
     );
 
     if (!author) return res.status(404).json({ message: "Author not found" });
-    res.json({ message: "Author approved", author });
+
+    // Promote user to author role
+    await User.findByIdAndUpdate(author.userId, { role: "author" });
+
+    res.json({ message: "Author approved and user role updated", author });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -136,11 +142,12 @@ export const approveAuthor = async (req, res) => {
 
 /**
  * PATCH /api/authors/:id/reject
- * Admin rejects an author
+ * Admin rejects an author and optionally reverts their role to 'user'
  */
 export const rejectAuthor = async (req, res) => {
   try {
     const { reason } = req.body;
+
     const author = await Author.findByIdAndUpdate(
       req.params.id,
       {
@@ -152,11 +159,48 @@ export const rejectAuthor = async (req, res) => {
     );
 
     if (!author) return res.status(404).json({ message: "Author not found" });
-    res.json({ message: "Author rejected", author });
+
+    // If the user was previously approved, revert their role back to user
+    const user = await User.findById(author.userId);
+    if (user && user.role === "author") {
+      await User.findByIdAndUpdate(author.userId, { role: "user" });
+    }
+
+    res.json({ message: "Author rejected and user role updated if applicable", author });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
+/**
+ * PATCH /api/authors/:id/revoke
+ * Admin revokes an approved author's status (demotes them)
+ */
+export const revokeAuthor = async (req, res) => {
+  try {
+    // Find the author first
+    const author = await Author.findById(req.params.id);
+    if (!author) return res.status(404).json({ message: "Author not found" });
+
+    // Only approved authors can be revoked
+    if (author.status !== "approved") {
+      return res.status(400).json({ message: "Only approved authors can be revoked" });
+    }
+
+    // Update author record
+    author.status = "revoked";
+    author.rejectedAt = new Date();
+    author.reason = req.body.reason || "Revoked by admin";
+    await author.save();
+
+    // Downgrade user back to 'user' role
+    await User.findByIdAndUpdate(author.userId, { role: "user" });
+
+    res.json({ message: "Author privileges revoked and user role downgraded", author });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
 
 /**
  * DELETE /api/authors/:id
