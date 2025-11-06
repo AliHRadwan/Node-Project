@@ -1,5 +1,10 @@
 <h2 class="mb-3">Orders</h2>
 
+<div class="d-flex align-items-center mb-2">
+  <input class="form-control me-2" style="max-width:320px" placeholder="Search by ID, name, status...">
+  <button class="btn btn-outline-secondary">Search</button>
+</div>
+
 <div class="card card-glass shadow-soft">
   <div class="table-responsive">
     <table class="table align-middle mb-0">
@@ -25,10 +30,11 @@
           <td class="text-end fw-semibold">$59.99</td>
           <td><span class="badge bg-success-subtle text-success">Paid</span></td>
           <td class="text-center">
-            <button class="btn btn-sm text-white"
-                   style="background-color:#ff5a7a;border-color:#ff5a7a">
-                 <i class="bi bi-card-list me-1"></i> Details
+            <button class="btn btn-sm text-white" style="background-color:#ff5a7a;border-color:#ff5a7a" data-bs-toggle="modal"
+              data-bs-target="#orderDetailsModal">
+              <i class="bi bi-card-list me-1"></i> Details
             </button>
+
           </td>
           <td class="text-center">
             <div class="dropdown">
@@ -54,9 +60,9 @@
           <td class="text-end fw-semibold">$24.50</td>
           <td><span class="badge bg-warning-subtle text-warning">Pending</span></td>
           <td class="text-center">
-             <button class="btn btn-sm text-white"
-                   style="background-color:#ff5a7a;border-color:#ff5a7a">
-                 <i class="bi bi-card-list me-1"></i> Details
+            <button class="btn btn-sm text-white" style="background-color:#ff5a7a;border-color:#ff5a7a" data-bs-toggle="modal"
+              data-bs-target="#orderDetailsModal">
+              <i class="bi bi-card-list me-1"></i> Details
             </button>
           </td>
           <td class="text-center">
@@ -83,9 +89,10 @@
           <td class="text-end fw-semibold">$99.00</td>
           <td><span class="badge bg-info-subtle text-info">Shipped</span></td>
           <td class="text-center">
-             <button class="btn btn-sm text-white"
-                   style="background-color:#ff5a7a;border-color:#ff5a7a">
-                 <i class="bi bi-card-list me-1"></i> Details
+            <button class="btn btn-sm text-white"
+                    style="background-color:#ff5a7a;border-color:#ff5a7a"
+                    data-bs-toggle="modal" data-bs-target="#orderDetailsModal">
+              <i class="bi bi-card-list me-1"></i> Details
             </button>
           </td>
           <td class="text-center">
@@ -106,3 +113,57 @@
     </table>
   </div>
 </div>
+
+
+
+<!-- model or pop up of details -->
+
+<div class="modal" id="orderDetailsModal"
+     data-bs-backdrop="false" data-bs-keyboard="true"
+     tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content card-glass">
+      <div class="modal-header">
+        <h5 class="modal-title">Order ORD-101</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="text-muted small mb-2">
+          Ali Ahmed • 2025-11-05 10:20 •
+          <span class="badge bg-success-subtle text-success">Paid</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Item</th>
+                <th class="text-end">Qty</th>
+                <th class="text-end">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Clean Code</td>
+                <td class="text-end">1</td>
+                <td class="text-end">$19.99</td>
+              </tr>
+              <tr>
+                <td>Design Patterns</td>
+                <td class="text-end">2</td>
+                <td class="text-end">$20.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="me-auto fw-semibold">Total: $59.99</div>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
