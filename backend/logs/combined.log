@@ -912,3 +912,17 @@
 {"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:04:10 +0000] \"POST /api/auth/login HTTP/1.1\" 401 37 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:04:10.015Z"}
 {"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:04:14 +0000] \"POST /api/auth/login HTTP/1.1\" 200 436 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:04:14.105Z"}
 {"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:04:38 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:04:38.870Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T15:06:52.145Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T15:06:52.414Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T15:06:52.434Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T15:06:52.436Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T15:06:52.440Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T15:06:52.511Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T15:06:52.518Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T15:06:52.689Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T15:06:53.085Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:07:02 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:07:02.148Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:07:09 +0000] \"POST /api/auth/login HTTP/1.1\" 401 37 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:07:09.002Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:07:13 +0000] \"POST /api/auth/login HTTP/1.1\" 200 436 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:07:13.281Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:07:33 +0000] \"POST /api/categories HTTP/1.1\" 201 153 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:07:33.245Z"}
+{"level":"info","message":"Cache cleared after POST operation","timestamp":"2025-11-06T15:07:33.246Z"}
