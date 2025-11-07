@@ -1,93 +1,118 @@
-// backend/controllers/bookController.js
-import mongoose from "mongoose";
 import Book from "../models/Book.js";
-import { wssBroadcast } from "../utils/websocket.js";
+import Author from "../models/Author.js";
+import Category from "../models/Category.js";
 
-// -------------------- BUILD FILTERS --------------------
-const buildFilters = (q) => {
+/**
+ * Build query filters for books (by name instead of ID)
+ */
+const buildFilter = async (query) => {
   const filter = {};
 
-  // full-text search
-  if (q.q) filter.$text = { $search: String(q.q) };
-
-  // isActive may arrive as "true"/"false" or boolean (if validated)
-  if (typeof q.isActive === "boolean") {
-    filter.isActive = q.isActive;
-  } else if (q.isActive !== undefined) {
-    filter.isActive = String(q.isActive) === "true";
+  // 🔹 Filter by author name (case-insensitive)
+  if (query.author) {
+    const authorDoc = await Author.findOne({
+      name: { $regex: new RegExp(query.author, "i") }
+    });
+    if (authorDoc) filter.authors = authorDoc._id;
+    else filter.authors = null; // no author found
   }
 
-  // author/category ids (accept validated or raw string)
-  if (q.author) filter.authors = new mongoose.Types.ObjectId(String(q.author));
-  if (q.category) filter.categories = new mongoose.Types.ObjectId(String(q.category));
-
-  // price range
-  const min = q.minPrice != null ? Number(q.minPrice) : null;
-  const max = q.maxPrice != null ? Number(q.maxPrice) : null;
-  if (min != null || max != null) {
-    filter.price = {};
-    if (min != null) filter.price.$gte = min;
-    if (max != null) filter.price.$lte = max;
+  // 🔹 Filter by category name (case-insensitive)
+  if (query.category) {
+    const categoryDoc = await Category.findOne({
+      name: { $regex: new RegExp(query.category, "i") }
+    });
+    if (categoryDoc) filter.categories = categoryDoc._id;
+    else filter.categories = null;
   }
+
+  // 🔹 Active status filter
+  if (query.isActive !== undefined) filter.isActive = query.isActive;
 
   return filter;
 };
 
-// -------------------- LIST BOOKS (pagination + filters + projection + safe sort) --------------------
-// GET /api/books
+/**
+ * GET /api/books
+ * List books with optional search and filters
+ */
 export const listBooks = async (req, res) => {
   try {
-    // pagination
     const page = Math.max(parseInt(req.query.page) || 1, 1);
     const limit = Math.min(parseInt(req.query.limit) || 12, 100);
     const skip = (page - 1) * limit;
 
-    // sorting (whitelist)
-    const allowedSorts = new Set(["price", "-price", "createdAt", "-createdAt", "title", "-title"]);
-    const sort = allowedSorts.has(req.query.sort) ? req.query.sort : "-createdAt";
+    // ✅ buildFilter is now async
+    const filter = await buildFilter(req.query);
+    const sort = req.query.sort || { createdAt: -1 };
+    const searchTerm = req.query.q;
 
-    // filters
-    const filter = buildFilters(req.query);
+    let books = [];
+    let total = 0;
 
-    // projection (optional): ?fields=title,price,image
-    let projection = null;
-    if (req.query.fields) {
-      projection = String(req.query.fields)
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
-        .join(" "); // mongoose select syntax
+    // ✅ Use Atlas Search if query.q exists
+    if (searchTerm) {
+      const pipeline = [
+        {
+          $search: {
+            index: "bookSearch", // Atlas Search index name
+            text: {
+              query: searchTerm,
+              path: ["title", "description"]
+            }
+          }
+        },
+        { $match: filter },
+        { $sort: { createdAt: -1 } },
+        {
+          $facet: {
+            meta: [{ $count: "total" }],
+            items: [{ $skip: skip }, { $limit: limit }]
+          }
+        }
+      ];
+
+      const result = await Book.aggregate(pipeline);
+      books = result[0]?.items || [];
+      total = result[0]?.meta?.[0]?.total || 0;
+    } else {
+      // fallback to normal find if no search query
+      const [items, count] = await Promise.all([
+        Book.find(filter)
+          .populate("authors categories")
+          .sort(sort)
+          .skip(skip)
+          .limit(limit),
+        Book.countDocuments(filter)
+      ]);
+
+      books = items;
+      total = count;
     }
 
-    const [items, total] = await Promise.all([
-      Book.find(filter, projection)
-        .populate("authors", "name")
-        .populate("categories", "name slug")
-        .sort(sort)
-        .skip(skip)
-        .limit(limit),
-      Book.countDocuments(filter),
-    ]);
-
-    const pages = Math.max(Math.ceil(total / limit), 1);
-    const hasNext = page < pages;
-    const hasPrev = page > 1;
-
     res.json({
-      meta: { total, page, limit, pages, hasNext, hasPrev, sort, filterApplied: filter },
-      items,
+      meta: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit)
+      },
+      items: books
     });
   } catch (err) {
+    console.error("❌ Book list error:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
-// -------------------- OTHER CRUD HANDLERS (unchanged) --------------------
+/**
+ * GET /api/books/:id
+ * Get single book details
+ */
 export const getBook = async (req, res) => {
   try {
     const book = await Book.findById(req.params.id)
-      .populate("authors", "name")
-      .populate("categories", "name slug");
+      .populate("authors categories");
     if (!book) return res.status(404).json({ message: "Book not found" });
     res.json(book);
   } catch (err) {
@@ -95,55 +120,45 @@ export const getBook = async (req, res) => {
   }
 };
 
+/**
+ * POST /api/books
+ * Create new book (Author only)
+ */
 export const createBook = async (req, res) => {
   try {
-    const newBook = req.body;
-    
-    if (!newBook.title || !newBook.price || !newBook.stock) {
-      return res.status(400).json({ message: "title, price, and stock are required" });
-    }
-    const book = await Book.create(newBook);
-
-    wssBroadcast({
-      type: "NEW_BOOK",
-      payload: newBook
-    });
-
-    res.status(201).json(book);
+    const book = await Book.create(req.body);
+    res.status(201).json({ message: "Book created successfully", book });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
 
+/**
+ * PATCH /api/books/:id
+ * Update existing book
+ */
 export const updateBook = async (req, res) => {
   try {
     const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
     if (!book) return res.status(404).json({ message: "Book not found" });
-    res.json(book);
+    res.json({ message: "Book updated successfully", book });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
 
+/**
+ * DELETE /api/books/:id
+ * Delete book
+ */
 export const deleteBook = async (req, res) => {
   try {
-    const hard = req.query.hard === "true";
-    if (hard) {
-      const deleted = await Book.findByIdAndDelete(req.params.id);
-      if (!deleted) return res.status(404).json({ message: "Book not found" });
-      return res.json({ message: "Book permanently deleted" });
-    } else {
-      const updated = await Book.findByIdAndUpdate(
-        req.params.id,
-        { isActive: false },
-        { new: true }
-      );
-      if (!updated) return res.status(404).json({ message: "Book not found" });
-      return res.json({ message: "Book deactivated", book: updated });
-    }
+    const book = await Book.findByIdAndDelete(req.params.id);
+    if (!book) return res.status(404).json({ message: "Book not found" });
+    res.json({ message: "Book deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

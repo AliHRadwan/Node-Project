@@ -615,3 +615,314 @@
 {"level":"error","message":"Redis client error: AggregateError","timestamp":"2025-10-29T06:46:50.585Z"}
 {"level":"error","message":"Redis client error: AggregateError","timestamp":"2025-10-29T06:46:52.633Z"}
 {"level":"error","message":"Redis client error: AggregateError","timestamp":"2025-10-29T06:46:54.676Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-05T14:01:47.818Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-05T14:01:48.428Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-05T14:01:48.459Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-05T14:01:48.461Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-05T14:01:48.466Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-05T14:01:48.625Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-05T14:01:48.632Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T14:01:49.083Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-05T14:01:50.747Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-05T14:03:26.586Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-05T14:03:26.974Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-05T14:03:27.003Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-05T14:03:27.005Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-05T14:03:27.010Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-05T14:03:27.111Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-05T14:03:27.115Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T14:03:27.357Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-05T14:03:28.808Z"}
+{"level":"http","message":"::1 - - [05/Nov/2025:14:06:54 +0000] \"GET / HTTP/1.1\" 200 2761 \"-\" \"Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.6899\"","timestamp":"2025-11-05T14:06:54.732Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:18:03 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:18:03.110Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:19:05 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:19:05.158Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:19:08 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:19:08.436Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:19:19 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:19:19.059Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:20:07 +0000] \"GET /api/authors/apply HTTP/1.1\" 500 108 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:20:07.320Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:22:07 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:22:07.429Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:24:12 +0000] \"GET /api/auth/login HTTP/1.1\" 404 1101 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:24:12.838Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:27:03 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:27:03.693Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:37:54 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:37:54.253Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:39:24 +0000] \"GET /api/auth/register HTTP/1.1\" 404 1107 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:39:24.348Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:39:32 +0000] \"POST /api/auth/register HTTP/1.1\" 400 66 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:39:32.072Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:39:34 +0000] \"POST /api/auth/register HTTP/1.1\" 400 66 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:39:34.102Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:40:27 +0000] \"POST /api/auth/register HTTP/1.1\" 400 87 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:40:27.447Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:40:42 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:40:42.559Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:40:53 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:40:53.178Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:43:04 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:43:04.359Z"}
+{"level":"http","message":"::1 - - [05/Nov/2025:14:43:50 +0000] \"GET / HTTP/1.1\" 200 2761 \"-\" \"Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.6899\"","timestamp":"2025-11-05T14:43:50.129Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:44:32 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:44:32.487Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:49:29 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:49:29.339Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:14:55:32 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T14:55:32.515Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-05T16:06:12.032Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-05T16:06:12.564Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-05T16:06:12.597Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-05T16:06:12.600Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-05T16:06:12.607Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-05T16:06:12.774Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-05T16:06:12.782Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T16:06:12.975Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-05T16:06:14.227Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-05T16:25:51.888Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-05T16:25:52.229Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-05T16:25:52.258Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-05T16:25:52.260Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-05T16:25:52.264Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-05T16:25:52.341Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-05T16:25:52.374Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T16:25:52.678Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-05T16:25:53.815Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:27:21 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:27:21.116Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:33:47 +0000] \"POST /api/auth/register HTTP/1.1\" 400 43 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:33:47.490Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:34:01 +0000] \"POST /api/auth/register HTTP/1.1\" 400 35 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:34:01.368Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:34:07 +0000] \"POST /api/auth/register HTTP/1.1\" 400 41 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:34:07.690Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:34:21 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:34:21.237Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:34:46 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:34:46.840Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:35:04 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:35:04.764Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:37:07 +0000] \"POST /api/auth/login HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:37:07.135Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:37:08 +0000] \"POST /api/auth/login HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:37:08.214Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:37:48 +0000] \"GET /api/auth/login HTTP/1.1\" 404 1101 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:37:48.754Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:16:37:56 +0000] \"POST /api/auth/login HTTP/1.1\" 429 81 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T16:37:56.476Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:17:46:27 +0000] \"POST /api/auth/login HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T17:46:27.445Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:17:49:14 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T17:49:14.082Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [05/Nov/2025:17:50:56 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-05T17:50:56.987Z"}
+{"level":"http","message":"::1 - - [05/Nov/2025:17:55:31 +0000] \"POST /api/auth/login HTTP/1.1\" 200 912 \"-\" \"PostmanRuntime/7.49.1\"","timestamp":"2025-11-05T17:55:31.718Z"}
+{"level":"http","message":"::1 - - [05/Nov/2025:17:56:54 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"PostmanRuntime/7.49.1\"","timestamp":"2025-11-05T17:56:54.649Z"}
+{"level":"http","message":"::1 - - [05/Nov/2025:17:59:46 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"PostmanRuntime/7.49.1\"","timestamp":"2025-11-05T17:59:46.521Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-05T21:57:40.941Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-05T21:57:41.287Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-05T21:57:41.317Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-05T21:57:41.320Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-05T21:57:41.324Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-05T21:57:41.405Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-05T21:57:41.409Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-05T21:57:41.561Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-05T21:57:42.920Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T11:27:35.520Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T11:27:36.042Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T11:27:36.075Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T11:27:36.082Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T11:27:36.088Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T11:27:36.245Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T11:27:36.253Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T11:27:36.441Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T11:27:37.131Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:11:29:00 +0000] \"POST /api/auth/register HTTP/1.1\" 500 24 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T11:29:00.157Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T12:01:18.698Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T12:01:18.985Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T12:01:19.009Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T12:01:19.012Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T12:01:19.015Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T12:01:19.088Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T12:01:19.091Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T12:01:19.314Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T12:01:20.294Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:04:56 +0000] \"POST /api/auth/register HTTP/1.1\" 201 205 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:04:56.787Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:11:07 +0000] \"POST /api/auth/login HTTP/1.1\" 401 42 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:11:07.818Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T12:24:55.402Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T12:24:55.743Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T12:24:55.768Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T12:24:55.770Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T12:24:55.775Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T12:24:55.871Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T12:24:55.876Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-11-06T12:24:56.364Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T12:24:56.548Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:27:09 +0000] \"GET /api/auth/login HTTP/1.1\" 404 1101 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:27:09.779Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:27:17 +0000] \"POST /api/auth/login HTTP/1.1\" 401 42 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:27:17.562Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:27:33 +0000] \"POST /api/auth/login HTTP/1.1\" 401 42 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:27:33.155Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:27:33 +0000] \"POST /api/auth/login HTTP/1.1\" 401 42 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:27:33.882Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:27:34 +0000] \"POST /api/auth/login HTTP/1.1\" 401 42 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:27:34.286Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T12:33:35.606Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T12:33:36.060Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T12:33:36.100Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T12:33:36.104Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T12:33:36.110Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T12:33:36.240Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T12:33:36.246Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-11-06T12:33:36.789Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T12:33:37.042Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T12:33:45.324Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T12:33:45.824Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T12:33:45.864Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T12:33:45.867Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T12:33:45.876Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T12:33:46.010Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T12:33:46.017Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-11-06T12:33:46.492Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T12:33:46.578Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:33:55 +0000] \"POST /api/auth/login HTTP/1.1\" 200 454 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:33:55.472Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:42:22 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 29 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:42:22.350Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:43:36 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:43:36.507Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:43:54 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:43:54.804Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:46:03 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:46:03.754Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:47:01 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:47:01.863Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:47:02 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:47:02.740Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:48:39 +0000] \"GET /api/authors/apply HTTP/1.1\" 500 108 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:48:39.894Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:12:48:46 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T12:48:46.942Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T14:56:14.026Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T14:56:14.447Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T14:56:14.475Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T14:56:14.477Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T14:56:14.483Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T14:56:14.529Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T14:56:14.533Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T14:56:17.335Z"}
+{"level":"info","message":"Email transporter verified successfully","timestamp":"2025-11-06T14:56:20.163Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:56:35 +0000] \"POST /api/auth/login HTTP/1.1\" 200 454 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:56:35.042Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:56:51 +0000] \"POST /api/authors/apply HTTP/1.1\" 400 74 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:56:51.576Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T15:09:41.349Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T15:09:41.815Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T15:09:41.851Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T15:09:41.854Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T15:09:41.859Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T15:09:41.980Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T15:09:41.988Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T15:09:42.148Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T15:09:42.568Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:10:03 +0000] \"POST /api/authors/apply HTTP/1.1\" 201 322 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:10:03.260Z"}
+{"level":"info","message":"Cache cleared after POST operation","timestamp":"2025-11-06T15:10:03.262Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:43:40 +0000] \"POST /api/auth/register HTTP/1.1\" 201 196 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:43:40.062Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:45:24 +0000] \"POST /api/auth/login HTTP/1.1\" 200 436 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:45:24.919Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:46:39 +0000] \"GET /api/authors?status=pending HTTP/1.1\" 200 584 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:46:39.327Z"}
+{"level":"info","message":"Cached: /api/authors?status=pending","timestamp":"2025-11-06T15:46:39.328Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:52:27 +0000] \"PATCH /api/authors/690cbab45c5ddc7acc0a97e/approve HTTP/1.1\" 401 29 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:52:27.482Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:52:43 +0000] \"PATCH /api/authors/690cbab45c5ddc7acc0a97e/approve HTTP/1.1\" 400 66 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:52:43.786Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:55:10 +0000] \"PATCH /api/authors/690cbab45c5ddc7acc0a97e/approve HTTP/1.1\" 400 126 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:55:10.327Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:56:47 +0000] \"PATCH /api/authors/690c8ee7c70cd658229276bc/approve HTTP/1.1\" 404 30 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:56:47.873Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:57:59 +0000] \"PATCH /api/authors/690c8ee7c70cd658229276bc/approve HTTP/1.1\" 404 30 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:57:59.026Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:16:00:02 +0000] \"PATCH /api/authors/690cbab45c5ddc7acc0a97e/approve HTTP/1.1\" 400 126 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T16:00:02.630Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:16:02:28 +0000] \"POST /api/authors/apply HTTP/1.1\" 401 46 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T16:02:28.994Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:16:02:56 +0000] \"POST /api/auth/login HTTP/1.1\" 200 454 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T16:02:56.570Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:16:03:13 +0000] \"POST /api/authors/apply HTTP/1.1\" 201 322 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T16:03:13.165Z"}
+{"level":"error","message":"Redis DEL PATTERN error: Error: MISCONF Redis is configured to save RDB snapshots, but it is currently not able to persist on disk. Commands that may modify the data set are disabled, because this instance is configured to report errors during writes if RDB snapshotting fails (stop-writes-on-bgsave-error option). Please check the Redis logs for details about the RDB error.","timestamp":"2025-11-06T16:03:13.167Z"}
+{"level":"info","message":"Cache cleared after POST operation","timestamp":"2025-11-06T16:03:13.167Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:16:03:58 +0000] \"PATCH /api/authors/690cc6c15cd5dcc7acc0a99f/approve HTTP/1.1\" 200 379 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T16:03:58.774Z"}
+{"level":"error","message":"Redis DEL PATTERN error: Error: MISCONF Redis is configured to save RDB snapshots, but it is currently not able to persist on disk. Commands that may modify the data set are disabled, because this instance is configured to report errors during writes if RDB snapshotting fails (stop-writes-on-bgsave-error option). Please check the Redis logs for details about the RDB error.","timestamp":"2025-11-06T16:03:58.776Z"}
+{"level":"info","message":"Cache cleared after PATCH operation","timestamp":"2025-11-06T16:03:58.776Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:16:06:29 +0000] \"PATCH /api/authors/690cc6c15cd5dcc7acc0a99f/revoke HTTP/1.1\" 400 68 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T16:06:29.462Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:16:06:36 +0000] \"PATCH /api/authors/690cc6c15cd5dcc7acc0a99f/revoke HTTP/1.1\" 400 102 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T16:06:36.486Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T14:24:54.006Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T14:24:54.320Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T14:24:54.342Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T14:24:54.344Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T14:24:54.348Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T14:24:54.431Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T14:24:54.434Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:24:54.632Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T14:24:55.022Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:25:05 +0000] \"PATCH /api/authors/690cc6c15cd5dcc7acc0a99f/revoke HTTP/1.1\" 200 459 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:25:05.009Z"}
+{"level":"info","message":"Cache cleared after PATCH operation","timestamp":"2025-11-06T14:25:05.011Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T14:39:30.319Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T14:39:30.609Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T14:39:30.630Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T14:39:30.632Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T14:39:30.637Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T14:39:30.718Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T14:39:30.722Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:39:30.903Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T14:39:31.277Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:39:58 +0000] \"POST /api/categories HTTP/1.1\" 403 25 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:39:59.000Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:40:13 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:40:13.816Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:41:38 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:41:38.528Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:41:52 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:41:52.860Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T14:42:40.198Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T14:42:40.486Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T14:42:40.509Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T14:42:40.510Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T14:42:40.515Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T14:42:40.590Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T14:42:40.593Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:42:40.747Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T14:42:41.183Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:42:55 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:42:55.260Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:42:57 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:42:57.075Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:42:57 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:42:57.722Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:42:58 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:42:58.199Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:43:03 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:43:03.375Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:43:30 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:43:30.217Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T14:48:26.801Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T14:48:27.120Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T14:48:27.140Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T14:48:27.142Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T14:48:27.147Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T14:48:27.227Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T14:48:27.232Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:48:27.389Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T14:48:27.803Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:48:34 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:48:34.276Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:50:03 +0000] \"POST /api/auth/login HTTP/1.1\" 200 436 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:50:03.346Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:50:20 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:50:20.285Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:50:28 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:50:28.384Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T14:53:27.354Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T14:53:27.690Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T14:53:27.711Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T14:53:27.713Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T14:53:27.716Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T14:53:27.795Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T14:53:27.802Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:53:27.953Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T14:53:28.356Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:53:30 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:53:30.620Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:53:40 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:53:40.961Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:53:47 +0000] \"POST /api/auth/login HTTP/1.1\" 200 436 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:53:47.138Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:54:06 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:54:06.171Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:54:06 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:54:06.796Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:54:07 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:54:07.087Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:54:07 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:54:07.277Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:54:07 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:54:07.460Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:54:07 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:54:07.594Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T14:54:33.570Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T14:54:33.876Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T14:54:33.896Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T14:54:33.898Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T14:54:33.902Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T14:54:33.979Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T14:54:33.985Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:54:34.138Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T14:54:34.559Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:54:43 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:54:43.412Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:54:59 +0000] \"POST /api/auth/login HTTP/1.1\" 401 37 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:54:59.603Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:55:04 +0000] \"POST /api/auth/login HTTP/1.1\" 200 436 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:55:04.932Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:55:21 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:55:21.883Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T14:57:57.427Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T14:57:57.715Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T14:57:57.748Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T14:57:57.752Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T14:57:57.757Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T14:57:57.854Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T14:57:57.858Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T14:57:58.017Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T14:57:58.415Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:58:03 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:58:03.372Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:58:10 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:58:10.573Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:58:22 +0000] \"POST /api/auth/login HTTP/1.1\" 401 37 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:58:22.373Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:58:26 +0000] \"POST /api/auth/login HTTP/1.1\" 200 436 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:58:26.786Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:14:58:43 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T14:58:43.031Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T15:03:51.983Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T15:03:52.248Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T15:03:52.269Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T15:03:52.271Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T15:03:52.274Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T15:03:52.350Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T15:03:52.353Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T15:03:52.517Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T15:03:52.957Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:04:00 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:04:00.885Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:04:10 +0000] \"POST /api/auth/login HTTP/1.1\" 401 37 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:04:10.015Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:04:14 +0000] \"POST /api/auth/login HTTP/1.1\" 200 436 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:04:14.105Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:04:38 +0000] \"POST /api/categories HTTP/1.1\" 500 730 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:04:38.870Z"}
+{"level":"info","message":"[GROQ] chat route loaded with model: llama-3.1-8b-instant","timestamp":"2025-11-06T15:06:52.145Z"}
+{"level":"info","message":"[CRON] starting logs cleaner schedules","timestamp":"2025-11-06T15:06:52.414Z"}
+{"level":"info","message":"Serving the endpoint of Swagger UI at : http://18.184.165.152:3000/api-docs","timestamp":"2025-11-06T15:06:52.434Z"}
+{"level":"info","message":"WebSocket server initialized.","timestamp":"2025-11-06T15:06:52.436Z"}
+{"level":"info","message":"Server running on: http://18.184.165.152:3000","timestamp":"2025-11-06T15:06:52.440Z"}
+{"level":"info","message":"Redis client connected","timestamp":"2025-11-06T15:06:52.511Z"}
+{"level":"info","message":"Redis client ready","timestamp":"2025-11-06T15:06:52.518Z"}
+{"level":"error","message":"Email transporter verification failed:","timestamp":"2025-11-06T15:06:52.689Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2025-11-06T15:06:53.085Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:07:02 +0000] \"POST /api/categories HTTP/1.1\" 401 48 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:07:02.148Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:07:09 +0000] \"POST /api/auth/login HTTP/1.1\" 401 37 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:07:09.002Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:07:13 +0000] \"POST /api/auth/login HTTP/1.1\" 200 436 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:07:13.281Z"}
+{"level":"http","message":"::ffff:127.0.0.1 - - [06/Nov/2025:15:07:33 +0000] \"POST /api/categories HTTP/1.1\" 201 153 \"-\" \"Thunder Client (https://www.thunderclient.com)\"","timestamp":"2025-11-06T15:07:33.245Z"}
+{"level":"info","message":"Cache cleared after POST operation","timestamp":"2025-11-06T15:07:33.246Z"}

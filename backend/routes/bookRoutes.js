@@ -1,28 +1,68 @@
+// routes/bookRoutes.js
 import express from "express";
+import verifyJWT from "../middleware/verifyJWT.js";
+import roleCheck from "../middleware/roleCheck.js";
+import { validateBody, validateQuery } from "../middleware/validate.js";
+import { simpleCache, clearCacheOnWrite } from "../middleware/cache.js";
+
 import {
   listBooks,
   getBook,
   createBook,
   updateBook,
-  deleteBook,
+  deleteBook
 } from "../controllers/bookController.js";
-import verifyJWT from "../middleware/verifyJWT.js";
-import roleCheck from "../middleware/roleCheck.js";
-import { validateBody, validateQuery } from "../middleware/validate.js";
-import { createBookSchema, updateBookSchema } from "../validators/book.validation.js";
+
+import {
+  createBookSchema,
+  updateBookSchema
+} from "../validators/book.validation.js";
+
 import { listBooksQuery } from "../validators/book.query.validation.js";
-import { simpleCache, clearCacheOnWrite } from "../middleware/cache.js";
 
 const router = express.Router();
 
-// GET routes with caching (30 minutes cache)
+/* ===============================
+   PUBLIC ROUTES (no login)
+   =============================== */
+
+// List all books (with filters, pagination, sorting)
 router.get("/", simpleCache(1800), validateQuery(listBooksQuery), listBooks);
+
+// Get one book
 router.get("/:id", simpleCache(1800), getBook);
 
-// Write routes with cache clearing
-router.post("/", verifyJWT, roleCheck(["admin"]), validateBody(createBookSchema), clearCacheOnWrite(), createBook);
-router.put("/:id", verifyJWT, roleCheck(["admin"]), validateBody(updateBookSchema), clearCacheOnWrite(), updateBook);
-router.delete("/:id", verifyJWT, roleCheck(["admin"]), clearCacheOnWrite(), deleteBook);
+/* ===============================
+   PROTECTED ROUTES (admin or approved author)
+   =============================== */
 
+// Create a new book — must be admin or approved author
+router.post(
+  "/",
+  verifyJWT,
+  roleCheck(["admin", "author"]),
+  validateBody(createBookSchema),
+  clearCacheOnWrite(),
+  createBook
+);
 
-export default router ;
+// Update a book — must be admin or the author who owns it
+router.put(
+  "/:id",
+  verifyJWT,
+  roleCheck(["admin", "author"]),
+  validateBody(updateBookSchema),
+  clearCacheOnWrite(),
+  updateBook
+);
+
+// Delete (soft or hard) — must be admin or the author who owns it
+router.delete(
+  "/:id",
+  verifyJWT,
+  roleCheck(["admin", "author"]),
+  clearCacheOnWrite(),
+  deleteBook
+);
+
+export default router;

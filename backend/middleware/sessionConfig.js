@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// 🟢 Debug log to verify the environment variable
+console.log(">>> MONGO_URI loaded:", process.env.MONGO_URI);
+
 const sessionConfig = session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -16,6 +19,5 @@ const sessionConfig = session({
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 });
-
 
 export default sessionConfig;

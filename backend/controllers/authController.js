@@ -15,7 +15,9 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-
+    if(user.isDeleted){
+      return res.status(401).json({error:'Email has been deleted please restore before you can use it again '});
+    }
     if (!user.isVerified) {
       return res.status(401).json({ error: 'Please verify your email first' });
     }
@@ -28,7 +30,7 @@ const login = async (req, res) => {
     await Session.deleteMany({ userId: user._id });
 
     const token = jwt.sign(
-      { id: user._id, email: user.email, addresses: user.addresses, role: user.role },
+      { id: user._id, FirstName: user.FirstName, LastName: user.LastName, email: user.email, addresses: user.addresses, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
