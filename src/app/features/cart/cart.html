@@ -1,0 +1,131 @@
+<div class="cart-container">
+  <!-- Empty Cart -->
+  <div *ngIf="isEmpty || cartItems.length === 0" class="empty-cart">
+    <mat-icon class="empty-icon">shopping_cart</mat-icon>
+    <h2>Your cart is empty</h2>
+    <p>Add some books to get started!</p>
+    <button mat-raised-button color="primary">
+      Browse Books
+    </button>
+  </div>
+
+  <!-- Cart with Items -->
+  <div *ngIf="!isEmpty && cartItems.length > 0" class="cart-content">
+    <!-- Header -->
+    <div class="cart-header">
+      <h1>Shopping Cart ({{ itemCount }} items)</h1>
+      <button mat-button color="warn" (click)="clearCart()">
+        <mat-icon>delete_sweep</mat-icon>
+        Clear Cart
+      </button>
+    </div>
+
+    <!-- Cart Items -->
+    <div class="cart-items">
+      <mat-card *ngFor="let item of cartItems" class="cart-item-card">
+        <div class="item-content">
+          <!-- Book Image -->
+          <div class="item-image">
+            <img [src]="item.image" [alt]="item.title">
+          </div>
+
+          <!-- Book Details -->
+          <div class="item-details">
+            <h3>{{ item.title }}</h3>
+            <p class="author">by {{ item.author }}</p>
+            <p class="price">{{ item.price }} EGP</p>
+            
+            <!-- Stock Status -->
+            <div class="stock-status" [class.out-of-stock]="!item.isInStock">
+              <mat-icon *ngIf="item.isInStock">check_circle</mat-icon>
+              <mat-icon *ngIf="!item.isInStock">error</mat-icon>
+              <span *ngIf="item.isInStock">In Stock ({{ item.stock }} available)</span>
+              <span *ngIf="!item.isInStock">Out of Stock</span>
+            </div>
+          </div>
+
+          <!-- Quantity Controls -->
+          <div class="item-quantity">
+            <button 
+              mat-icon-button 
+              (click)="decreaseQty(item)"
+              [disabled]="item.qty <= 1"
+            >
+              <mat-icon>remove</mat-icon>
+            </button>
+            
+            <input 
+              type="number" 
+              [value]="item.qty" 
+              (change)="updateQty(item, $event)"
+              min="1"
+              [max]="item.stock"
+            >
+            
+            <button 
+              mat-icon-button 
+              (click)="increaseQty(item)"
+              [disabled]="item.qty >= item.stock"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <!-- Item Total -->
+          <div class="item-total">
+            <p class="total-label">Total</p>
+            <p class="total-amount">{{ getItemTotal(item) }} EGP</p>
+          </div>
+
+          <!-- Remove Button -->
+          <button 
+            mat-icon-button 
+            color="warn" 
+            (click)="removeItem(item)"
+            class="remove-btn"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Cart Summary -->
+    <mat-card class="cart-summary">
+      <h2>Order Summary</h2>
+      
+      <div class="summary-row">
+        <span>Subtotal ({{ itemCount }} items)</span>
+        <span>{{ subtotal }} EGP</span>
+      </div>
+      
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span class="free">FREE</span>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>{{ subtotal }} EGP</span>
+      </div>
+
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="checkout-btn"
+        (click)="checkout()"
+      >
+        Proceed to Checkout
+      </button>
+
+      <button 
+        mat-stroked-button 
+        class="continue-btn"
+      >
+        Continue Shopping
+      </button>
+    </mat-card>
+  </div>
+</div>

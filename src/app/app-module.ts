@@ -4,10 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Header } from './core/components/header/header';
-import { Footer } from './core/components/footer/footer';
-import { CoreModule } from './core/core-module';
+import { H } from '@angular/cdk/keycodes';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,8 +14,7 @@ import { CoreModule } from './core/core-module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    CoreModule
+    HttpClientModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners()

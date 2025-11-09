@@ -2,7 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-{ path: 'dashboard', loadChildren: () => import('./features/dashboard/dashboard-module').then(m => m.DashboardModule) },
+  {
+    path: 'cart',
+    loadChildren: () => import('./features/cart/cart.module').then(m => m.CartModule)
+  }
 ];
 
 @NgModule({
