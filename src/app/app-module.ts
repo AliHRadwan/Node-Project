@@ -6,15 +6,20 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { H } from '@angular/cdk/keycodes';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CoreModule } from './core/core-module';
+
 
 @NgModule({
   declarations: [
-    App
+    App,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    CoreModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners()
