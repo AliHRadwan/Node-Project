@@ -5,6 +5,12 @@ const routes: Routes = [
   {
     path: 'cart',
     loadChildren: () => import('./features/cart/cart.module').then(m => m.CartModule)
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () =>
+      import('./features/dashboard/dashboard.module')
+        .then(m => m.DashboardModule)
   }
 ];
 
