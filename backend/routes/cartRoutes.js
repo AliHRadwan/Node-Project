@@ -17,4 +17,7 @@ router.delete('/:bookId', verifyJWT, cartController.removeFromCartAuth);
 
 router.delete('/', verifyJWT, cartController.clearCartAuth);
 
+router.post('/validate', verifyJWT, cartController.validateCartStock);
+
+
 export default router;
