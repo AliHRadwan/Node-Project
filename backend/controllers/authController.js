@@ -96,17 +96,17 @@ const sendLoginAlertEmail = async (user, req) => {
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; color:#222; padding:24px; background:#f6f8fa;">
         <div style="max-width:600px; margin:0 auto; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.06);">
           
-          <div style="padding:20px 24px; border-bottom:1px solid #eef2f6; display:flex; align-items:center; gap:12px;">
+          <div style="padding:20px 24px; border-bottom:1px solid #f93c65ff; display:flex; align-items:center; gap:12px;">
             <div>
-              <h2 style="margin:0; font-size:18px; color:#0b57d0;">We noticed a new login to your account</h2>
-              <p style="margin:4px 0 0; color:#586069; font-size:13px;">If this was you, you can safely ignore this message.</p>
+              <h2 style="margin:0; font-size:18px; color:#f93c65ff;">We noticed a new login to your account</h2>
+              <p style="margin:4px 0 0; color:#f93c65ff; font-size:13px;">If this was you, you can safely ignore this message.</p>
             </div>
           </div>
 
           <div style="padding:20px 24px;">
-            <p style="margin:0 0 12px; color:#333;">Hi <strong>${user.name || "there"}</strong>,</p>
+            <p style="margin:0 0 12px; color:#333;">Hi <strong>${user.FirstName || "there"}</strong>,</p>
 
-            <p style="margin:0 0 14px; color:#333;">We noticed a new sign-in to your account. Here are the details:</p>
+            <p style="margin:0 0 14px; color:#f93c65ff;">We noticed a new sign-in to your account. Here are the details:</p>
 
             <table style="width:100%; border-collapse:collapse; margin-bottom:16px;">
               <tr>
@@ -122,7 +122,7 @@ const sendLoginAlertEmail = async (user, req) => {
             <p style="margin:0 0 18px; color:#333;">If this wasn't you, please secure your account immediately.</p>
 
             <p style="margin:0 0 24px;">
-              <a href="#" style="display:inline-block; padding:10px 16px; background:#0b57d0; color:#fff; text-decoration:none; border-radius:6px; font-weight:600;">Secure my account</a>
+              <a href="http://localhost:4200/features/login" style="display:inline-block; padding:10px 16px; background:#f93c65ff; color:#eef2f6; text-decoration:none; border-radius:6px; font-weight:600;">Secure my account</a>
             </p>
           </div>
           <div style="padding:14px 24px; background:#fbfdff; border-top:1px solid #eef2f6; color:#6b7280; font-size:13px;">

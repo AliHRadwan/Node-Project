@@ -41,7 +41,7 @@ const user_register = async (req, res) => {
 
     await newuser.save();
 
-    await newEmailVerificationToken(newuser);
+    await newEmailVerificationToken(newuser.email,newuser);
 
     res.status(201).json({
       message: "User registered successfully",
@@ -62,7 +62,7 @@ const user_register = async (req, res) => {
   }
 };
 
-export  async function newEmailVerificationToken(newuser) 
+export  async function newEmailVerificationToken(email,newuser) 
   {
     const verifyToken = crypto.randomBytes(32).toString("hex");
     const tokenHash = crypto.createHash("sha256").update(verifyToken).digest("hex");
@@ -84,6 +84,6 @@ export  async function newEmailVerificationToken(newuser)
         <p>This link will expire in 15 minutes.</p>
       `;
 
-    await sendEmail(newuser.email, "Verify your email address", html);
+    await sendEmail(email, "Verify your email address", html);
   }
 export default user_register;
