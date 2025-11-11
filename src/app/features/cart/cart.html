@@ -1,16 +1,21 @@
 <div class="cart-container">
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+
   <!-- Empty Cart -->
-  <div *ngIf="isEmpty || cartItems.length === 0" class="empty-cart">
+  <div *ngIf="!loading && isEmpty" class="empty-cart">
     <mat-icon class="empty-icon">shopping_cart</mat-icon>
     <h2>Your cart is empty</h2>
     <p>Add some books to get started!</p>
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" routerLink="/books">
       Browse Books
     </button>
   </div>
 
   <!-- Cart with Items -->
-  <div *ngIf="!isEmpty && cartItems.length > 0" class="cart-content">
+  <div *ngIf="!loading && !isEmpty && cart" class="cart-content">
     <!-- Header -->
     <div class="cart-header">
       <h1>Shopping Cart ({{ itemCount }} items)</h1>
@@ -26,20 +31,26 @@
         <div class="item-content">
           <!-- Book Image -->
           <div class="item-image">
-            <img [src]="item.image" [alt]="item.title">
+            <img 
+              [src]="getBook(item)?.image?.url || 'https://via.placeholder.com/150x200?text=Book'" 
+              [alt]="getBook(item)?.title || 'Book'"
+            >
           </div>
 
           <!-- Book Details -->
           <div class="item-details">
-            <h3>{{ item.title }}</h3>
-            <p class="author">by {{ item.author }}</p>
-            <p class="price">{{ item.price }} EGP</p>
+            <h3>{{ getBook(item)?.title || 'Unknown Book' }}</h3>
+            <p class="author">by {{ getBook(item)?.author || 'Unknown Author' }}</p>
+            <p class="price">{{ item.priceAtAdd }} EGP</p>
             
             <!-- Stock Status -->
             <div class="stock-status" [class.out-of-stock]="!item.isInStock">
               <mat-icon *ngIf="item.isInStock">check_circle</mat-icon>
               <mat-icon *ngIf="!item.isInStock">error</mat-icon>
-              <span *ngIf="item.isInStock">In Stock ({{ item.stock }} available)</span>
+              <span *ngIf="item.isInStock">
+                In Stock 
+                <span *ngIf="item.stockAvailable">({{ item.stockAvailable }} available)</span>
+              </span>
               <span *ngIf="!item.isInStock">Out of Stock</span>
             </div>
           </div>
@@ -59,13 +70,13 @@
               [value]="item.qty" 
               (change)="updateQty(item, $event)"
               min="1"
-              [max]="item.stock"
+              [max]="item.stockAvailable || 999"
             >
             
             <button 
               mat-icon-button 
               (click)="increaseQty(item)"
-              [disabled]="item.qty >= item.stock"
+              [disabled]="item.qty >= (item.stockAvailable || 999)"
             >
               <mat-icon>add</mat-icon>
             </button>
@@ -123,6 +134,7 @@
       <button 
         mat-stroked-button 
         class="continue-btn"
+        routerLink="/books"
       >
         Continue Shopping
       </button>
