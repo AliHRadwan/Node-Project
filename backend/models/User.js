@@ -4,11 +4,19 @@ import Address from "./userAddress.js";
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    FirstName: {
       type: String,
-      required: [true, "Name is required"],
-      minlength: [2, "Name must be at least 2 characters"],
-      maxlength: [50, "Name cannot exceed 50 characters"],
+      required: [true, "First Name is required"],
+      minlength: [2, "First Name must be at least 2 characters"],
+      maxlength: [50, "First Name cannot exceed 50 characters"],
+      trim: true,
+    },
+
+    LastName: {
+      type: String,
+      required: [true, "Last Name is required"],
+      minlength: [2, "Last Name must be at least 2 characters"],
+      maxlength: [50, "Last Name cannot exceed 50 characters"],
       trim: true,
     },
 
@@ -31,15 +39,21 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["admin", "user"],
+      enum: ["admin", "user", "author"],
       default: "user",
     },
-
     isVerified: {
       type: Boolean,
       default: false,
     },
-
+    isDeleted: { 
+      type: Boolean, 
+      default: false 
+    },
+    deletedAt: { 
+      type: Date, 
+      default: null 
+    },
     addresses: [Address],
   },
   { timestamps: true }

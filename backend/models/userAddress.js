@@ -11,6 +11,6 @@ const addressSchema = new mongoose.Schema({
   country: { type: String },
   postalCode: { type: String },
   isDefault: { type: Boolean, default: false },
-}, { _id: false });
+}, { _id: true });
 
 export default addressSchema;

@@ -2,13 +2,18 @@
 import Joi from "joi";
 
 export const registerSchema = Joi.object({
-  name: Joi.string().min(2).max(50).required(),
+  FirstName: Joi.string().min(2).max(50).required(),
+  LastName: Joi.string().min(2).max(50).required(),
   email: Joi.string().email().required(),
   password: Joi.string()
     .min(8)
     .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$"))
     .message("Password must contain at least one uppercase, one lowercase, and one number")
     .required(),
+  confirmPassword: Joi.any()
+    .valid(Joi.ref("password"))
+    .required()
+    .messages({ "any.only": "Confirm password does not match password" }),
   addresses: Joi.array()
     .items(
       Joi.object({
