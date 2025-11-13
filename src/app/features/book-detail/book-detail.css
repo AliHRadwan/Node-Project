@@ -1,0 +1,105 @@
+/* Book Detail Page Styles */
+.book-image-container {
+  position: sticky;
+  top: 100px;
+}
+
+.book-image-container img {
+  transition: transform 0.3s ease;
+}
+
+.book-image-container:hover img {
+  transform: scale(1.02);
+}
+
+.book-badge {
+  z-index: 10;
+}
+
+.detail-item {
+  padding: 0.5rem 0;
+}
+
+.detail-item label {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-item .fw-semibold {
+  color: #212529;
+  font-size: 1rem;
+}
+
+/* Action buttons */
+button[mat-raised-button],
+button[mat-stroked-button] {
+  transition: all 0.3s ease;
+}
+
+button[mat-raised-button]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+button[mat-stroked-button]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Rating stars */
+.text-warning i {
+  margin-right: 2px;
+}
+
+/* Badge styling */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Card styling */
+.card {
+  border-radius: 12px;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .book-image-container {
+    position: relative;
+    top: 0;
+    margin-bottom: 2rem;
+  }
+
+  h1.display-5 {
+    font-size: 2rem;
+  }
+
+  button[mat-raised-button],
+  button[mat-stroked-button] {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* General improvements */
+.text-primary {
+  color: #dc3545 !important;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
