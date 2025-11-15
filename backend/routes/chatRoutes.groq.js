@@ -6,7 +6,7 @@ const router = express.Router();
 dotenv.config();
 
 const API_KEY = process.env.GROQ_API_KEY;
-const MODEL  = process.env.GROQ_MODEL || "llama-3.2-3b-preview";
+const MODEL  = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
 
 // Debug — prove which file is active
 winstonLogger.info(`[GROQ] chat route loaded with model: ${MODEL}`);

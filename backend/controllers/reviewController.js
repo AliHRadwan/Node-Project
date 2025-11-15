@@ -1,7 +1,50 @@
 import Review from "../models/reviewModel.js";
 import Book from "../models/Book.js";
 import Order from "../models/Order.js";
+import User from "../models/User.js";
 import { winstonLogger } from "../config/logger.js";
+import dotenv from "dotenv";
+dotenv.config();
+
+const API_KEY = process.env.GROQ_API_KEY;
+const MODEL  = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
+
+const filterReview = async (revieww) => {
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        temperature: 0.6,
+        max_tokens: 256,
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a text-filtering assistant. When I provide you with any text in Arabic, English, or any human language, you must scan it for offensive, insulting, or inappropriate words. For every offensive word you identify, replace all of its characters with asterisks (****). After modifying the text, return only the filtered text and nothing else.",
+          },
+          { role: "user", content: revieww },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      return "";
+    }
+
+    const data = await response.json();
+    const filterdReview = data?.choices?.[0]?.message?.content ?? "";
+
+    return filterdReview;
+
+  } catch (err) {
+    return "";
+  }
+}
 
 const updateBookRating = async (bookId) => {
   try {
@@ -30,7 +73,7 @@ const updateBookRating = async (bookId) => {
   }
 };
 
-export const getReviews = async (req, res) => {
+export const getBookReviews = async (req, res) => {
   try {
     const { bookId } = req.params;
 
@@ -41,11 +84,11 @@ export const getReviews = async (req, res) => {
 
     const [reviews, totalItems] = await Promise.all([
       Review.find(filter)
-        .populate('userId', 'name')
+        .populate('userId', 'FirstName LastName')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
-    
+
       Review.countDocuments(filter)
     ]);
 
@@ -60,9 +103,52 @@ export const getReviews = async (req, res) => {
       },
       data: reviews,
     });
-    
+
   } catch (error) {
-    winstonLogger.error("Server error on getReviews controller", error);
+    winstonLogger.error("Server error while getting the book Reviews", error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const getUserReviews = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const tokenUserId = req.user.id;
+    const userRole = req.user.role;
+
+    if (userRole === "user" && userId !== tokenUserId) {
+      return res.status(403).json({ message: 'You are not allowd' });
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const filter = { userId: userId };
+
+    const [reviews, totalItems] = await Promise.all([
+      Review.find(filter)
+        .populate('bookId', 'title')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+
+      Review.countDocuments(filter)
+    ]);
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    res.status(200).json({
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalItems: totalItems,
+        limit: limit,
+      },
+      data: reviews,
+    });
+
+  } catch (error) {
+    winstonLogger.error("Server error while getting the user Reviews", error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -90,11 +176,16 @@ export const createReview = async (req, res) => {
       });
     }
 
+    let filterdReview = await filterReview(review);
+    if (filterdReview === "") {
+      filterdReview = review;
+    }
+
     const newReview = new Review({
       userId,
       bookId,
       rating,
-      review,
+      review: filterdReview
     });
     await newReview.save();
 
@@ -125,8 +216,13 @@ export const updateReview = async (req, res) => {
       });
     }
 
+    let filterdReview = await filterReview(review);
+    if (filterdReview === "") {
+      filterdReview = review;
+    }
+
     reviewDoc.rating = rating;
-    reviewDoc.review = review;
+    reviewDoc.review = filterdReview;
     await reviewDoc.save();
 
     await updateBookRating(reviewDoc.bookId);
@@ -160,7 +256,7 @@ export const deleteReview = async (req, res) => {
     await reviewDoc.deleteOne();
 
     await updateBookRating(bookId);
-  
+
     res.status(200).json({ message: 'Review deleted successfully' });
   } catch (error) {
     winstonLogger.error("Server error on deleteReview controller", error);
