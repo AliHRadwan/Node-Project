@@ -27,10 +27,7 @@
     <!-- Book Image -->
     <div class="col-12 col-md-5">
       <div class="book-image-container position-relative">
-        <img 
-          [src]="book.image?.url || book.image || book.coverImage || 'https://via.placeholder.com/500x700?text=No+Image'" 
-          [alt]="book.title"
-          class="img-fluid rounded shadow-lg w-100"
+        <img [src]="book.image?.url || palceholderCover" [alt]="book.title" class="img-fluid rounded shadow-lg w-100"
           style="max-height: 700px; object-fit: cover;">
         <div class="book-badge position-absolute top-0 end-0 m-3" *ngIf="book.discount">
           <span class="badge bg-danger fs-6 px-3 py-2">10% off</span>
@@ -41,7 +38,7 @@
     <!-- Book Details -->
     <div class="col-12 col-md-7">
       <h1 class="display-5 fw-bold mb-3 text-dark">{{ book.title }}</h1>
-      
+
       <!-- Author -->
       <div class="mb-3">
         <h5 class="text-muted mb-0">
@@ -73,7 +70,8 @@
       <div class="mb-4">
         <div class="d-flex align-items-baseline gap-3 mb-2">
           <h2 class="text-danger fw-bold mb-0">${{ book.price }}</h2>
-          <span class="text-decoration-line-through text-muted fs-5" *ngIf="book.originalPrice">${{ book.originalPrice }}</span>
+          <span class="text-decoration-line-through text-muted fs-5" *ngIf="book.originalPrice">${{ book.originalPrice
+            }}</span>
         </div>
         <div class="mb-3">
           <span class="badge bg-success fs-6 px-3 py-2" *ngIf="book.stock > 0">
@@ -94,18 +92,11 @@
       <!-- Action Buttons -->
       <div class="mb-5">
         <div class="d-flex gap-3 flex-wrap">
-          <button 
-            mat-raised-button 
-            class="px-5 py-3 bg-danger text-white border-0"
-            style="font-size: 1.1rem;"
-            (click)="addToCart()"
-            [disabled]="book.stock === 0">
+          <button mat-raised-button class="px-5 py-3 bg-danger text-white border-0" style="font-size: 1.1rem;"
+            (click)="addToCart()" [disabled]="book.stock === 0">
             <i class="bi bi-cart-plus me-2"></i> Add to Cart
           </button>
-          <button 
-            mat-stroked-button 
-            class="px-5 py-3 border-danger text-danger"
-            style="font-size: 1.1rem;">
+          <button mat-stroked-button class="px-5 py-3 border-danger text-danger" style="font-size: 1.1rem;">
             <i class="bi bi-heart me-2"></i> Add to Wishlist
           </button>
         </div>
@@ -160,6 +151,8 @@
         </div>
       </div>
 
+
+
       <!-- Additional Info -->
       <div class="card border-0 bg-light">
         <div class="card-body p-4">
@@ -184,6 +177,86 @@
         </div>
       </div>
     </div>
+
+  </div>
+
+  <div class="reviews-section">
+    <h2 class="fw-bold mb-4">Customer Reviews</h2>
+
+    <div class="review-summary" *ngIf="book.ratingCount > 0">
+      <div class="row align-items-center">
+        <div class="col-md-4 text-center">
+          <h3 class="display-4 fw-bold mb-0">{{ book.ratingAvg.toFixed(1) }}</h3>
+          <p class="text-muted mb-0">out of 5</p>
+        </div>
+        <div class="col-md-8">
+          <div class="d-flex align-items-center mb-2">
+            <span class="text-warning me-2">
+              <i class="bi bi-star-fill" *ngFor="let i of getStars(book.ratingAvg)"></i>
+              <i class="bi bi-star" *ngFor="let i of getEmptyStars(book.ratingAvg)"></i>
+            </span>
+            <span class="fw-semibold">{{ book.ratingAvg.toFixed(1) }} average</span>
+          </div>
+          <p class="text-muted">Based on {{ book.ratingCount }} reviews</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center py-5" *ngIf="reviewsLoading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading reviews...</span>
+      </div>
+      <p class="mt-3">Loading reviews...</p>
+    </div>
+
+    <div class="alert alert-warning" *ngIf="!reviewsLoading && reviewsError">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ reviewsError }}
+    </div>
+
+    <div class="text-center py-5" *ngIf="!reviewsLoading && !reviewsError && reviews.length === 0">
+      <i class="bi bi-chat-square-text fs-1 text-muted d-block mb-3"></i>
+      <h4 class="text-muted">No Reviews Yet</h4>
+      <p>Be the first to review this book!</p>
+    </div>
+
+    <div class="reviews-list" *ngIf="!reviewsLoading && !reviewsError && reviews.length > 0">
+      <div class="review-item" *ngFor="let review of reviews">
+        <div class="row">
+          <div class="col-12 col-md-3">
+            <div class="review-author">{{ review.userId?.FirstName || 'User' }} {{ review.userId?.LastName || '' }}</div>
+            <div class="review-date">{{ review.createdAt | date:'mediumDate' }}</div>
+          </div>
+          <div class="col-12 col-md-9 mt-3 mt-md-0">
+            <div class="review-rating mb-2">
+              <span class="me-2">
+                <i class="bi bi-star-fill" *ngFor="let i of getStars(review.rating)"></i>
+                <i class="bi bi-star" *ngFor="let i of getEmptyStars(review.rating)"></i>
+              </span>
+            </div>
+            <p class="review-body">{{ review.review }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="pagination-nav" *ngIf="!reviewsLoading && reviewPagination && reviewPagination.totalPages > 1">
+      <button class="btn btn-outline-secondary" 
+              [disabled]="currentReviewPage === 1"
+              (click)="onReviewPageChange(currentReviewPage - 1)">
+        <i class="bi bi-arrow-left"></i> Previous
+      </button>
+
+      <span class="page-info">
+        Page {{ currentReviewPage }} of {{ reviewPagination.totalPages }}
+      </span>
+
+      <button class="btn btn-outline-secondary" 
+              [disabled]="currentReviewPage === reviewPagination.totalPages"
+              (click)="onReviewPageChange(currentReviewPage + 1)">
+        Next <i class="bi bi-arrow-right"></i>
+      </button>
+    </nav>
+
   </div>
 </div>
 
