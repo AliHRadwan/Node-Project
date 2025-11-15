@@ -15,7 +15,7 @@ export const getBook = async (req, res) => {
     const hasPurchased = await Order.findOne({
       userId: userId,
       "items.bookId": bookId,
-      status: "paid",
+      status: { $in: ['paid', 'delivered'] },
     });
 
     if (!hasPurchased) {
