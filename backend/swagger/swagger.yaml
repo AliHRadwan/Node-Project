@@ -1007,17 +1007,24 @@ paths:
     get:
       tags: [Reviews]
       summary: Get all reviews for a specific book
+      description: Gets a paginated list of all reviews for a specific book. This is a public endpoint.
       parameters:
         - name: bookId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+            example: 68ece8d94f8441ee8f486882
         - name: page
           in: query
-          schema: { type: integer, default: 1 }
+          schema:
+            type: integer
+            default: 1
         - name: limit
           in: query
-          schema: { type: integer, default: 10 }
+          schema:
+            type: integer
+            default: 10
       responses:
         '200':
           description: A paginated list of reviews
@@ -1028,25 +1035,49 @@ paths:
                 properties:
                   pagination:
                     type: object
+                    properties:
+                      currentPage:
+                        type: integer
+                        example: 1
+                      totalPages:
+                        type: integer
+                        example: 3
+                      totalItems:
+                        type: integer
+                        example: 25
+                      limit:
+                        type: integer
+                        example: 10
                   data:
                     type: array
                     items:
                       $ref: '#/components/schemas/Review'
+        '500':
+          $ref: '#/components/responses/Error500'
   /api/reviews/user/{userId}:
     get:
       tags: [Reviews]
       summary: Get all reviews from a specific user
+      description: Gets a paginated list of reviews written by a specific user. A user can get their own reviews; an admin can get anyone's reviews.
+      security:
+        - bearerAuth: []
       parameters:
         - name: userId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+            example: 68eae7202ed3f81131f64f90
         - name: page
           in: query
-          schema: { type: integer, default: 1 }
+          schema:
+            type: integer
+            default: 1
         - name: limit
           in: query
-          schema: { type: integer, default: 10 }
+          schema:
+            type: integer
+            default: 10
       responses:
         '200':
           description: A paginated list of reviews
@@ -1057,10 +1088,29 @@ paths:
                 properties:
                   pagination:
                     type: object
+                    properties:
+                      currentPage:
+                        type: integer
+                        example: 1
+                      totalPages:
+                        type: integer
+                        example: 5
+                      totalItems:
+                        type: integer
+                        example: 48
+                      limit:
+                        type: integer
+                        example: 10
                   data:
                     type: array
                     items:
                       $ref: '#/components/schemas/Review'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '500':
+          $ref: '#/components/responses/Error500'
   /api/reviews:
     post:
       tags: [Reviews]
@@ -1083,19 +1133,34 @@ paths:
                 $ref: '#/components/schemas/Review'
         '400':
           description: You have already reviewed this book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
         '403':
           description: You can only review books you have purchased
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '500':
+          $ref: '#/components/responses/Error500'
   /api/reviews/{reviewId}:
     put:
       tags: [Reviews]
       summary: (User) Update an existing review
+      description: Allows a user to update their own review.
       security:
         - bearerAuth: []
       parameters:
         - name: reviewId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+            example: 68fa2432b05cf7ddb8a12345
       requestBody:
         required: true
         content:
@@ -1109,27 +1174,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
+        '401':
+          $ref: '#/components/responses/Error401'
         '403':
           description: Not authorized to update this review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
         '404':
           description: Review not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '500':
+          $ref: '#/components/responses/Error500'
+          
     delete:
       tags: [Reviews]
       summary: (User) Delete a review
+      description: Allows a user or an admin to delete a review.
       security:
         - bearerAuth: []
       parameters:
         - name: reviewId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+            example: 68fa2432b05cf7ddb8a12345
       responses:
         '200':
           description: Review deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Review deleted successfully
+        '401':
+          $ref: '#/components/responses/Error401'
         '403':
           description: Not authorized to delete this review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
         '404':
           description: Review not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+        '500':
+          $ref: '#/components/responses/Error500'
           
   # --- Cart (from CART_API.md) ---
   /api/cart:
