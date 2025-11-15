@@ -1003,12 +1003,41 @@ paths:
           $ref: '#/components/responses/Error404'
           
   # --- Reviews ---
-  /api/reviews/{bookId}:
+  /api/reviews/book/{bookId}:
     get:
       tags: [Reviews]
-      summary: Get reviews for a specific book
+      summary: Get all reviews for a specific book
       parameters:
         - name: bookId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 10 }
+      responses:
+        '200':
+          description: A paginated list of reviews
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    type: object
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+  /api/reviews/user/{userId}:
+    get:
+      tags: [Reviews]
+      summary: Get all reviews from a specific user
+      parameters:
+        - name: userId
           in: path
           required: true
           schema: { type: string }
