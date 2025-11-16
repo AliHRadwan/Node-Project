@@ -11,4 +11,7 @@ import { CartService } from '../../services/cart.service';
 export class Header {
   constructor(public cartService: CartService) {}
 
+  navigateToCart() {
+    this.router.navigate(['/cart']);
+  }
 }

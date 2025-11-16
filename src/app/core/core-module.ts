@@ -18,11 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
     Discount
   ],
   imports: [
-    CommonModule,
-    RouterModule,
-    MatBadgeModule,
-    MatIconModule,
-    MatButtonModule
+    CommonModule
   ],
    exports: [Header, Footer , Discount]  
 })

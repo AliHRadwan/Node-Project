@@ -1,5 +1,5 @@
 :root{
-  --brand:#ff5a7a;
+  --brand:#dc3545;
 }
 .brand{ color: var(--brand); }
 .logo-box{
