@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', verifyJWT, cartController.getCartAuth);
 
-// Body: { bookId, qty, priceAtAdd }
+// Body: { bookId, qty }
 router.post('/', verifyJWT, cartController.addToCartAuth);
 
 // Body: { bookId, qty }

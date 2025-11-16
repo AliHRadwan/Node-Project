@@ -21,7 +21,7 @@ export const getCartAuth = async (req, res) => {
       });
     }
 
-    // 🔥 Check stock availability for all items
+    // Check stock availability for all items
     const itemsWithStockStatus = cart.items.map(item => {
       const book = item.bookId;
       return {
@@ -62,7 +62,7 @@ export const addToCartAuth = async (req, res) => {
       });
     }
 
-    // 🔥 Get book from database (TRUSTED source for price)
+    // Get book from database (TRUSTED source for price)
     const book = await Book.findById(bookObjectId);
 
     if (!book) {
@@ -72,7 +72,7 @@ export const addToCartAuth = async (req, res) => {
       });
     }
 
-    // 🔥 Check if book is active
+    // Check if book is active
     if (book.isActive === false) {
       return res.status(400).json({
         success: false,
@@ -80,7 +80,7 @@ export const addToCartAuth = async (req, res) => {
       });
     }
 
-    // 🔥 Use price from DATABASE, not from user input!
+    // Use price from DATABASE, not from user input!
     const priceAtAdd = book.price;
 
     let cart = await Cart.findOne({ userId: userObjectId });
@@ -107,7 +107,7 @@ export const addToCartAuth = async (req, res) => {
       newQuantity = qtyValue;
     }
 
-    // 🔥 Validate stock availability
+    // Validate stock availability
     if (book.stock < newQuantity) {
       return res.status(400).json({
         success: false,
@@ -120,13 +120,13 @@ export const addToCartAuth = async (req, res) => {
     // Update cart
     if (existingItemIndex > -1) {
       cart.items[existingItemIndex].qty = newQuantity;
-      // 🔥 Update price in case it changed
+      // Update price in case it changed
       cart.items[existingItemIndex].priceAtAdd = priceAtAdd;
     } else {
       cart.items.push({
         bookId: bookObjectId,
         qty: newQuantity,
-        priceAtAdd: priceAtAdd  // 🔥 From database
+        priceAtAdd: priceAtAdd  // From database
       });
     }
 
@@ -176,7 +176,7 @@ export const updateCartItemAuth = async (req, res) => {
 
     const bookObjectId = new mongoose.Types.ObjectId(bookId);
 
-    // 🔥 Check book stock
+    // Check book stock
     const book = await Book.findById(bookObjectId);
 
     if (!book) {
@@ -186,7 +186,7 @@ export const updateCartItemAuth = async (req, res) => {
       });
     }
 
-    // 🔥 Validate stock
+    // Validate stock
     if (book.stock < qty) {
       return res.status(400).json({
         success: false,
