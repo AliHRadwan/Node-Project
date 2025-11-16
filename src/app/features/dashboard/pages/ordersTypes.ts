@@ -38,5 +38,17 @@ export interface Order {
   payment?: Payment;
 }
 
-export interface GetAllOrdersResponse { allOrders: Order[]; }
-export interface SingleOrderResponse   { order: Order; }
+
+export interface GetAllOrdersResponse {
+  message: string;
+  status: string;
+  code: number;
+  allOrders: Order[];
+}
+
+export interface SingleOrderResponse {
+  message: string;
+  status: string;
+  code: number;
+  order: Order;
+}

@@ -15,24 +15,65 @@ export class Orders {
   orders: Order[] = [];
   selected: Order | null = null;
 
+  flashText: string | null = null;
+  flashType: 'success' | 'danger' | 'info' = 'info';
+  flashTimeout?: any;
+
   constructor(private api: OrderService) { }
 
   ngOnInit(): void {
     this.load();
   }
 
-  load() {
-    this.loading = true;
-    this.error = null;
-    this.api.getAll().subscribe({
-      next: r => { this.orders = r.allOrders ?? []; this.loading = false; },
-      error: (err) => {
-        console.error('Orders load error:', err);
-        this.error = (err?.status ? `[${err.status}] ` : '') + 'Failed to load orders';
-        this.loading = false;
-      }
-    });
+  showMessage(type: 'success'|'danger'|'info', text: string) {
+  this.flashType = type;
+  this.flashText = text;
+
+  if (this.flashTimeout) {
+    clearTimeout(this.flashTimeout);
   }
+  this.flashTimeout = setTimeout(() => {
+    this.flashText = null;
+  }, 3000); 
+}
+
+  // load() {
+  //   this.loading = true;
+  //   this.error = null;
+  //   this.api.getAll().subscribe({
+  //     next: r => { this.orders = r.allOrders ?? []; this.loading = false; },
+  //     error: (err) => {
+  //       console.error('Orders load error:', err);
+  //       this.error = (err?.status ? `[${err.status}] ` : '') + 'Failed to load orders';
+  //       this.loading = false;
+  //     }
+  //   });
+  // }
+  load() {
+  this.loading = true;
+  this.error = null;
+
+  this.api.getAll().subscribe({
+    next: (res) => {
+      this.orders = (res.allOrders ?? []).sort((a,b) =>
+        new Date(b.placedAt).getTime() - new Date(a.placedAt).getTime()
+      );
+      this.loading = false;
+
+      if (res.message) {
+        this.showMessage('success', res.message); // ✅ done, all orders here
+      }
+    },
+    error: (err) => {
+      console.error('Orders load error:', err);
+      this.error = 'Failed to load orders';
+      const msg = err.error?.message || 'Failed to load orders';
+      this.showMessage('danger', msg);
+      this.loading = false;
+    }
+  });
+}
+
 
   get filtered() {
     const q = this.query.trim().toLowerCase();
@@ -81,18 +122,27 @@ export class Orders {
     return k.charAt(0).toUpperCase() + k.slice(1);
   }
 
-  private call(id: string, kind: 'cancel' | 'paid' | 'shipped' | 'delivered') {
-    const fn = {
-      cancel: () => this.api.cancel(id),
-      paid: () => this.api.markPaid(id),
-      shipped: () => this.api.markShipped(id),
-      delivered: () => this.api.markDelivered(id),
-    }[kind];
+  private call(id: string, kind: 'cancel'|'paid'|'shipped'|'delivered') {
+  const fn = {
+    cancel:    () => this.api.cancel(id),
+    paid:      () => this.api.markPaid(id),
+    shipped:   () => this.api.markShipped(id),
+    delivered: () => this.api.markDelivered(id),
+  }[kind];
 
-    fn().subscribe({
-      next: () => this.load(),
-      error: () => { /* TODO: Toast */ }
-    });
-  }
+  fn().subscribe({
+    next: (res) => {
+      this.load();
+
+      const msg = res.message || 'Order updated successfully';
+      this.showMessage('success', msg);
+    },
+    error: (err) => {
+      console.error('Action error:', err);
+      const msg = err.error?.message || 'Failed to update order';
+      this.showMessage('danger', msg);
+    }
+  });
+}
 
 }
