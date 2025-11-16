@@ -17,13 +17,35 @@ const buildFilter = async (query) => {
     else filter.authors = null; // no author found
   }
 
-  // 🔹 Filter by category name (case-insensitive)
+  // 🔹 Filter by category (accepts both ID and name)
   if (query.category) {
-    const categoryDoc = await Category.findOne({
-      name: { $regex: new RegExp(query.category, "i") }
-    });
+    // Check if it's a valid MongoDB ObjectId (24 hex characters)
+    const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(query.category);
+    
+    let categoryDoc;
+    if (isValidObjectId) {
+      // If it's a valid ObjectId, search by ID
+      categoryDoc = await Category.findById(query.category);
+    } else {
+      // Otherwise, search by name (case-insensitive)
+      categoryDoc = await Category.findOne({
+        name: { $regex: new RegExp(query.category, "i") }
+      });
+    }
+    
     if (categoryDoc) filter.categories = categoryDoc._id;
     else filter.categories = null;
+  }
+
+  // 🔹 Price range filtering
+  if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+    filter.price = {};
+    if (query.minPrice !== undefined) {
+      filter.price.$gte = parseFloat(query.minPrice);
+    }
+    if (query.maxPrice !== undefined) {
+      filter.price.$lte = parseFloat(query.maxPrice);
+    }
   }
 
   // 🔹 Active status filter
@@ -44,7 +66,18 @@ export const listBooks = async (req, res) => {
 
     // ✅ buildFilter is now async
     const filter = await buildFilter(req.query);
-    const sort = req.query.sort || { createdAt: -1 };
+    let sort = { createdAt: -1 }; // default
+    if (req.query.sort) {
+      const sortStr = req.query.sort;
+      if (sortStr.startsWith('-')) {
+        // Descending: "-price" -> { price: -1 }
+        const field = sortStr.substring(1);
+        sort = { [field]: -1 };
+      } else {
+        // Ascending: "price" -> { price: 1 }
+        sort = { [sortStr]: 1 };
+      }
+    }
     const searchTerm = req.query.q;
 
     let books = [];

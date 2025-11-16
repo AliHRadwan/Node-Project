@@ -14,9 +14,9 @@ import { simpleCache, clearCacheOnWrite } from "../middleware/cache.js";
 
 const router = express.Router();
 
-// GET routes with caching (1 hour cache)
-router.get("/", simpleCache(3600), listCategories);
-router.get("/:id", simpleCache(3600), getCategory);
+// GET routes with caching (reduced to 60 seconds for faster updates)
+router.get("/", simpleCache(60), listCategories);
+router.get("/:id", simpleCache(60), getCategory);
 
 // Write routes with cache clearing
 router.post("/", verifyJWT, roleCheck(["admin"]), validateBody(createSchema), clearCacheOnWrite(), createCategory);
