@@ -10,6 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { CartComponent } from './cart';
+import { CoreModule } from "../../core/core-module";
 
 const routes: Routes = [
   { path: '', component: CartComponent }
@@ -25,7 +26,8 @@ const routes: Routes = [
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatDividerModule
-  ]
+    MatDividerModule,
+    CoreModule
+]
 })
 export class CartModule { }

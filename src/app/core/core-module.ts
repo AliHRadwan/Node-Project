@@ -6,8 +6,9 @@ import { Footer } from './components/footer/footer';
 import { Discount } from './components/discount/discount';
 
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule, MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { M } from '@angular/cdk/keycodes';
 
 
 
@@ -18,8 +19,13 @@ import { MatButtonModule } from '@angular/material/button';
     Discount
   ],
   imports: [
-    CommonModule
-  ],
+    CommonModule,
+    MatIcon,
+    MatBadgeModule,
+    MatButtonModule,
+    RouterModule,
+    MatIconModule
+],
    exports: [Header, Footer , Discount]  
 })
 export class CoreModule { }
