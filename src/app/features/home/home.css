@@ -49,40 +49,6 @@
   z-index: 10;
 }
 
-/* Discount Banner */
-.discount-banner {
-  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-  padding: 4rem 0;
-}
-
-.countdown-timer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.countdown-item {
-  text-align: center;
-}
-
-.countdown-value {
-  min-width: 80px;
-  font-size: 2rem;
-}
-
-.countdown-label {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.countdown-separator {
-  color: white;
-  font-weight: bold;
-  margin: 0 0.5rem;
-}
-
 /* Categories section */
 .categories-section {
   background: #fff;

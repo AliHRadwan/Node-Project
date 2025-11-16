@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { AuthService } from './auth';
 
 export interface BookFilters {
   page?: number;
@@ -34,7 +35,10 @@ export interface BooksResponse {
 export class BookService {
   private readonly API_URL = 'http://localhost:3000/api/books';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   // Fetch all books with pagination and filtering
   getAllBooks(filters: BookFilters = {}): Observable<BooksResponse> {
@@ -68,5 +72,35 @@ export class BookService {
   // Fetch a specific book by ID
   getBookById(id: string): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/${id}`);
+  }
+
+  // Create a new book (requires authentication)
+  createBook(bookData: any): Observable<any> {
+    const headers = this.authService.getAuthHeaders();
+    // If no token, return an error observable
+    if (!this.authService.isAuthenticated()) {
+      return throwError(() => ({ error: { message: 'Authentication required' } }));
+    }
+    return this.http.post<any>(this.API_URL, bookData, { headers });
+  }
+
+  // Update an existing book (requires authentication)
+  updateBook(id: string, bookData: any): Observable<any> {
+    const headers = this.authService.getAuthHeaders();
+    // If no token, return an error observable
+    if (!this.authService.isAuthenticated()) {
+      return throwError(() => ({ error: { message: 'Authentication required' } }));
+    }
+    return this.http.put<any>(`${this.API_URL}/${id}`, bookData, { headers });
+  }
+
+  // Delete a book (requires authentication)
+  deleteBook(id: string): Observable<any> {
+    const headers = this.authService.getAuthHeaders();
+    // If no token, return an error observable
+    if (!this.authService.isAuthenticated()) {
+      return throwError(() => ({ error: { message: 'Authentication required' } }));
+    }
+    return this.http.delete<any>(`${this.API_URL}/${id}`, { headers });
   }
 }

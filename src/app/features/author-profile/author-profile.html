@@ -1,0 +1,288 @@
+<app-header></app-header>
+
+<div class="author-profile-container py-5">
+  <div class="container">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-danger" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3">Loading author profile...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">Error!</h4>
+      <p>{{ error }}</p>
+      <hr>
+      <p class="mb-0">Please make sure you are logged in and have author privileges.</p>
+    </div>
+
+    <!-- Author Profile Content -->
+    <div *ngIf="!loading && !error && author">
+      <!-- Author Profile Header -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h1 class="mb-2">{{ author.name || 'Author Profile' }}</h1>
+                  <p class="text-muted mb-2" *ngIf="author.bio">{{ author.bio }}</p>
+                  <div class="d-flex gap-3 mb-2">
+                    <span class="badge" [ngClass]="{
+                      'bg-success': author.status === 'approved',
+                      'bg-warning': author.status === 'pending',
+                      'bg-danger': author.status === 'rejected' || author.status === 'revoked'
+                    }">
+                      {{ author.status?.toUpperCase() || 'UNKNOWN' }}
+                    </span>
+                    <span class="text-muted" *ngIf="author.appliedAt">
+                      Applied: {{ author.appliedAt | date:'short' }}
+                    </span>
+                  </div>
+                </div>
+                <button class="btn btn-danger" (click)="openCreateBookForm()">
+                  <i class="bi bi-plus-circle"></i> Create New Book
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Books Section -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h3 class="mb-0">My Books ({{ totalBooks }})</h3>
+            </div>
+            <div class="card-body">
+              <!-- Books List -->
+              <div *ngIf="books.length === 0" class="text-center py-5">
+                <i class="bi bi-book fs-1 text-muted"></i>
+                <p class="text-muted mt-3">No books found. Create your first book!</p>
+              </div>
+
+              <div class="table-responsive" *ngIf="books.length > 0">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Image</th>
+                      <th>Title</th>
+                      <th>Price</th>
+                      <th>Stock</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let book of books">
+                      <td>
+                        <img 
+                          [src]="book.image?.url || 'https://via.placeholder.com/50x70?text=No+Image'" 
+                          [alt]="book.title"
+                          class="img-thumbnail"
+                          style="width: 50px; height: 70px; object-fit: cover;"
+                        >
+                      </td>
+                      <td>
+                        <strong>{{ book.title }}</strong>
+                        <br>
+                        <small class="text-muted" *ngIf="book.description">
+                          {{ book.description.substring(0, 50) }}...
+                        </small>
+                      </td>
+                      <td>{{ book.price }} EGP</td>
+                      <td>
+                        <span [ngClass]="{
+                          'text-success': book.stock > 10,
+                          'text-warning': book.stock > 0 && book.stock <= 10,
+                          'text-danger': book.stock === 0
+                        }">
+                          {{ book.stock }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                          'bg-success': book.isActive,
+                          'bg-secondary': !book.isActive
+                        }">
+                          {{ book.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="btn-group" role="group">
+                          <button class="btn btn-sm btn-outline-primary" (click)="openEditBookForm(book)">
+                            <i class="bi bi-pencil"></i> Edit
+                          </button>
+                          <button class="btn btn-sm btn-outline-danger" (click)="deleteBook(book)">
+                            <i class="bi bi-trash"></i> Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Pagination -->
+              <nav *ngIf="totalPages > 1" aria-label="Books pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link" (click)="onPageChange(currentPage - 1)" style="cursor: pointer;">Previous</a>
+                  </li>
+                  <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+                    <a class="page-link" (click)="onPageChange(page)" style="cursor: pointer;">{{ page }}</a>
+                  </li>
+                  <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link" (click)="onPageChange(currentPage + 1)" style="cursor: pointer;">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Book Form Modal -->
+<div class="modal fade" [class.show]="showBookForm" [style.display]="showBookForm ? 'block' : 'none'" 
+     tabindex="-1" *ngIf="showBookForm" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editingBook ? 'Edit Book' : 'Create New Book' }}</h5>
+        <button type="button" class="btn-close" (click)="closeBookForm()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="submitBookForm()">
+          <!-- Title -->
+          <div class="mb-3">
+            <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="title" [(ngModel)]="bookForm.title" 
+                   name="title" required>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" rows="4" 
+                      [(ngModel)]="bookForm.description" name="description"></textarea>
+          </div>
+
+          <!-- Price and Stock -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="price" class="form-label">Price (EGP) <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" id="price" 
+                     [(ngModel)]="bookForm.price" name="price" 
+                     min="0" step="0.01" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="stock" class="form-label">Stock <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" id="stock" 
+                     [(ngModel)]="bookForm.stock" name="stock" 
+                     min="0" required>
+            </div>
+          </div>
+
+          <!-- ISBN and SKU -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="isbn" class="form-label">ISBN</label>
+              <input type="text" class="form-control" id="isbn" 
+                     [(ngModel)]="bookForm.isbn" name="isbn">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sku" class="form-label">SKU</label>
+              <input type="text" class="form-control" id="sku" 
+                     [(ngModel)]="bookForm.sku" name="sku">
+            </div>
+          </div>
+
+          <!-- Publisher and Language -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="publisher" class="form-label">Publisher</label>
+              <input type="text" class="form-control" id="publisher" 
+                     [(ngModel)]="bookForm.publisher" name="publisher">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="language" class="form-label">Language</label>
+              <input type="text" class="form-control" id="language" 
+                     [(ngModel)]="bookForm.language" name="language">
+            </div>
+          </div>
+
+          <!-- Published Date -->
+          <div class="mb-3">
+            <label for="publishedAt" class="form-label">Published Date</label>
+            <input type="date" class="form-control" id="publishedAt" 
+                   [(ngModel)]="bookForm.publishedAt" name="publishedAt">
+          </div>
+
+          <!-- Image URL -->
+          <div class="mb-3">
+            <label for="imageUrl" class="form-label">Image URL</label>
+            <input type="url" class="form-control" id="imageUrl" 
+                   [(ngModel)]="bookForm.image.url" name="imageUrl"
+                   placeholder="https://example.com/image.jpg">
+            <div class="form-text">Enter a URL for the book cover image</div>
+          </div>
+
+          <!-- PDF URL -->
+          <div class="mb-3">
+            <label for="pdfUrl" class="form-label">PDF URL</label>
+            <input type="url" class="form-control" id="pdfUrl" 
+                   [(ngModel)]="bookForm.pdfUrl" name="pdfUrl"
+                   placeholder="https://example.com/book.pdf">
+          </div>
+
+          <!-- Categories -->
+          <div class="mb-3">
+            <label class="form-label">Categories</label>
+            <div class="row">
+              <div class="col-md-4" *ngFor="let category of categories">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" 
+                         [id]="'category-' + category._id"
+                         [checked]="isCategorySelected(category._id)"
+                         (change)="onCategoryChange($event, category._id)">
+                  <label class="form-check-label" [for]="'category-' + category._id">
+                    {{ category.name }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Status -->
+          <div class="mb-3">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="isActive" 
+                     [(ngModel)]="bookForm.isActive" name="isActive">
+              <label class="form-check-label" for="isActive">
+                Book is Active
+              </label>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" (click)="closeBookForm()">Cancel</button>
+            <button type="submit" class="btn btn-danger">
+              {{ editingBook ? 'Update Book' : 'Create Book' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer [categories]="[]"></app-footer>
+
