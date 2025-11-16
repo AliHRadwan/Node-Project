@@ -373,3 +373,13 @@
 .cart-item-card {
   animation: fadeIn 0.3s ease;
 }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  background: white;
+  border-radius: 12px;
+  margin: 40px 0;
+}

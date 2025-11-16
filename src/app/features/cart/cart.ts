@@ -1,143 +1,225 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { CartService } from '../../core/services/cart.service';
+import { Cart, CartItem, Book } from '../../core/models/cart.model';
 
-interface CartItem {
-  id: string;
-  bookId: string;
-  title: string;
-  author: string;
-  price: number;
-  qty: number;
-  image: string;
-  stock: number;
-  isInStock: boolean;
-}
 @Component({
   selector: 'app-cart',
   standalone: false,
   templateUrl: './cart.html',
   styleUrls: ['./cart.scss'],
 })
-export class Cart {
-  cartItems: CartItem[] = [
-    {
-      id: '1',
-      bookId: 'book1',
-      title: 'The Great Gatsby',
-      author: 'F. Scott Fitzgerald',
-      price: 150,
-      qty: 2,
-      image: 'https://via.placeholder.com/150x200?text=Book+1',
-      stock: 10,
-      isInStock: true
-    },
-    {
-      id: '2',
-      bookId: 'book2',
-      title: '1984',
-      author: 'George Orwell',
-      price: 120,
-      qty: 1,
-      image: 'https://via.placeholder.com/150x200?text=Book+2',
-      stock: 5,
-      isInStock: true
-    },
-    {
-      id: '3',
-      bookId: 'book3',
-      title: 'To Kill a Mockingbird',
-      author: 'Harper Lee',
-      price: 180,
-      qty: 3,
-      image: 'https://via.placeholder.com/150x200?text=Book+3',
-      stock: 0,
-      isInStock: false
-    }
-  ];
-
+export class CartComponent implements OnInit, OnDestroy {
+  cart: Cart | null = null;
+  loading = false;
   isEmpty = false;
+  
+  private destroy$ = new Subject<void>();
 
-  constructor() {}
+  constructor(
+    private cartService: CartService,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.loadCart();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Load cart from API
+  loadCart(): void {
+    this.loading = true;
+    
+    this.cartService.getCart()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.cart = response.data;
+          this.isEmpty = !this.cart.items || this.cart.items.length === 0;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error loading cart:', error);
+          this.showMessage(error.error?.message || 'Error loading cart');
+          this.loading = false;
+          this.isEmpty = true;
+        }
+      });
+  }
+
+  // Get book from item
+  getBook(item: CartItem): Book | null {
+    return typeof item.bookId === 'object' ? item.bookId as Book : null;
+  }
+
+  // Get book ID
+  getBookId(item: CartItem): string {
+    const book = this.getBook(item);
+    return book ? book._id : (item.bookId as string);
+  }
 
   // حساب الـ subtotal
   get subtotal(): number {
-    return this.cartItems.reduce((total, item) => total + (item.price * item.qty), 0);
+    return this.cart?.totals.subTotal || 0;
   }
 
   // حساب عدد الـ items
   get itemCount(): number {
-    return this.cartItems.reduce((total, item) => total + item.qty, 0);
+    return this.cart?.items.reduce((total, item) => total + item.qty, 0) || 0;
+  }
+
+  // Get cart items
+  get cartItems(): CartItem[] {
+    return this.cart?.items || [];
   }
 
   // زيادة الكمية
   increaseQty(item: CartItem): void {
-    if (item.qty < item.stock) {
-      item.qty++;
-    } else {
-      alert('Maximum stock reached!');
+    const book = this.getBook(item);
+    const maxStock = item.stockAvailable || book?.stock || 0;
+    
+    if (item.qty >= maxStock) {
+      this.showMessage('Maximum stock reached!');
+      return;
     }
+
+    this.updateQuantity(item, item.qty + 1);
   }
 
   // تقليل الكمية
   decreaseQty(item: CartItem): void {
-    if (item.qty > 1) {
-      item.qty--;
+    if (item.qty <= 1) {
+      return;
     }
+
+    this.updateQuantity(item, item.qty - 1);
   }
 
   // تحديث الكمية
   updateQty(item: CartItem, event: any): void {
     const newQty = parseInt(event.target.value);
-    if (newQty >= 1 && newQty <= item.stock) {
-      item.qty = newQty;
-    } else if (newQty > item.stock) {
-      alert(`Only ${item.stock} items available`);
-      event.target.value = item.stock;
-      item.qty = item.stock;
-    } else {
+    const book = this.getBook(item);
+    const maxStock = item.stockAvailable || book?.stock || 0;
+
+    if (isNaN(newQty) || newQty < 1) {
       event.target.value = 1;
-      item.qty = 1;
+      this.updateQuantity(item, 1);
+      return;
     }
+
+    if (newQty > maxStock) {
+      this.showMessage(`Only ${maxStock} items available`);
+      event.target.value = maxStock;
+      this.updateQuantity(item, maxStock);
+      return;
+    }
+
+    this.updateQuantity(item, newQty);
+  }
+
+  // Update quantity API call
+  private updateQuantity(item: CartItem, newQty: number): void {
+    const bookId = this.getBookId(item);
+    
+    this.cartService.updateCartItem({ bookId, qty: newQty })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.cart = response.data;
+          this.showMessage('Cart updated');
+        },
+        error: (error) => {
+          console.error('Error updating cart:', error);
+          this.showMessage(error.error?.message || 'Error updating cart');
+          this.loadCart(); // Reload to get correct data
+        }
+      });
   }
 
   // حذف item
   removeItem(item: CartItem): void {
-    if (confirm(`Remove "${item.title}" from cart?`)) {
-      const index = this.cartItems.findIndex(i => i.id === item.id);
-      if (index > -1) {
-        this.cartItems.splice(index, 1);
-      }
-      this.isEmpty = this.cartItems.length === 0;
+    const book = this.getBook(item);
+    const title = book?.title || 'this item';
+    
+    if (!confirm(`Remove "${title}" from cart?`)) {
+      return;
     }
+
+    const bookId = this.getBookId(item);
+    
+    this.cartService.removeFromCart(bookId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.cart = response.data;
+          this.isEmpty = this.cart.items.length === 0;
+          this.showMessage('Item removed from cart');
+        },
+        error: (error) => {
+          console.error('Error removing item:', error);
+          this.showMessage(error.error?.message || 'Error removing item');
+        }
+      });
   }
 
   // مسح الـ cart
   clearCart(): void {
-    if (confirm('Clear all items from cart?')) {
-      this.cartItems = [];
-      this.isEmpty = true;
+    if (!confirm('Clear all items from cart?')) {
+      return;
     }
+
+    this.cartService.clearCart()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.cart = response.data;
+          this.isEmpty = true;
+          this.showMessage('Cart cleared');
+        },
+        error: (error) => {
+          console.error('Error clearing cart:', error);
+          this.showMessage(error.error?.message || 'Error clearing cart');
+        }
+      });
   }
 
   // الـ checkout
   checkout(): void {
     if (this.isEmpty) {
-      alert('Cart is empty!');
+      this.showMessage('Cart is empty!');
       return;
     }
 
     const outOfStockItems = this.cartItems.filter(item => !item.isInStock);
     
     if (outOfStockItems.length > 0) {
-      alert('Some items are out of stock. Please remove them before checkout.');
+      this.showMessage('Some items are out of stock. Please remove them before checkout.');
       return;
     }
 
-    alert('Proceeding to checkout...');
-    // TODO: Navigate to checkout page
+    // TODO: Navigate to checkout
+    this.router.navigate(['/checkout']);
   }
 
   // الـ item total
   getItemTotal(item: CartItem): number {
-    return item.price * item.qty;
+    return item.priceAtAdd * item.qty;
   }
- }
+
+  // Show snackbar message
+  private showMessage(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top'
+    });
+  }
+}
