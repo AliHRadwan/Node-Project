@@ -1,29 +1,20 @@
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { H } from '@angular/cdk/keycodes';
-import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CoreModule } from './core/core-module';
-
 
 @NgModule({
   declarations: [
-    App,
+    App,  // Keep only App component here
+    // Removed HomeComponent from declarations here
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
-    BrowserAnimationsModule,
-    CoreModule
+    AppRoutingModule,
   ],
-  providers: [
-    provideBrowserGlobalErrorListeners()
-  ],
+  providers: [],
   bootstrap: [App]
 })
 export class AppModule { }
