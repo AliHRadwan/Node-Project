@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
   pageSize: number = 12;
   totalBooks: number = 0;
   totalPages: number = 0;
+  palceholderCover: string = 'https://res.cloudinary.com/dbelkcsrq/image/upload/book-store/covers/soul.jpg';
   
   // Filters
   filters: BookFilters = {

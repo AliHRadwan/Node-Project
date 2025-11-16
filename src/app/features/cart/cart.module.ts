@@ -9,14 +9,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
-import { Cart } from './cart';
+import { CartComponent } from './cart';
+import { CoreModule } from "../../core/core-module";
 
 const routes: Routes = [
-  { path: '', component: Cart }
+  { path: '', component: CartComponent }
 ];
 
 @NgModule({
-  declarations: [Cart],
+  declarations: [CartComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -25,7 +26,8 @@ const routes: Routes = [
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatDividerModule
-  ]
+    MatDividerModule,
+    CoreModule
+]
 })
 export class CartModule { }

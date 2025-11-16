@@ -33,7 +33,7 @@ export interface BooksResponse {
   providedIn: 'root',
 })
 export class BookService {
-  private readonly API_URL = 'http://localhost:3000/api/books';
+  private readonly API_URL = 'http://18.184.165.152:3000/api/books';
 
   constructor(
     private http: HttpClient,

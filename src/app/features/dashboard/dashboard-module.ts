@@ -14,9 +14,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { Home } from './pages/home/home';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from '../../core/core-module';
 import { ReviewAuthorsComponent } from '../review-authors/review-authors';
+
+
 
 
 @NgModule({
@@ -26,7 +29,7 @@ import { ReviewAuthorsComponent } from '../review-authors/review-authors';
     Sidebar,
     Orders,
     Home,
-    Books
+    Books,
   ],
   imports: [
     CommonModule,
@@ -38,7 +41,8 @@ import { ReviewAuthorsComponent } from '../review-authors/review-authors';
     MatButtonModule,
     FormsModule,
     CoreModule,
-    ReviewAuthorsComponent
+    RouterModule,
   ]
 })
 export class DashboardModule { }
+

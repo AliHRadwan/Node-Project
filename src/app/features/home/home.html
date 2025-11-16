@@ -51,7 +51,7 @@
           </div>
           <div class="book-image-wrapper mb-2">
             <img 
-              [src]="book.image?.url || book.image || book.coverImage || 'https://via.placeholder.com/200x300?text=No+Image'" 
+              [src]="book.image?.url || palceholderCover"
               [alt]="book.title"
               class="w-100 rounded"
               style="height: 250px; object-fit: cover;">
@@ -98,7 +98,7 @@
         <div class="book-list" *ngIf="books.length > 0">
           <div class="book-item d-flex gap-3 mb-4 bg-white rounded p-3 shadow-sm" *ngFor="let book of books.slice(0, 3)" (click)="navigateToBook(book._id)" style="cursor: pointer;">
             <img 
-              [src]="book.image?.url || book.image || book.coverImage || 'https://via.placeholder.com/100x150?text=No+Image'" 
+              [src]="book.image?.url || palceholderCover" 
               [alt]="book.title"
               class="rounded"
               style="width: 80px; height: 120px; object-fit: cover;">
@@ -116,7 +116,7 @@
         <div class="book-list" *ngIf="books.length > 0">
           <div class="book-item d-flex gap-3 mb-4 bg-white rounded p-3 shadow-sm" *ngFor="let book of books.slice(3, 6)" (click)="navigateToBook(book._id)" style="cursor: pointer;">
             <img 
-              [src]="book.image?.url || book.image || book.coverImage || 'https://via.placeholder.com/100x150?text=No+Image'" 
+              [src]="book.image?.url || palceholderCover" 
               [alt]="book.title"
               class="rounded"
               style="width: 80px; height: 120px; object-fit: cover;">
@@ -134,7 +134,7 @@
         <div class="book-list" *ngIf="books.length > 0">
           <div class="book-item d-flex gap-3 mb-4 bg-white rounded p-3 shadow-sm" *ngFor="let book of books.slice(6, 9)" (click)="navigateToBook(book._id)" style="cursor: pointer;">
             <img 
-              [src]="book.image?.url || book.image || book.coverImage || 'https://via.placeholder.com/100x150?text=No+Image'" 
+              [src]="book.image?.url || palceholderCover"
               [alt]="book.title"
               class="rounded"
               style="width: 80px; height: 120px; object-fit: cover;">
@@ -152,7 +152,7 @@
         <div class="book-list" *ngIf="books.length > 0">
           <div class="book-item d-flex gap-3 mb-4 bg-white rounded p-3 shadow-sm" *ngFor="let book of books.slice(9, 12)" (click)="navigateToBook(book._id)" style="cursor: pointer;">
             <img 
-              [src]="book.image?.url || book.image || book.coverImage || 'https://via.placeholder.com/100x150?text=No+Image'" 
+              [src]="book.image?.url || palceholderCover" 
               [alt]="book.title"
               class="rounded"
               style="width: 80px; height: 120px; object-fit: cover;">
@@ -269,7 +269,7 @@
           </div>
           <div class="book-image-wrapper mb-3">
             <img 
-              [src]="book.image?.url || book.image || book.coverImage || 'https://via.placeholder.com/300x400?text=No+Image'" 
+              [src]="book.image?.url || palceholderCover"
               [alt]="book.title"
               class="w-100 rounded"
               style="height: 300px; object-fit: cover;">
