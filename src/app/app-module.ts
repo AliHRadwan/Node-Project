@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
+import { RegisterationModule } from './features/registeration/registeration-module';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { App } from './app';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    RegisterationModule
   ],
   providers: [],
   bootstrap: [App]
