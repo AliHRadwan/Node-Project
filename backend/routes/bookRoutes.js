@@ -27,7 +27,7 @@ const router = express.Router();
    =============================== */
 
 // List all books (with filters, pagination, sorting)
-router.get("/", simpleCache(1800), validateQuery(listBooksQuery), listBooks);
+router.get("/", simpleCache(60), validateQuery(listBooksQuery), listBooks);
 
 // Get one book
 router.get("/:id", simpleCache(1800), getBook);
