@@ -25,6 +25,10 @@ const routes: Routes = [
     loadChildren: () => import('./features/registeration/registeration-module').then(m => m.RegisterationModule)
   },
   {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
+  },
+  {
     path: "password-management",
     loadChildren: () => import('./features/passowrdmanagement/passowrdmanagement-module').then(m => m.PassowrdmanagementModule)
   },
