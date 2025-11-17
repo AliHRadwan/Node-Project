@@ -28,6 +28,10 @@ const routes: Routes = [
     path: "password-management",
     loadChildren: () => import('./features/passowrdmanagement/passowrdmanagement-module').then(m => m.PassowrdmanagementModule)
   },
+  {
+    path: 'account',
+    loadChildren: () => import('./features/account/account-module').then(m => m.AccountModule)
+  }
 ];
 
 @NgModule({

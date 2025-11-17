@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { RegisterationModule } from './features/registeration/registeration-module';
 import { PassowrdmanagementModule } from './features/passowrdmanagement/passowrdmanagement-module';
+import { AccountModule } from './features/account/account-module';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { PassowrdmanagementModule } from './features/passowrdmanagement/passowrd
     HttpClientModule,
     AppRoutingModule,
     RegisterationModule,
-    PassowrdmanagementModule
+    PassowrdmanagementModule,
+    AccountModule
   ],
   providers: [],
   bootstrap: [App]
