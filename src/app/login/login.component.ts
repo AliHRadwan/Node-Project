@@ -13,6 +13,7 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
   rememberMe: boolean = false;
+  hidePassword: boolean = true;
 
   isLoading: boolean = false;
   errorMessage: string | null = null;
