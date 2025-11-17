@@ -284,7 +284,7 @@
             <p class="text-muted mb-2 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
             <div class="d-flex justify-content-between align-items-center">
               <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
-              <button mat-icon-button class="ms-2 text-danger" (click)="$event.stopPropagation()">
+              <button mat-icon-button class="ms-2 text-danger" (click)="addToCart(book, $event)">
                 <i class="bi bi-cart-plus fs-5"></i>
               </button>
             </div>

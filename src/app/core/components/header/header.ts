@@ -19,7 +19,18 @@ export class Header implements OnInit {
     private authorService: AuthorService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // Load cart on component initialization
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      this.cartService.getCart().subscribe({
+        error: (err) => {
+          // Silently fail if user not authenticated or cart doesn't exist
+          console.log('Could not load cart:', err.status);
+        }
+      });
+    }
+
     // Check if user is authenticated and has author profile
     if (this.authService.isAuthenticated()) {
       this.checkAuthorStatus();
@@ -50,5 +61,4 @@ export class Header implements OnInit {
       }
     });
   }
-
 }
