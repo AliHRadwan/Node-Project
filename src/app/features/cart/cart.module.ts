@@ -17,12 +17,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PaymentFailed } from './payment-failed/payment-failed';
 import { Payment } from './payment/payment';
+import { AuthGuard } from '../../core/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: CartComponent },
-  { path: 'payment', component: Payment },          
-  { path: 'payment/success', component: PaymentSuccess }, 
-  { path: 'payment/failed', component: PaymentFailed },  
+  { path: '', component: CartComponent, canActivate: [AuthGuard] },
+  { path: 'payment', component: Payment, canActivate: [AuthGuard] },          
+  { path: 'payment/success', component: PaymentSuccess, canActivate: [AuthGuard] }, 
+  { path: 'payment/failed', component: PaymentFailed, canActivate: [AuthGuard] },  
 ];
 
 @NgModule({

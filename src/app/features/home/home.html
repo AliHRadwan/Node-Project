@@ -69,20 +69,25 @@
 <app-discount></app-discount>
 
 <!-- Categories section -->
-<section class="categories-section py-5 bg-white">
+<section class="categories-section py-5">
   <div class="container">
-    <h2 class="text-center mb-5 fw-bold">Browse Categories</h2>
-    <div class="row justify-content-center">
-      <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4" *ngFor="let category of categories">
-        <mat-card 
-          class="h-100 border-0 text-center py-3 shadow-sm category-card bg-white" 
-          style="cursor: pointer;"
-          (click)="selectCategory(category)"
-          [class.border-danger]="selectedCategory === (category._id || category.id)"
-          [class.border]="selectedCategory === (category._id || category.id)">
-          <mat-icon class="mb-2" [ngStyle]="{'color': category.color || '#dc3545', 'font-size.px': 36}">{{ category.icon }}</mat-icon>
-          <div class="fw-semibold text-dark">{{ category.name }}</div>
-        </mat-card>
+    <h2 class="text-center mb-5 fw-bold category-title">Browse Categories</h2>
+    <div class="row justify-content-center g-4">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4" *ngFor="let category of categories; let i = index">
+        <div 
+          class="category-card-wrapper"
+          [attr.data-index]="i"
+          (click)="selectCategory(category)">
+          <mat-card 
+            class="h-100 border-0 text-center py-4 shadow-lg category-card" 
+            style="cursor: pointer;"
+            [class.selected]="selectedCategory === (category._id || category.id)">
+            <div class="category-icon-wrapper mb-3">
+              <mat-icon class="category-icon" [ngStyle]="{'color': category.color || '#dc3545', 'font-size.px': 40}">{{ category.icon }}</mat-icon>
+            </div>
+            <div class="fw-semibold category-name">{{ category.name }}</div>
+          </mat-card>
+        </div>
       </div>
     </div>
   </div>
