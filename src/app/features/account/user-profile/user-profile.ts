@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Profileservice } from '../ProfileService/profileservice';
-// import { Loginservice } from '../loginService/loginservice';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-user-profile',
@@ -48,7 +48,7 @@ export class UserProfile implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,         
     private profileService: Profileservice,
-    //private loginService: Loginservice,    
+    private authService: AuthService,
     private router: Router                
   ) {
     this.profileForm = this.fb.group({
@@ -136,7 +136,7 @@ export class UserProfile implements OnInit, OnDestroy {
   }
   
   loadProfile() {
-    if (!this.loginService.isLoggedIn()) {
+    if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/features/login']);
       return;
     }
@@ -165,7 +165,7 @@ export class UserProfile implements OnInit, OnDestroy {
         
         if (err.status === 401) {
           setTimeout(() => {
-            this.loginService.logout();
+            this.authService.logout();
             this.router.navigate(['/features/login']);
           }, 2000);
         }
@@ -228,7 +228,7 @@ export class UserProfile implements OnInit, OnDestroy {
         
         if (fieldName === 'email') {
           setTimeout(() => {
-            this.loginService.logout();
+            this.authService.logout();
             this.router.navigate(['/features/login']);
           }, 2000);
         }
@@ -287,7 +287,7 @@ export class UserProfile implements OnInit, OnDestroy {
         
         if (updateData.email) {
           setTimeout(() => {
-            this.loginService.logout();
+            this.authService.logout();
             this.router.navigate(['/features/login']);
           }, 2000);
         }
@@ -331,7 +331,7 @@ export class UserProfile implements OnInit, OnDestroy {
         this.startAutoCloseTimer();
         
         setTimeout(() => {
-          this.loginService.logout();
+          this.authService.logout();
           this.router.navigate(['/features/login']);
         }, 2000);
       },
@@ -369,7 +369,7 @@ export class UserProfile implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.loginService.logout(); 
+    this.authService.logout(); 
     this.router.navigate(['/features/login']); 
   }
 
