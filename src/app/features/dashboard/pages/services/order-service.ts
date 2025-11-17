@@ -5,7 +5,7 @@ import { environment } from '../../../../../environments/environment.prod';
 
 
 
-const BASE = `${environment.apiUrl}/api/orders/admin`;
+const BASE = `${environment.apiUrl}/orders/admin`;
 
 @Injectable({
   providedIn: 'root',

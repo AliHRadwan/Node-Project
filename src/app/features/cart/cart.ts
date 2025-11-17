@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CartService } from '../../core/services/cart.service';
 import { Cart, CartItem, Book } from '../../core/models/cart.model';
+import { CartOrders, PlaceOrderBody } from './cart-orders';
 
 @Component({
   selector: 'app-cart',
@@ -16,13 +17,28 @@ export class CartComponent implements OnInit, OnDestroy {
   cart: Cart | null = null;
   loading = false;
   isEmpty = false;
+
+//=====variable of payment & orders==========================
+  // shippingName: string = '';
+  // shippingCity: string = '';
+  // shippingCountry: string = '';
+  // shippingPhone: string = '';
+  // couponCode: string = '';
+  // flashText: string | null = null;
+  // flashType: 'success' | 'danger' | 'info' = 'info';
+  // flashTimeout?: any;
+  // checkoutLoading = false;
+//=======================================================
+
+
   
   private destroy$ = new Subject<void>();
 
   constructor(
     private cartService: CartService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private cartOrders: CartOrders
   ) {}
 
   ngOnInit(): void {
@@ -222,4 +238,86 @@ export class CartComponent implements OnInit, OnDestroy {
       verticalPosition: 'top'
     });
   }
+//=====================payment & orders ==============================================
+  // showMessageIn(type: 'success'|'danger'|'info', text: string) {
+  //   this.flashType = type;
+  //   this.flashText = text;
+
+  //   if (this.flashTimeout) {
+  //     clearTimeout(this.flashTimeout);
+  //   }
+  //   this.flashTimeout = setTimeout(() => {
+  //     this.flashText = null;
+  //   }, 3000);
+  // }
+
+  // checkoutOfOrder() {
+  //   if (this.checkoutLoading || !this.cartItems || this.cartItems.length === 0) {
+  //     return;
+  //   }
+
+  //   this.checkoutLoading = true;
+  //   this.showMessageIn('info', 'Placing your order...');
+
+  //   const body: PlaceOrderBody = {};
+
+  //   const hasShipping =
+  //     this.shippingName.trim() ||
+  //     this.shippingCity.trim() ||
+  //     this.shippingCountry.trim() ||
+  //     this.shippingPhone.trim();
+
+  //   if (hasShipping) {
+  //     body.shippingAddress = {
+  //       fullName: this.shippingName.trim() || undefined,
+  //       phone: this.shippingPhone.trim() || undefined,
+  //       city: this.shippingCity.trim() || undefined,
+  //       country: this.shippingCountry.trim() || undefined,
+  //     };
+  //   }
+
+  //   if (this.couponCode.trim()) {
+  //     body.payment = {
+  //       couponCode: this.couponCode.trim()
+  //     };
+  //   }
+
+  //   // 1) place order
+  //   this.cartOrders.placeOrder(body).subscribe({
+  //     next: (res) => {
+  //       const orderId = res.order._id;
+        
+  //       try {
+  //         localStorage.setItem('lastOrder', JSON.stringify(res.order));
+  //       } catch {}
+
+  //       this.showMessageIn('success', res.message || 'Order placed, redirecting to payment...');
+
+  //       // 2) create checkout
+  //       this.cartOrders.createCheckout(orderId).subscribe({
+  //         next: (chk) => {
+  //           this.checkoutLoading = false;
+  //           const url = chk.url || chk.checkoutUrl || '';
+
+  //           if (url) {
+  //             window.location.href = url; //  Stripe Hosted Checkout
+  //           } else {
+  //             this.showMessageIn('danger', 'Payment URL not found from server.');
+  //           }
+  //         },
+  //         error: (err) => {
+  //           this.checkoutLoading = false;
+  //           const msg = err.error?.message || 'Failed to start payment session.';
+  //           this.showMessageIn('danger', msg);
+  //         }
+  //       });
+  //     },
+  //     error: (err) => {
+  //       this.checkoutLoading = false;
+  //       const msg = err.error?.message || 'Failed to place order.';
+  //       this.showMessageIn('danger', msg);
+  //     }
+  //   });
+  // }
+
 }

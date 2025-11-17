@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PaymentSuccess } from './features/cart/payment-success/payment-success';
+import { PaymentFailed } from './features/cart/payment-failed/payment-failed';
 
 const routes: Routes = [
   { 
@@ -50,7 +52,9 @@ const routes: Routes = [
     path: 'review-authors',
     loadChildren: () =>
       import('./features/review-authors/review-authors.module').then(m => m.ReviewAuthorsModule)
-  }
+  },
+
+
 ];
 
 @NgModule({
