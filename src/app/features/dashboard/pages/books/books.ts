@@ -43,7 +43,9 @@ export class Books implements OnInit {
 
   // Form state
   showBookForm = false;
+  showDetailsForm = false;
   editingBook: any = null;
+  newlyCreatedBook: any = null; // Store the newly created book for step 2
   bookForm: any = {
     title: '',
     description: '',
@@ -57,6 +59,26 @@ export class Books implements OnInit {
     language: '',
     publishedAt: '',
     authors: [],
+    categories: [],
+    isActive: true
+  };
+  // Step 1 form (required fields only)
+  requiredForm: any = {
+    title: '',
+    price: 0,
+    stock: 0,
+    authors: []
+  };
+  // Step 2 form (optional details)
+  detailsForm: any = {
+    description: '',
+    pdfUrl: '',
+    image: { url: '' },
+    isbn: '',
+    sku: '',
+    publisher: '',
+    language: '',
+    publishedAt: '',
     categories: [],
     isActive: true
   };
@@ -217,11 +239,15 @@ export class Books implements OnInit {
 
   openCreateBookForm() {
     this.editingBook = null;
-    this.bookForm = {
+    this.newlyCreatedBook = null;
+    this.requiredForm = {
       title: '',
-      description: '',
       price: 0,
       stock: 0,
+      authors: []
+    };
+    this.detailsForm = {
+      description: '',
       pdfUrl: '',
       image: { url: '' },
       isbn: '',
@@ -229,11 +255,11 @@ export class Books implements OnInit {
       publisher: '',
       language: '',
       publishedAt: '',
-      authors: [],
       categories: [],
       isActive: true
     };
     this.showBookForm = true;
+    this.showDetailsForm = false;
   }
 
   openEditBookForm(book: any) {
@@ -259,7 +285,15 @@ export class Books implements OnInit {
 
   closeBookForm() {
     this.showBookForm = false;
+    this.showDetailsForm = false;
     this.editingBook = null;
+    this.newlyCreatedBook = null;
+  }
+
+  closeDetailsForm() {
+    this.showDetailsForm = false;
+    this.newlyCreatedBook = null;
+    this.loadBooks(); // Refresh the book list
   }
 
   onCategorySelect(categoryId: string) {
@@ -294,6 +328,126 @@ export class Books implements OnInit {
     return this.bookForm.authors && this.bookForm.authors.includes(authorId);
   }
 
+  // For required form (step 1)
+  onRequiredAuthorSelect(authorId: string) {
+    if (!this.requiredForm.authors) {
+      this.requiredForm.authors = [];
+    }
+    const index = this.requiredForm.authors.indexOf(authorId);
+    if (index > -1) {
+      this.requiredForm.authors.splice(index, 1);
+    } else {
+      this.requiredForm.authors.push(authorId);
+    }
+  }
+
+  isRequiredAuthorSelected(authorId: string): boolean {
+    return this.requiredForm.authors && this.requiredForm.authors.includes(authorId);
+  }
+
+  // For details form (step 2)
+  onDetailsCategorySelect(categoryId: string) {
+    if (!this.detailsForm.categories) {
+      this.detailsForm.categories = [];
+    }
+    const index = this.detailsForm.categories.indexOf(categoryId);
+    if (index > -1) {
+      this.detailsForm.categories.splice(index, 1);
+    } else {
+      this.detailsForm.categories.push(categoryId);
+    }
+  }
+
+  isDetailsCategorySelected(categoryId: string): boolean {
+    return this.detailsForm.categories && this.detailsForm.categories.includes(categoryId);
+  }
+
+  // Step 1: Submit required fields to create book
+  submitRequiredForm() {
+    // Validation
+    if (!this.requiredForm.title || !this.requiredForm.title.trim()) {
+      alert('Title is required');
+      return;
+    }
+
+    if (this.requiredForm.price < 0) {
+      alert('Price must be 0 or greater');
+      return;
+    }
+
+    if (this.requiredForm.stock < 0) {
+      alert('Stock must be 0 or greater');
+      return;
+    }
+
+    if (!this.requiredForm.authors || this.requiredForm.authors.length === 0) {
+      alert('At least one author is required');
+      return;
+    }
+
+    // Prepare required data only
+    const requiredData: any = {
+      title: this.requiredForm.title.trim(),
+      price: parseFloat(this.requiredForm.price),
+      stock: parseInt(this.requiredForm.stock),
+      authors: this.requiredForm.authors
+    };
+
+    // Create book with required fields only
+    this.bookService.createBook(requiredData).subscribe({
+      next: (response) => {
+        // Store the newly created book
+        this.newlyCreatedBook = response.book || response;
+        // Close the required form and show details form
+        this.showBookForm = false;
+        this.showDetailsForm = true;
+        alert('Book created successfully! Now fill in the details.');
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Failed to create book');
+        console.error('Error creating book:', err);
+      }
+    });
+  }
+
+  // Step 2: Submit optional details to update the book
+  submitDetailsForm() {
+    if (!this.newlyCreatedBook) {
+      alert('Error: Book not found. Please try again.');
+      this.closeDetailsForm();
+      return;
+    }
+
+    // Prepare details data
+    const detailsData: any = {};
+
+    if (this.detailsForm.description) detailsData.description = this.detailsForm.description.trim();
+    if (this.detailsForm.pdfUrl) detailsData.pdfUrl = this.detailsForm.pdfUrl.trim();
+    if (this.detailsForm.image?.url) detailsData.image = { url: this.detailsForm.image.url.trim() };
+    if (this.detailsForm.isbn) detailsData.isbn = this.detailsForm.isbn.trim();
+    if (this.detailsForm.sku) detailsData.sku = this.detailsForm.sku.trim();
+    if (this.detailsForm.publisher) detailsData.publisher = this.detailsForm.publisher.trim();
+    if (this.detailsForm.language) detailsData.language = this.detailsForm.language.trim();
+    if (this.detailsForm.publishedAt) detailsData.publishedAt = new Date(this.detailsForm.publishedAt).toISOString();
+    if (this.detailsForm.categories && this.detailsForm.categories.length > 0) detailsData.categories = this.detailsForm.categories;
+    if (this.detailsForm.isActive !== undefined) detailsData.isActive = this.detailsForm.isActive;
+
+    // Update the book with details
+    const bookId = this.newlyCreatedBook._id || this.newlyCreatedBook.id;
+    this.bookService.updateBook(bookId, detailsData).subscribe({
+      next: (response) => {
+        alert('Book details updated successfully!');
+        this.closeDetailsForm();
+        this.loadBooks();
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Failed to update book details');
+        console.error('Error updating book details:', err);
+      }
+    });
+  }
+
+  // For editing existing books (keep the old form)
   submitBookForm() {
     if (!this.bookForm.title || !this.bookForm.title.trim()) {
       alert('Title is required');
@@ -329,33 +483,18 @@ export class Books implements OnInit {
     if (this.bookForm.authors && this.bookForm.authors.length > 0) formData.authors = this.bookForm.authors;
     if (this.bookForm.categories && this.bookForm.categories.length > 0) formData.categories = this.bookForm.categories;
 
-    if (this.editingBook) {
-      // Update existing book
-      this.bookService.updateBook(this.editingBook._id || this.editingBook.id, formData).subscribe({
-        next: (response) => {
-          alert('Book updated successfully!');
-          this.closeBookForm();
-          this.loadBooks();
-        },
-        error: (err) => {
-          alert(err.error?.message || 'Failed to update book');
-          console.error('Error updating book:', err);
-        }
-      });
-    } else {
-      // Create new book
-      this.bookService.createBook(formData).subscribe({
-        next: (response) => {
-          alert('Book created successfully!');
-          this.closeBookForm();
-          this.loadBooks();
-        },
-        error: (err) => {
-          alert(err.error?.message || 'Failed to create book');
-          console.error('Error creating book:', err);
-        }
-      });
-    }
+    // Update existing book
+    this.bookService.updateBook(this.editingBook._id || this.editingBook.id, formData).subscribe({
+      next: (response) => {
+        alert('Book updated successfully!');
+        this.closeBookForm();
+        this.loadBooks();
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Failed to update book');
+        console.error('Error updating book:', err);
+      }
+    });
   }
 
   deleteBook(book: any) {

@@ -9,3 +9,11 @@
 }
 .nav-link{ color:#222; }
 .nav-link:hover{ color: var(--brand); }
+
+/* Author profile icon hover effect */
+.bi-person-badge {
+  transition: color 0.2s ease;
+}
+.bi-person-badge:hover {
+  color: var(--brand) !important;
+}

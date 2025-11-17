@@ -25,6 +25,13 @@
 
     <!-- icons-->
     <div class="ms-auto d-flex align-items-center gap-3">
+      <!-- Author Profile Icon (only for approved authors) -->
+      <a *ngIf="isAuthor && !isLoadingAuthor" 
+         class="bi bi-person-badge fs-4 text-dark" 
+         style="cursor: pointer; text-decoration: none;"
+         title="Author Profile"
+         routerLink="/author-profile">
+      </a>
       <a class="bi bi-person fs-4 text-dark" href="#"></a>
       <button mat-icon-button routerLink="/cart" 
               [matBadge]="cartService.cartCount$ | async" 
