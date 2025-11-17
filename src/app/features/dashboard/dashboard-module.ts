@@ -6,6 +6,7 @@ import { Dashboard } from './dashboard';
 import { DashboardLayout } from './layout/dashboard-layout/dashboard-layout';
 import { Sidebar } from './sidebar/sidebar';
 import { Orders } from './pages/orders/orders';
+import { Books } from './pages/books/books';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -15,6 +16,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { Home } from './pages/home/home';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CoreModule } from '../../core/core-module';
+import { ReviewAuthorsComponent } from '../review-authors/review-authors';
+
+
 
 
 @NgModule({
@@ -23,7 +28,8 @@ import { FormsModule } from '@angular/forms';
     DashboardLayout,
     Sidebar,
     Orders,
-    Home
+    Home,
+    Books,
   ],
   imports: [
     CommonModule,
@@ -33,8 +39,10 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     MatListModule,
     MatButtonModule,
+    FormsModule,
+    CoreModule,
     RouterModule,
-    FormsModule
   ]
 })
 export class DashboardModule { }
+

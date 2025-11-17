@@ -31,6 +31,20 @@ const routes: Routes = [
   {
     path: 'account',
     loadChildren: () => import('./features/account/account-module').then(m => m.AccountModule)
+  {
+    path: 'author-profile',
+    loadChildren: () =>
+      import('./features/author-profile/author-profile.module').then(m => m.AuthorProfileModule)
+  },
+  {
+    path: 'become-author',
+    loadChildren: () =>
+      import('./features/become-author/become-author.module').then(m => m.BecomeAuthorModule)
+  },
+  {
+    path: 'review-authors',
+    loadChildren: () =>
+      import('./features/review-authors/review-authors.module').then(m => m.ReviewAuthorsModule)
   }
 ];
 
