@@ -1,5 +1,7 @@
 <app-header></app-header>
 <div class="cart-container">
+
+
   <!-- Loading Spinner -->
   <div *ngIf="loading" class="loading-container">
     <mat-spinner></mat-spinner>
@@ -113,7 +115,7 @@
       
       <div class="summary-row">
         <span>Shipping</span>
-        <span class="free">FREE</span>
+        <span class="free">Not FREE</span>
       </div>
       
       <mat-divider></mat-divider>
@@ -123,22 +125,15 @@
         <span>{{ subtotal }} EGP</span>
       </div>
 
-      <button 
-        mat-raised-button 
-        color="primary" 
-        class="checkout-btn"
-        (click)="checkout()"
-      >
+      <button mat-raised-button color="primary" class="checkout-btn" routerLink="payment"
+      [disabled]="isEmpty">>
         Proceed to Checkout
       </button>
 
-      <button 
-        mat-stroked-button 
-        class="continue-btn"
-        routerLink="/books"
-      >
+      <button mat-stroked-button class="continue-btn" routerLink="/books">
         Continue Shopping
       </button>
+
     </mat-card>
   </div>
 </div>
