@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { RegisterationModule } from './features/registeration/registeration-module';
+import { PassowrdmanagementModule } from './features/passowrdmanagement/passowrdmanagement-module';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { RegisterationModule } from './features/registeration/registeration-modu
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    RegisterationModule
+    RegisterationModule,
+    PassowrdmanagementModule
   ],
   providers: [],
   bootstrap: [App]
