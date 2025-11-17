@@ -9,7 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
-// import { LoginComponent } from './login.component';
+
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [LoginComponent],
@@ -21,7 +22,8 @@ import { LoginComponent } from './login.component';
     MatInputModule,
     MatCheckboxModule,
     MatButtonModule,
-    LoginRoutingModule
+    LoginRoutingModule,
+    HttpClientModule
   ]
 })
 export class LoginModule {}

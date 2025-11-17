@@ -54,14 +54,14 @@ button {
 /* زر التسجيل باللون الوردي */
 :host ::ng-deep .mat-mdc-raised-button.mat-primary,
 :host ::ng-deep button[mat-raised-button] {
-  background-color: var(--brand-accent);
+  background-color: rgba(233, 14, 76, 0.8);
   color: #ffffff;
-  box-shadow: 0 6px 14px rgba(255, 45, 106, 0.25);
+  box-shadow: 0 6px 14px rgba(133, 24, 55, 0.6);
 }
 
 :host ::ng-deep .mat-mdc-raised-button.mat-primary:hover,
 :host ::ng-deep button[mat-raised-button]:hover {
-  background-color: var(--brand-accent-dark);
+  background-color: rgba(216, 3, 64, 0.884);
 }
 
 /* Popup message box */

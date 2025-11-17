@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CategoryService {
-  private readonly API_URL = 'http://localhost:3000/api/categories';
+  private readonly API_URL = 'http://18.184.165.152:3000/api/categories';
 
   constructor(private http: HttpClient) {}
 
