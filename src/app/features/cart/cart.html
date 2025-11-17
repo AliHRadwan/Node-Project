@@ -12,7 +12,7 @@
     <mat-icon class="empty-icon">shopping_cart</mat-icon>
     <h2>Your cart is empty</h2>
     <p>Add some books to get started!</p>
-    <button mat-raised-button color="primary" routerLink="/books">
+    <button mat-raised-button color="primary" routerLink="/">
       Browse Books
     </button>
   </div>
@@ -126,11 +126,11 @@
       </div>
 
       <button mat-raised-button color="primary" class="checkout-btn" routerLink="payment"
-      [disabled]="isEmpty">>
+      [disabled]="isEmpty">
         Proceed to Checkout
       </button>
 
-      <button mat-stroked-button class="continue-btn" routerLink="/books">
+      <button mat-stroked-button class="continue-btn" routerLink="/">
         Continue Shopping
       </button>
 

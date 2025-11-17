@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CartService } from '../../core/services/cart.service';
 import { Cart, CartItem, Book } from '../../core/models/cart.model';
 import { CartOrders, PlaceOrderBody } from './cart-orders';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-cart',
@@ -38,7 +40,8 @@ export class CartComponent implements OnInit, OnDestroy {
     private cartService: CartService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private cartOrders: CartOrders
+    private cartOrders: CartOrders,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -165,46 +168,66 @@ export class CartComponent implements OnInit, OnDestroy {
     const book = this.getBook(item);
     const title = book?.title || 'this item';
     
-    if (!confirm(`Remove "${title}" from cart?`)) {
-      return;
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Remove Item',
+        message: `Remove "${title}" from cart?`,
+        confirmText: 'Remove',
+        cancelText: 'Cancel'
+      }
+    });
 
-    const bookId = this.getBookId(item);
-    
-    this.cartService.removeFromCart(bookId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          this.cart = response.data;
-          this.isEmpty = this.cart.items.length === 0;
-          this.showMessage('Item removed from cart');
-        },
-        error: (error) => {
-          console.error('Error removing item:', error);
-          this.showMessage(error.error?.message || 'Error removing item');
-        }
-      });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const bookId = this.getBookId(item);
+        
+        this.cartService.removeFromCart(bookId)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (response) => {
+              this.cart = response.data;
+              this.isEmpty = this.cart.items.length === 0;
+              this.showMessage('Item removed from cart');
+            },
+            error: (error) => {
+              console.error('Error removing item:', error);
+              this.showMessage(error.error?.message || 'Error removing item');
+            }
+          });
+      }
+    });
   }
 
   // مسح الـ cart
   clearCart(): void {
-    if (!confirm('Clear all items from cart?')) {
-      return;
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Clear Cart',
+        message: 'Clear all items from cart?',
+        confirmText: 'Clear',
+        cancelText: 'Cancel'
+      }
+    });
 
-    this.cartService.clearCart()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          this.cart = response.data;
-          this.isEmpty = true;
-          this.showMessage('Cart cleared');
-        },
-        error: (error) => {
-          console.error('Error clearing cart:', error);
-          this.showMessage(error.error?.message || 'Error clearing cart');
-        }
-      });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.cartService.clearCart()
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (response) => {
+              this.cart = response.data;
+              this.isEmpty = true;
+              this.showMessage('Cart cleared');
+            },
+            error: (error) => {
+              console.error('Error clearing cart:', error);
+              this.showMessage(error.error?.message || 'Error clearing cart');
+            }
+          });
+      }
+    });
   }
 
   // الـ checkout
