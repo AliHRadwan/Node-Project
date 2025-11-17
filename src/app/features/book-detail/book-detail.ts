@@ -27,7 +27,7 @@ export class BookDetailComponent implements OnInit {
     private router: Router,
     private bookService: BookService,
     private reviewService: ReviewService
-  ) {}
+  ) { }
 
   ngOnInit() {
     const bookId = this.route.snapshot.paramMap.get('id');
@@ -45,13 +45,13 @@ export class BookDetailComponent implements OnInit {
     this.loading = true;
     this.error = null;
     console.log('Loading book with ID:', id);
-    
+
     this.bookService.getBookById(id).subscribe({
       next: (book) => {
         console.log('Book loaded successfully:', book);
         this.book = book;
         this.loading = false;
-        this.loadReviews(book._id, this.currentReviewPage); 
+        this.loadReviews(book._id, this.currentReviewPage);
       },
       error: (error) => {
         console.error('Error loading book:', error);
@@ -99,8 +99,9 @@ export class BookDetailComponent implements OnInit {
   }
 
   addToCart() {
-    // TODO: Implement add to cart functionality
-    console.log('Add to cart:', this.book);
+    if (this.book) {
+      this.bookService.addToCart(this.book);
+    }
   }
 
   getStars(rating: number): number[] {

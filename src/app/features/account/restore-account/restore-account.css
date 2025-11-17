@@ -1,0 +1,201 @@
+.restore-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #fff1f5 0%, #ffffff 100%);
+}
+
+.restore-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border: 2px solid var(--brand-border);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  padding: 48px 32px;
+  text-align: center;
+  z-index: 1;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-inner.success {
+  border-color: #86efac;
+}
+
+.card-inner.error {
+  border-color: #fecaca;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.spinner {
+  width: 64px;
+  height: 64px;
+  border: 5px solid #ffd1e0;
+  border-top-color: var(--brand-accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #86efac;
+  color: #16a34a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: bold;
+  margin: 0 auto;
+  animation: scaleIn 0.3s ease-out;
+}
+
+.icon.error-icon {
+  background: #fecaca;
+  color: #dc2626;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--brand-primary);
+  margin: 0;
+}
+
+.card-inner.error h2 {
+  color: #dc2626;
+}
+
+.card-inner.success h2 {
+  color: #16a34a;
+}
+
+.message-text {
+  font-size: 16px;
+  color: var(--brand-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.card-inner.error .message-text {
+  color: #991b1b;
+}
+
+.card-inner.success .message-text {
+  color: #15803d;
+}
+
+.action-btn {
+  margin-top: 8px;
+  min-width: 150px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--brand-muted);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  color: var(--brand-primary);
+  background: #f3f4f6;
+}
+
+/* تظبيط أزرار Angular Material */
+:host ::ng-deep .mat-mdc-raised-button.mat-primary,
+:host ::ng-deep button[mat-raised-button] {
+  background-color: var(--brand-accent);
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(255, 45, 106, 0.25);
+}
+
+:host ::ng-deep .mat-mdc-raised-button.mat-primary:hover,
+:host ::ng-deep button[mat-raised-button]:hover {
+  background-color: var(--brand-accent-dark);
+}
+
+:host ::ng-deep .mat-mdc-button.mat-primary,
+:host ::ng-deep button[mat-stroked-button] {
+  border-color: var(--brand-accent);
+  color: var(--brand-accent);
+}
+
+:host ::ng-deep .mat-mdc-button.mat-primary:hover,
+:host ::ng-deep button[mat-stroked-button]:hover {
+  background-color: rgba(255, 45, 106, 0.1);
+}
+
+

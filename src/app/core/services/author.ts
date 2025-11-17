@@ -25,7 +25,7 @@ export interface AuthorsResponse {
   providedIn: 'root',
 })
 export class AuthorService {
-  private readonly API_URL = 'http://localhost:3000/api/authors';
+  private readonly API_URL = 'http://18.184.165.152:3000/api/authors';
 
   constructor(
     private http: HttpClient,

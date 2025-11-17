@@ -1,0 +1,91 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+
+  <!-- First Name -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>First Name</mat-label>
+    <input matInput formControlName="FirstName" />
+    <mat-error *ngIf="registerForm.get('FirstName')?.errors?.['required']">
+      First Name is required.
+    </mat-error>
+    <mat-error *ngIf="registerForm.get('FirstName')?.errors?.['minlength']">
+      Must be at least 3 characters.
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Last Name -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Last Name</mat-label>
+    <input matInput formControlName="LastName" />
+    <mat-error *ngIf="registerForm.get('LastName')?.errors?.['required']">
+      Last Name is required.
+    </mat-error>
+    <mat-error *ngIf="registerForm.get('LastName')?.errors?.['minlength']">
+      Must be at least 3 characters.
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Email -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" />
+    <mat-error *ngIf="registerForm.get('email')?.errors?.['required']">
+      Email is required.
+    </mat-error>
+    <mat-error *ngIf="registerForm.get('email')?.errors?.['email']">
+      Enter a valid email.
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Password -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Password</mat-label>
+    <input matInput type="password" formControlName="password" />
+    <mat-error *ngIf="registerForm.get('password')?.errors?.['required']">
+      Password is required.
+    </mat-error>
+    <mat-error *ngIf="registerForm.get('password')?.errors?.['minlength']">
+      Must be at least 6 characters.
+    </mat-error>
+    <mat-error *ngIf="registerForm.get('password')?.errors?.['pattern']">
+      Must contain letters and numbers.
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Confirm Password -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Confirm Password</mat-label>
+    <input matInput type="password" formControlName="confirmPassword" />
+    <mat-error *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">
+      Confirm Password is required.
+    </mat-error>
+    <mat-error *ngIf="registerForm.get('confirmPassword')?.errors?.['mismatch'] && registerForm.get('confirmPassword')?.dirty">
+      Passwords do not match.
+    </mat-error>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">
+    Register
+  </button>
+
+  <div class="login-link">
+    Already have an account? <a routerLink="/login">Login here</a>
+  </div>
+
+</form>
+
+<!-- Popup message/loading box -->
+<div class="message-box" *ngIf="isLoading || message">
+  <div class="backdrop"></div>
+  <div class="box-inner" [class.error]="isError" [class.success]="!isError && !isLoading">
+    <button type="button" class="close-btn" (click)="message=''; isLoading=false; isError=false">×</button>
+    <div class="row">
+      <div class="spinner" *ngIf="isLoading"></div>
+      <div class="text" *ngIf="!isLoading">
+        {{ message }}
+      </div>
+      <div class="text" *ngIf="isLoading">
+        Processing, please wait...
+      </div>
+    </div>
+  </div>
+</div>
