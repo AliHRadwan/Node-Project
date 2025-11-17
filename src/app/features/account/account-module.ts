@@ -4,17 +4,33 @@ import { CommonModule } from '@angular/common';
 import { AccountRoutingModule } from './account-routing-module';
 import { RequestRestoreAccount } from './request-restore-account/request-restore-account';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
+import { UserProfile } from './user-profile/user-profile';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatListModule } from '@angular/material/list';
 @NgModule({
   declarations: [
     RequestRestoreAccount,
+    UserProfile
   ],
   imports: [
     CommonModule,
     AccountRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatDividerModule,
+    MatFormFieldModule,
+    MatListModule,
   ]
 })
 export class AccountModule { }
