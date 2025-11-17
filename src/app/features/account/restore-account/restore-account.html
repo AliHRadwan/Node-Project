@@ -1,0 +1,34 @@
+<div class="restore-container">
+  <div class="restore-card">
+    <div class="backdrop"></div>
+    <div class="card-inner" [class.error]="isError" [class.success]="!isError && !isLoading">
+      <button type="button" class="close-btn" (click)="closeMessage()" *ngIf="!isLoading && message">×</button>
+      <div class="content">
+        <div class="spinner" *ngIf="isLoading"></div>
+        <div class="icon" *ngIf="!isLoading && !isError && message">✓</div>
+        <div class="icon error-icon" *ngIf="!isLoading && isError && message">✕</div>
+        <h2 *ngIf="!isLoading && message">{{ isError ? 'Restore Failed' : 'Account Restored!' }}</h2>
+        <h2 *ngIf="isLoading">Restoring Your Account...</h2>
+        <p class="message-text" *ngIf="isLoading || message">
+          {{ isLoading ? 'Please wait while we restore your account...' : message }}
+        </p>
+        <button 
+          mat-raised-button 
+          color="primary" 
+          *ngIf="!isLoading && !isError && message"
+          (click)="goToLogin()"
+          class="action-btn">
+          Go to Login
+        </button>
+        <button 
+          mat-stroked-button 
+          *ngIf="!isLoading && isError && message"
+          (click)="goToLogin()"
+          class="action-btn">
+          Go to Login
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

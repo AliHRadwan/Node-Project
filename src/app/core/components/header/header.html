@@ -32,7 +32,7 @@
          title="Author Profile"
          routerLink="/author-profile">
       </a>
-      <a class="bi bi-person fs-4 text-dark" href="#"></a>
+      <a class="bi bi-person fs-4 text-dark" routerLink="/login"></a>
       <button mat-icon-button routerLink="/cart" 
               [matBadge]="cartService.cartCount$ | async" 
               matBadgeColor="warn">

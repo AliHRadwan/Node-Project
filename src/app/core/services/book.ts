@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from './auth';
+import { CartService } from './cart.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface BookFilters {
   page?: number;
@@ -37,7 +39,9 @@ export class BookService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private cartService: CartService,
+    private snackBar: MatSnackBar
   ) {}
 
   // Fetch all books with pagination and filtering
@@ -103,4 +107,18 @@ export class BookService {
     }
     return this.http.delete<any>(`${this.API_URL}/${id}`, { headers });
   }
+  
+  addToCart(book: any): void {
+  this.cartService.addToCart({
+    bookId: book._id,
+    qty: 1
+  }).subscribe({
+    next: (response) => {
+      this.snackBar.open('✅ Added to cart!', 'View', { duration: 3000 });
+    },
+    error: (error) => {
+      this.snackBar.open('❌ ' + error.error?.message, 'Close', { duration: 3000 });
+    }
+  });
+}
 }

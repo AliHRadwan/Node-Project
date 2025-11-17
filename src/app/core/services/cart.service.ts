@@ -8,7 +8,7 @@ import {
   AddToCartRequest, 
   UpdateCartRequest 
 } from '../models/cart.model';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class CartService {
 
   // Helper: Get headers with token
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken'); // Changed from 'token' to 'authToken'
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -48,7 +48,7 @@ export class CartService {
 
   // 2️⃣ Add to Cart
   addToCart(request: AddToCartRequest): Observable<CartResponse> {
-    return this.http.post<CartResponse>(this.apiUrl, request).pipe(
+    return this.http.post<CartResponse>(this.apiUrl, request, { headers: this.getHeaders() }).pipe(
       tap(response => {
         if (response.success) {
           this.cartSubject.next(response.data);
@@ -60,7 +60,7 @@ export class CartService {
 
   // 3️⃣ Update Cart Item
   updateCartItem(request: UpdateCartRequest): Observable<CartResponse> {
-    return this.http.put<CartResponse>(this.apiUrl, request).pipe(
+    return this.http.put<CartResponse>(this.apiUrl, request, { headers: this.getHeaders() }).pipe(
       tap(response => {
         if (response.success) {
           this.cartSubject.next(response.data);
@@ -72,7 +72,7 @@ export class CartService {
 
   // 4️⃣ Remove from Cart
   removeFromCart(bookId: string): Observable<CartResponse> {
-    return this.http.delete<CartResponse>(`${this.apiUrl}/${bookId}`).pipe(
+    return this.http.delete<CartResponse>(`${this.apiUrl}/${bookId}`, { headers: this.getHeaders() }).pipe(
       tap(response => {
         if (response.success) {
           this.cartSubject.next(response.data);
@@ -84,7 +84,7 @@ export class CartService {
 
   // 5️⃣ Clear Cart
   clearCart(): Observable<CartResponse> {
-    return this.http.delete<CartResponse>(this.apiUrl).pipe(
+    return this.http.delete<CartResponse>(this.apiUrl, { headers: this.getHeaders() }).pipe(
       tap(response => {
         if (response.success) {
           this.cartSubject.next(response.data);

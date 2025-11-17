@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PaymentSuccess } from './features/cart/payment-success/payment-success';
+import { PaymentFailed } from './features/cart/payment-failed/payment-failed';
 
 const routes: Routes = [
   { 
@@ -19,6 +21,23 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/dashboard/dashboard-module').then(m => m.DashboardModule)
   },
+
+  {
+    path: 'register',
+    loadChildren: () => import('./features/registeration/registeration-module').then(m => m.RegisterationModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: "password-management",
+    loadChildren: () => import('./features/passowrdmanagement/passowrdmanagement-module').then(m => m.PassowrdmanagementModule)
+  },
+  {
+    path: 'account',
+    loadChildren: () => import('./features/account/account-module').then(m => m.AccountModule)
+  },
   {
     path: 'author-profile',
     loadChildren: () =>
@@ -33,7 +52,9 @@ const routes: Routes = [
     path: 'review-authors',
     loadChildren: () =>
       import('./features/review-authors/review-authors.module').then(m => m.ReviewAuthorsModule)
-  }
+  },
+
+
 ];
 
 @NgModule({
