@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PaymentSuccess } from './features/cart/payment-success/payment-success';
 import { PaymentFailed } from './features/cart/payment-failed/payment-failed';
+import { AdminGuard } from './core/guards/admin.guard';
 
 const routes: Routes = [
   { 
@@ -18,6 +19,7 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
+    canActivate: [AdminGuard],
     loadChildren: () =>
       import('./features/dashboard/dashboard-module').then(m => m.DashboardModule)
   },
@@ -52,6 +54,16 @@ const routes: Routes = [
     path: 'review-authors',
     loadChildren: () =>
       import('./features/review-authors/review-authors.module').then(m => m.ReviewAuthorsModule)
+  },
+  {
+    path: 'about',
+    loadChildren: () =>
+      import('./features/about/about.module').then(m => m.AboutModule)
+  },
+  {
+    path: 'contact',
+    loadChildren: () =>
+      import('./features/contact/contact.module').then(m => m.ContactModule)
   },
 
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthorService, AuthorFilters } from '../../core/services/author';
 import { AuthService } from '../../core/services/auth';
 import { CoreModule } from '../../core/core-module';
@@ -11,7 +12,7 @@ import { CoreModule } from '../../core/core-module';
   standalone: true,
   templateUrl: './review-authors.html',
   styleUrls: ['./review-authors.css'],
-  imports: [CommonModule, FormsModule, CoreModule]
+  imports: [CommonModule, FormsModule, CoreModule, MatSnackBarModule]
 })
 export class ReviewAuthorsComponent implements OnInit {
   authors: any[] = [];
@@ -49,7 +50,8 @@ export class ReviewAuthorsComponent implements OnInit {
   constructor(
     private authorService: AuthorService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -163,12 +165,22 @@ export class ReviewAuthorsComponent implements OnInit {
       this.approveData.name || this.approveData.bio ? this.approveData : undefined
     ).subscribe({
       next: (response) => {
-        alert('Author approved successfully!');
+        this.snackBar.open('Author approved successfully!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        });
         this.closeModals();
         this.loadAuthors();
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to approve author');
+        this.snackBar.open(err.error?.message || 'Failed to approve author', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar']
+        });
         console.error('Error approving author:', err);
       }
     });
@@ -182,12 +194,22 @@ export class ReviewAuthorsComponent implements OnInit {
       this.rejectReason
     ).subscribe({
       next: (response) => {
-        alert('Author rejected successfully!');
+        this.snackBar.open('Author rejected successfully!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        });
         this.closeModals();
         this.loadAuthors();
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to reject author');
+        this.snackBar.open(err.error?.message || 'Failed to reject author', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar']
+        });
         console.error('Error rejecting author:', err);
       }
     });
@@ -197,7 +219,12 @@ export class ReviewAuthorsComponent implements OnInit {
     if (!this.selectedAuthor) return;
 
     if (this.selectedAuthor.status !== 'approved') {
-      alert('Only approved authors can be revoked');
+      this.snackBar.open('Only approved authors can be revoked', 'Close', {
+        duration: 4000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        panelClass: ['warning-snackbar']
+      });
       return;
     }
 
@@ -206,12 +233,22 @@ export class ReviewAuthorsComponent implements OnInit {
       this.revokeReason || 'Revoked by admin'
     ).subscribe({
       next: (response) => {
-        alert('Author privileges revoked successfully!');
+        this.snackBar.open('Author privileges revoked successfully!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['success-snackbar']
+        });
         this.closeModals();
         this.loadAuthors();
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to revoke author');
+        this.snackBar.open(err.error?.message || 'Failed to revoke author', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar']
+        });
         console.error('Error revoking author:', err);
       }
     });

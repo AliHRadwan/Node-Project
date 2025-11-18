@@ -247,14 +247,17 @@
           </div>
 
           <div class="mb-3">
-            <label for="detailsImageUrl" class="form-label">Image URL</label>
-            <input type="url" class="form-control" id="detailsImageUrl" [(ngModel)]="detailsForm.image.url" name="detailsImageUrl" placeholder="https://example.com/image.jpg">
-            <div class="form-text">Enter a URL for the book cover image</div>
+            <label for="detailsImageFile" class="form-label">Book Cover Image</label>
+            <input type="file" class="form-control" id="detailsImageFile" accept="image/*" (change)="onImageFileSelected($event, false)" name="detailsImageFile">
+            <div class="form-text">Upload a cover image for the book (JPG, PNG, etc.)</div>
+            <small class="text-muted" *ngIf="selectedImageFile">Selected: {{ selectedImageFile.name }}</small>
           </div>
 
           <div class="mb-3">
-            <label for="detailsPdfUrl" class="form-label">PDF URL</label>
-            <input type="url" class="form-control" id="detailsPdfUrl" [(ngModel)]="detailsForm.pdfUrl" name="detailsPdfUrl" placeholder="https://example.com/book.pdf">
+            <label for="detailsPdfFile" class="form-label">Book PDF</label>
+            <input type="file" class="form-control" id="detailsPdfFile" accept=".pdf" (change)="onPdfFileSelected($event, false)" name="detailsPdfFile">
+            <div class="form-text">Upload the book PDF file</div>
+            <small class="text-muted" *ngIf="selectedPdfFile">Selected: {{ selectedPdfFile.name }}</small>
           </div>
 
           <div class="mb-3">
@@ -371,21 +374,22 @@
                    [(ngModel)]="bookForm.publishedAt" name="publishedAt">
           </div>
 
-          <!-- Image URL -->
+          <!-- Image File -->
           <div class="mb-3">
-            <label for="imageUrl" class="form-label">Image URL</label>
-            <input type="url" class="form-control" id="imageUrl" 
-                   [(ngModel)]="bookForm.image.url" name="imageUrl"
-                   placeholder="https://example.com/image.jpg">
-            <div class="form-text">Enter a URL for the book cover image</div>
+            <label for="imageFile" class="form-label">Book Cover Image</label>
+            <input type="file" class="form-control" id="imageFile" accept="image/*" (change)="onImageFileSelected($event, true)" name="imageFile">
+            <div class="form-text">Upload a cover image for the book (JPG, PNG, etc.)</div>
+            <small class="text-muted" *ngIf="selectedEditImageFile">Selected: {{ selectedEditImageFile.name }}</small>
+            <small class="text-muted" *ngIf="!selectedEditImageFile && bookForm.image?.url">Current: {{ bookForm.image.url }}</small>
           </div>
 
-          <!-- PDF URL -->
+          <!-- PDF File -->
           <div class="mb-3">
-            <label for="pdfUrl" class="form-label">PDF URL</label>
-            <input type="url" class="form-control" id="pdfUrl" 
-                   [(ngModel)]="bookForm.pdfUrl" name="pdfUrl"
-                   placeholder="https://example.com/book.pdf">
+            <label for="pdfFile" class="form-label">Book PDF</label>
+            <input type="file" class="form-control" id="pdfFile" accept=".pdf" (change)="onPdfFileSelected($event, true)" name="pdfFile">
+            <div class="form-text">Upload the book PDF file</div>
+            <small class="text-muted" *ngIf="selectedEditPdfFile">Selected: {{ selectedEditPdfFile.name }}</small>
+            <small class="text-muted" *ngIf="!selectedEditPdfFile && bookForm.pdfUrl">Current: {{ bookForm.pdfUrl }}</small>
           </div>
 
           <!-- Categories -->

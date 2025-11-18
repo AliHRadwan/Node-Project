@@ -141,7 +141,7 @@
                 </span>
                 <span *ngIf="!book.categories || book.categories.length === 0" class="text-muted">No category</span>
               </td>
-              <td>${{ book.price | number:'1.2-2' }}</td>
+              <td>{{ book.price | number:'1.2-2' }} EGP</td>
               <td>{{ book.stock }}</td>
               <td>
                 <span class="badge" [ngClass]="book.isActive ? 'bg-success' : 'bg-secondary'">
@@ -265,7 +265,7 @@
         <div class="alert alert-success">
           <i class="bi bi-check-circle"></i> Book created successfully! Now you can add optional details.
         </div>
-        <form>
+        <form enctype="multipart/form-data">
           <div class="mb-3">
             <label for="detailsDescription" class="form-label">Description</label>
             <textarea class="form-control" id="detailsDescription" rows="4" [(ngModel)]="detailsForm.description" name="detailsDescription"></textarea>
@@ -308,13 +308,17 @@
           </div>
 
           <div class="mb-3">
-            <label for="detailsImageUrl" class="form-label">Image URL</label>
-            <input type="url" class="form-control" id="detailsImageUrl" [(ngModel)]="detailsForm.image.url" name="detailsImageUrl" placeholder="https://...">
+            <label for="detailsImageFile" class="form-label">Book Cover Image</label>
+            <input type="file" class="form-control" id="detailsImageFile" accept="image/*" (change)="onImageFileSelected($event, false)" name="image">
+            <div class="form-text">Upload a cover image for the book (JPG, PNG, etc.)</div>
+            <small class="text-muted" *ngIf="selectedImageFile">Selected: {{ selectedImageFile.name }}</small>
           </div>
 
           <div class="mb-3">
-            <label for="detailsPdfUrl" class="form-label">PDF URL</label>
-            <input type="url" class="form-control" id="detailsPdfUrl" [(ngModel)]="detailsForm.pdfUrl" name="detailsPdfUrl" placeholder="https://...">
+            <label for="detailsPdfFile" class="form-label">Book PDF</label>
+            <input type="file" class="form-control" id="detailsPdfFile" accept=".pdf" (change)="onPdfFileSelected($event, false)" name="book">
+            <div class="form-text">Upload the book PDF file</div>
+            <small class="text-muted" *ngIf="selectedPdfFile">Selected: {{ selectedPdfFile.name }}</small>
           </div>
 
           <div class="mb-3">
@@ -372,7 +376,7 @@
         <button type="button" class="btn-close btn-close-white" (click)="closeBookForm()" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form encrypt="multipart/form-data" method="post">
           <div class="row">
             <div class="col-md-8">
               <div class="mb-3">
@@ -436,13 +440,19 @@
           </div>
 
           <div class="mb-3">
-            <label for="imageUrl" class="form-label">Image URL</label>
-            <input type="url" class="form-control" id="imageUrl" [(ngModel)]="bookForm.image.url" name="imageUrl" placeholder="https://...">
+            <label for="imageFile" class="form-label">Book Cover Image</label>
+            <input type="file" class="form-control" id="imageFile" accept="image/*" (change)="onImageFileSelected($event, true)" name="image">
+            <div class="form-text">Upload a cover image for the book (JPG, PNG, etc.)</div>
+            <small class="text-muted" *ngIf="selectedEditImageFile">Selected: {{ selectedEditImageFile.name }}</small>
+            <small class="text-muted" *ngIf="!selectedEditImageFile && bookForm.image?.url">Current: {{ bookForm.image.url }}</small>
           </div>
 
           <div class="mb-3">
-            <label for="pdfUrl" class="form-label">PDF URL</label>
-            <input type="url" class="form-control" id="pdfUrl" [(ngModel)]="bookForm.pdfUrl" name="pdfUrl" placeholder="https://...">
+            <label for="pdfFile" class="form-label">Book PDF</label>
+            <input type="file" class="form-control" id="pdfFile" accept=".pdf" (change)="onPdfFileSelected($event, true)" name="book">
+            <div class="form-text">Upload the book PDF file</div>
+            <small class="text-muted" *ngIf="selectedEditPdfFile">Selected: {{ selectedEditPdfFile.name }}</small>
+            <small class="text-muted" *ngIf="!selectedEditPdfFile && bookForm.pdfUrl">Current: {{ bookForm.pdfUrl }}</small>
           </div>
 
           <div class="mb-3">

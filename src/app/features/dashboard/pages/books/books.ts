@@ -3,6 +3,8 @@ import { BookService, BookFilters } from '../../../../core/services/book';
 import { CategoryService } from '../../../../core/services/category';
 import { AuthorService } from '../../../../core/services/author';
 import { AuthService } from '../../../../core/services/auth';
+import { UploadService } from '../../../../core/services/upload.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-books',
@@ -83,11 +85,18 @@ export class Books implements OnInit {
     isActive: true
   };
 
+  // File uploads
+  selectedImageFile: File | null = null;
+  selectedPdfFile: File | null = null;
+  selectedEditImageFile: File | null = null;
+  selectedEditPdfFile: File | null = null;
+
   constructor(
     private bookService: BookService,
     private categoryService: CategoryService,
     private authorService: AuthorService,
-    private authService: AuthService
+    private authService: AuthService,
+    private uploadService: UploadService
   ) {}
 
   ngOnInit() {
@@ -258,6 +267,8 @@ export class Books implements OnInit {
       categories: [],
       isActive: true
     };
+    this.selectedImageFile = null;
+    this.selectedPdfFile = null;
     this.showBookForm = true;
     this.showDetailsForm = false;
   }
@@ -280,6 +291,8 @@ export class Books implements OnInit {
       categories: book.categories ? (Array.isArray(book.categories) ? book.categories.map((c: any) => c._id || c.id || c) : []) : [],
       isActive: book.isActive !== undefined ? book.isActive : true
     };
+    this.selectedEditImageFile = null;
+    this.selectedEditPdfFile = null;
     this.showBookForm = true;
   }
 
@@ -288,6 +301,32 @@ export class Books implements OnInit {
     this.showDetailsForm = false;
     this.editingBook = null;
     this.newlyCreatedBook = null;
+    this.selectedImageFile = null;
+    this.selectedPdfFile = null;
+    this.selectedEditImageFile = null;
+    this.selectedEditPdfFile = null;
+  }
+
+  onImageFileSelected(event: any, isEdit: boolean = false) {
+    const file = event.target.files[0];
+    if (file) {
+      if (isEdit) {
+        this.selectedEditImageFile = file;
+      } else {
+        this.selectedImageFile = file;
+      }
+    }
+  }
+
+  onPdfFileSelected(event: any, isEdit: boolean = false) {
+    const file = event.target.files[0];
+    if (file) {
+      if (isEdit) {
+        this.selectedEditPdfFile = file;
+      } else {
+        this.selectedPdfFile = file;
+      }
+    }
   }
 
   closeDetailsForm() {
@@ -422,8 +461,6 @@ export class Books implements OnInit {
     const detailsData: any = {};
 
     if (this.detailsForm.description) detailsData.description = this.detailsForm.description.trim();
-    if (this.detailsForm.pdfUrl) detailsData.pdfUrl = this.detailsForm.pdfUrl.trim();
-    if (this.detailsForm.image?.url) detailsData.image = { url: this.detailsForm.image.url.trim() };
     if (this.detailsForm.isbn) detailsData.isbn = this.detailsForm.isbn.trim();
     if (this.detailsForm.sku) detailsData.sku = this.detailsForm.sku.trim();
     if (this.detailsForm.publisher) detailsData.publisher = this.detailsForm.publisher.trim();
@@ -432,13 +469,58 @@ export class Books implements OnInit {
     if (this.detailsForm.categories && this.detailsForm.categories.length > 0) detailsData.categories = this.detailsForm.categories;
     if (this.detailsForm.isActive !== undefined) detailsData.isActive = this.detailsForm.isActive;
 
+    // Initialize image object if image file is selected (prevents backend error)
+    if (this.selectedImageFile && !detailsData.image) {
+      detailsData.image = {};
+    }
+
     // Update the book with details
     const bookId = this.newlyCreatedBook._id || this.newlyCreatedBook.id;
+    if (!bookId) {
+      alert('Error: Book ID not found. Please try again.');
+      return;
+    }
+
     this.bookService.updateBook(bookId, detailsData).subscribe({
       next: (response) => {
-        alert('Book details updated successfully!');
-        this.closeDetailsForm();
-        this.loadBooks();
+        let uploadPromises: Promise<any>[] = [];
+
+        // Upload image if selected
+        if (this.selectedImageFile) {
+          const imageUpload = firstValueFrom(this.uploadService.uploadImage(bookId, this.selectedImageFile))
+            .then(() => {
+              console.log('Image uploaded successfully');
+              alert('Image uploaded successfully!');
+            })
+            .catch((err) => {
+              console.error('Error uploading image:', err);
+              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload image';
+              alert(`Image upload failed: ${errorMsg}`);
+            });
+          uploadPromises.push(imageUpload);
+        }
+
+        // Upload PDF if selected
+        if (this.selectedPdfFile) {
+          const pdfUpload = firstValueFrom(this.uploadService.uploadPdf(bookId, this.selectedPdfFile))
+            .then(() => {
+              console.log('PDF uploaded successfully');
+              alert('PDF uploaded successfully!');
+            })
+            .catch((err) => {
+              console.error('Error uploading PDF:', err);
+              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload PDF';
+              alert(`PDF upload failed: ${errorMsg}`);
+            });
+          uploadPromises.push(pdfUpload);
+        }
+
+        // Wait for all uploads to complete
+        Promise.all(uploadPromises).finally(() => {
+          alert('Book details updated successfully!');
+          this.closeDetailsForm();
+          this.loadBooks();
+        });
       },
       error: (err) => {
         alert(err.error?.message || 'Failed to update book details');
@@ -473,8 +555,6 @@ export class Books implements OnInit {
       isActive: this.bookForm.isActive
     };
 
-    if (this.bookForm.pdfUrl) formData.pdfUrl = this.bookForm.pdfUrl.trim();
-    if (this.bookForm.image?.url) formData.image = { url: this.bookForm.image.url };
     if (this.bookForm.isbn) formData.isbn = this.bookForm.isbn.trim();
     if (this.bookForm.sku) formData.sku = this.bookForm.sku.trim();
     if (this.bookForm.publisher) formData.publisher = this.bookForm.publisher.trim();
@@ -483,12 +563,58 @@ export class Books implements OnInit {
     if (this.bookForm.authors && this.bookForm.authors.length > 0) formData.authors = this.bookForm.authors;
     if (this.bookForm.categories && this.bookForm.categories.length > 0) formData.categories = this.bookForm.categories;
 
+    // Initialize image object if image file is selected (prevents backend error)
+    if (this.selectedEditImageFile && !formData.image) {
+      formData.image = {};
+    }
+
+    const bookId = this.editingBook._id || this.editingBook.id;
+    if (!bookId) {
+      alert('Error: Book ID not found. Please try again.');
+      return;
+    }
+
     // Update existing book
-    this.bookService.updateBook(this.editingBook._id || this.editingBook.id, formData).subscribe({
+    this.bookService.updateBook(bookId, formData).subscribe({
       next: (response) => {
-        alert('Book updated successfully!');
-        this.closeBookForm();
-        this.loadBooks();
+        let uploadPromises: Promise<any>[] = [];
+
+        // Upload image if selected
+        if (this.selectedEditImageFile) {
+          const imageUpload = firstValueFrom(this.uploadService.uploadImage(bookId, this.selectedEditImageFile))
+            .then(() => {
+              console.log('Image uploaded successfully');
+              alert('Image uploaded successfully!');
+            })
+            .catch((err) => {
+              console.error('Error uploading image:', err);
+              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload image';
+              alert(`Image upload failed: ${errorMsg}`);
+            });
+          uploadPromises.push(imageUpload);
+        }
+
+        // Upload PDF if selected
+        if (this.selectedEditPdfFile) {
+          const pdfUpload = firstValueFrom(this.uploadService.uploadPdf(bookId, this.selectedEditPdfFile))
+            .then(() => {
+              console.log('PDF uploaded successfully');
+              alert('PDF uploaded successfully!');
+            })
+            .catch((err) => {
+              console.error('Error uploading PDF:', err);
+              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload PDF';
+              alert(`PDF upload failed: ${errorMsg}`);
+            });
+          uploadPromises.push(pdfUpload);
+        }
+
+        // Wait for all uploads to complete
+        Promise.all(uploadPromises).finally(() => {
+          alert('Book updated successfully!');
+          this.closeBookForm();
+          this.loadBooks();
+        });
       },
       error: (err) => {
         alert(err.error?.message || 'Failed to update book');

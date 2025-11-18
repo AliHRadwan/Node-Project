@@ -58,7 +58,7 @@
           </div>
           <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
           <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
-          <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+          <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
         </div>
       </div>
     </div>
@@ -110,7 +110,7 @@
             <div class="flex-grow-1">
               <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
               <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
-              <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+              <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
             </div>
           </div>
         </div>
@@ -128,7 +128,7 @@
             <div class="flex-grow-1">
               <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
               <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
-              <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+              <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@
             <div class="flex-grow-1">
               <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
               <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
-              <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+              <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
             </div>
           </div>
         </div>
@@ -165,8 +165,8 @@
               <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
               <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
               <p class="fw-bold mb-0 text-danger">
-                <span class="text-decoration-line-through text-muted me-2" *ngIf="book.originalPrice">${{ book.originalPrice }}</span>
-                ${{ book.price }}
+                <span class="text-decoration-line-through text-muted me-2" *ngIf="book.originalPrice">{{ book.originalPrice }} EGP</span>
+                {{ book.price }} EGP
               </p>
             </div>
           </div>
@@ -177,7 +177,7 @@
 </section>
 
 <!-- Books section with filtering and pagination -->
-<section class="books-section py-5 bg-light">
+<section id="all-books" class="books-section py-5 bg-light">
   <div class="container">
     <h2 class="text-center mb-4 fw-bold">All Books</h2>
     
@@ -283,7 +283,7 @@
             <h6 class="fw-semibold mb-1 text-dark">{{ book.title }}</h6>
             <p class="text-muted mb-2 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
             <div class="d-flex justify-content-between align-items-center">
-              <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+              <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
               <button mat-icon-button class="ms-2 text-danger" (click)="addToCart(book, $event)">
                 <i class="bi bi-cart-plus fs-5"></i>
               </button>
@@ -345,3 +345,5 @@
 </section>
 
 <app-footer [categories]="categories"></app-footer>
+
+<app-chatbot></app-chatbot>

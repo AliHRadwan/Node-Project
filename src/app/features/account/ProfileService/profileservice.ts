@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class Profileservice {
-  private apiUrl = `${environment.apiUrl}profile`;
-  private apiUrll = `${environment.apiUrl}auth`;
+  private apiUrl = `${environment.apiUrl}/profile`;
+  private apiUrll = `${environment.apiUrl}/auth`;
 
   constructor(
     private http: HttpClient
@@ -75,5 +75,9 @@ export class Profileservice {
     confirm_password: string;
   }): Observable<any> {
     return this.http.post(`${this.apiUrll}/change-password`, passwordData);
+  }
+
+  getUserOrders(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/orders`);
   }
 }

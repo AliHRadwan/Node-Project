@@ -52,7 +52,7 @@
               <mat-icon *ngIf="!item.isInStock">error</mat-icon>
               <span *ngIf="item.isInStock">
                 In Stock 
-                <span *ngIf="item.stockAvailable">({{ item.stockAvailable }} available)</span>
+                <span *ngIf="item.stockAvailable && item.stockAvailable <= 5">({{ item.stockAvailable }} available)</span>
               </span>
               <span *ngIf="!item.isInStock">Out of Stock</span>
             </div>
@@ -115,7 +115,7 @@
       
       <div class="summary-row">
         <span>Shipping</span>
-        <span class="free">Not FREE</span>
+        <span class="free">Applied on checkout</span>
       </div>
       
       <mat-divider></mat-divider>

@@ -69,13 +69,12 @@
       <!-- Price -->
       <div class="mb-4">
         <div class="d-flex align-items-baseline gap-3 mb-2">
-          <h2 class="text-danger fw-bold mb-0">${{ book.price }}</h2>
-          <span class="text-decoration-line-through text-muted fs-5" *ngIf="book.originalPrice">${{ book.originalPrice
-            }}</span>
+          <h2 class="text-danger fw-bold mb-0">{{ book.price }} EGP</h2>
+          <span class="text-decoration-line-through text-muted fs-5" *ngIf="book.originalPrice">{{ book.originalPrice }} EGP</span>
         </div>
         <div class="mb-3">
           <span class="badge bg-success fs-6 px-3 py-2" *ngIf="book.stock > 0">
-            <i class="bi bi-check-circle me-1"></i>In Stock ({{ book.stock }} available)
+            <i class="bi bi-check-circle me-1"></i>In Stock<span *ngIf="book.stock <= 5"> ({{ book.stock }} available)</span>
           </span>
           <span class="badge bg-danger fs-6 px-3 py-2" *ngIf="book.stock === 0">
             <i class="bi bi-x-circle me-1"></i>Out of Stock
@@ -181,7 +180,84 @@
   </div>
 
   <div class="reviews-section">
-    <h2 class="fw-bold mb-4">Customer Reviews</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold mb-0">Customer Reviews</h2>
+      <button 
+        *ngIf="isAuthenticated() && hasPurchasedBook && !userHasReviewed && !isCheckingPurchase"
+        mat-raised-button 
+        color="primary"
+        (click)="showReviewFormDialog()"
+        class="d-flex align-items-center gap-2">
+        <i class="bi bi-pencil-square"></i> Write a Review
+      </button>
+      <button 
+        *ngIf="!isAuthenticated()"
+        mat-stroked-button
+        (click)="showReviewFormDialog()"
+        class="d-flex align-items-center gap-2">
+        <i class="bi bi-pencil-square"></i> Write a Review
+      </button>
+    </div>
+
+    <!-- Review Form -->
+    <div class="card border-primary mb-4" *ngIf="showReviewForm">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Write Your Review</h5>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Rating <span class="text-danger">*</span></label>
+            <div class="rating-input">
+              <button 
+                type="button" 
+                *ngFor="let i of [1,2,3,4,5]; let idx = index"
+                class="btn btn-link p-0 me-1"
+                (click)="reviewForm.patchValue({rating: idx + 1})"
+                [class.text-warning]="reviewForm.value.rating >= idx + 1"
+                [class.text-muted]="reviewForm.value.rating < idx + 1">
+                <i class="bi bi-star-fill fs-3"></i>
+              </button>
+              <span class="ms-2 text-muted">{{ reviewForm.value.rating }} out of 5</span>
+            </div>
+            <div *ngIf="reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched" class="text-danger small mt-1">
+              Please select a rating
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="reviewText" class="form-label fw-semibold">Your Review (Optional)</label>
+            <textarea 
+              id="reviewText"
+              class="form-control" 
+              rows="4" 
+              formControlName="review"
+              placeholder="Share your thoughts about this book..."></textarea>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button 
+              type="submit" 
+              mat-raised-button 
+              color="primary"
+              [disabled]="isSubmittingReview || !reviewForm.valid">
+              <span *ngIf="!isSubmittingReview">Submit Review</span>
+              <span *ngIf="isSubmittingReview">
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Submitting...
+              </span>
+            </button>
+            <button 
+              type="button" 
+              mat-stroked-button
+              (click)="cancelReviewForm()"
+              [disabled]="isSubmittingReview">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <div class="review-summary" *ngIf="book.ratingCount > 0">
       <div class="row align-items-center">

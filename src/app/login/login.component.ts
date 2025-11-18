@@ -38,7 +38,13 @@ export class LoginComponent {
         localStorage.setItem('authToken', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
 
-        this.router.navigate(['/']); 
+        // Check if user is admin and redirect to dashboard
+        const userRole = response.user?.role?.toLowerCase();
+        if (userRole === 'admin') {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;

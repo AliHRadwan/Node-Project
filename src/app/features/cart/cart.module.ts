@@ -18,7 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { PaymentFailed } from './payment-failed/payment-failed';
 import { Payment } from './payment/payment';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogModule } from './confirm-dialog/confirm-dialog.module';
 import { AuthGuard } from '../../core/guards/auth.guard';
 
 const routes: Routes = [
@@ -29,7 +29,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CartComponent, PaymentSuccess, PaymentFailed, Payment, ConfirmDialogComponent],
+  declarations: [CartComponent, PaymentSuccess, PaymentFailed, Payment],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -44,6 +44,7 @@ const routes: Routes = [
     FormsModule,
     MatFormFieldModule, 
     MatInputModule, 
+    ConfirmDialogModule
 ]
 })
 export class CartModule { }
