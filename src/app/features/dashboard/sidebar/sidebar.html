@@ -15,7 +15,7 @@
     <a mat-list-item routerLink="/dashboard/orders" routerLinkActive="active"><mat-icon matListIcon>shopping_bag</mat-icon><span>Orders</span></a>
     <a mat-list-item routerLink="/dashboard/manage-books" routerLinkActive="active"><mat-icon matListIcon>menu_book</mat-icon><span>Books</span></a>
     <a mat-list-item routerLink="/dashboard/review-authors" routerLinkActive="active"><mat-icon matListIcon>people</mat-icon><span>Review Authors</span></a>
-     <a mat-list-item href="#" class="mt-2">
+     <a mat-list-item (click)="logout()" class="mt-2 text-danger" style="cursor: pointer;">
     <mat-icon matListIcon>logout</mat-icon><span class="ms-2">Logout</span>
     </a>
   </mat-nav-list>

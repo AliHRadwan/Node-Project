@@ -11,6 +11,10 @@
           </div>
 
           <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+            <div *ngIf="expiredMessage" class="expired-message alert alert-warning">
+              <i class="bi bi-clock-history me-2"></i>
+              {{ expiredMessage }}
+            </div>
             <div *ngIf="errorMessage" class="error-message">
               <i class="bi bi-exclamation-triangle-fill me-2"></i>
               {{ errorMessage }}

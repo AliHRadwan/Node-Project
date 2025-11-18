@@ -58,9 +58,47 @@ export class AuthService {
     }
   }
 
-  // Check if user is authenticated
+  // Check if token is expired
+  isTokenExpired(token?: string): boolean {
+    const tokenToCheck = token || this.getToken();
+    if (!tokenToCheck) {
+      return true;
+    }
+
+    try {
+      const payload = JSON.parse(atob(tokenToCheck.split('.')[1]));
+      const exp = payload.exp;
+      
+      if (!exp) {
+        return false; // No expiration claim, assume valid
+      }
+      
+      // exp is in seconds, Date.now() is in milliseconds
+      const expirationTime = exp * 1000;
+      const currentTime = Date.now();
+      
+      return currentTime >= expirationTime;
+    } catch (e) {
+      console.error('Error checking token expiration:', e);
+      return true; // If we can't parse, consider it expired
+    }
+  }
+
+  // Check if user is authenticated and token is valid
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) {
+      return false;
+    }
+    
+    // Check if token is expired
+    if (this.isTokenExpired(token)) {
+      // Token is expired, clear it
+      this.logout();
+      return false;
+    }
+    
+    return true;
   }
 
   // Login (if you have a login endpoint)
