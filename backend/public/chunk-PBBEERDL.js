@@ -1,0 +1,1 @@
+import{A as e,D as r,Eb as i}from"./chunk-HLKPSKLN.js";var o=class t{constructor(a){this.http=a}API_URL="http://18.184.165.152:3000/api/categories";getCategories(){return this.http.get(this.API_URL)}static \u0275fac=function(n){return new(n||t)(r(i))};static \u0275prov=e({token:t,factory:t.\u0275fac,providedIn:"root"})};export{o as a};

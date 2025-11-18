@@ -10,18 +10,34 @@ const buildFilter = async (query) => {
 
   // 🔹 Filter by author name (case-insensitive)
   if (query.author) {
-    const authorDoc = await Author.findOne({
-      name: { $regex: new RegExp(query.author, "i") }
-    });
-    if (authorDoc) filter.authors = authorDoc._id;
-    else filter.authors = null; // no author found
+    // Check if it's a valid MongoDB ObjectId (24 hex characters)
+    const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(query.author);
+
+    let authorDoc;
+    if (isValidObjectId) {
+      // If it's a valid ObjectId, search by ID
+      authorDoc = await Author.findById(query.author);
+    } else {
+      // Otherwise, search by name (case-insensitive) for backward compatibility
+      authorDoc = await Author.findOne({
+        name: { $regex: new RegExp(query.author, "i") }
+      });
+    }
+
+    if (authorDoc) {
+      // Use $in operator because authors is an array
+      filter.authors = { $in: [authorDoc._id] };
+    } else {
+      // No author found - set filter to return no results
+      filter.authors = { $in: [] };
+    }
   }
 
   // 🔹 Filter by category (accepts both ID and name)
   if (query.category) {
     // Check if it's a valid MongoDB ObjectId (24 hex characters)
     const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(query.category);
-    
+
     let categoryDoc;
     if (isValidObjectId) {
       // If it's a valid ObjectId, search by ID
@@ -32,7 +48,7 @@ const buildFilter = async (query) => {
         name: { $regex: new RegExp(query.category, "i") }
       });
     }
-    
+
     if (categoryDoc) filter.categories = categoryDoc._id;
     else filter.categories = null;
   }

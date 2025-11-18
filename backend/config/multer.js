@@ -54,7 +54,8 @@ export const multerUploadBook = multer({
     s3: s3,
     bucket: process.env.AWS_S3_BUCKET,
     key: (req, file, cb) => {
-      cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+      const randCode = Math.random().toString().slice(2, 8);
+      cb(null, `${file.fieldname}-${Date.now()}-${randCode}${path.extname(file.originalname)}`);
       winstonLogger.info(`Book was uploaded: ${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
     },
     contentType: multerS3.AUTO_CONTENT_TYPE,
