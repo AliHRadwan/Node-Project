@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from './auth';
 import { CartService } from './cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../../environments/environment.prod';
 
 export interface BookFilters {
   page?: number;
@@ -36,7 +37,7 @@ export interface BooksResponse {
   providedIn: 'root',
 })
 export class BookService {
-  private readonly API_URL = 'http://18.184.165.152:3000/api/books';
+  private readonly API_URL = environment.apiUrl + '/books';
 
   constructor(
     private http: HttpClient,

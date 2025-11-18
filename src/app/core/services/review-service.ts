@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
-
+import { environment } from '../../../environments/environment.prod';
 export interface ReviewsResponse {
   pagination: {
     currentPage: number;
@@ -23,7 +23,7 @@ export interface CreateReviewRequest {
   providedIn: 'root',
 })
 export class ReviewService {
-  private readonly API_URL = 'http://18.184.165.152:3000/api/reviews';
+  private readonly API_URL = environment.apiUrl + '/reviews';
 
   constructor(
     private http: HttpClient,
