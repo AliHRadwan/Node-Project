@@ -218,7 +218,7 @@ const requestRestoreAccount = async (req, res) => {
       used: false,
     });
 
-    const restoreLink = `http://localhost:4200/features/restore/${restoreToken}`;
+    const restoreLink = `http://18.184.165.152:3000/account/restored-account/${restoreToken}`;
     await sendEmail(user.email, "Restore Your Account",
       `<h2>Restore Your Account</h2>
       <p>Click the link below to restore your account:</p>

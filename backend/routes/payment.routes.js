@@ -130,8 +130,8 @@ router.post("/create-checkout/:orderId", verifyJWT, async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.FRONTEND_URL || "http://localhost:3000"}/payment/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.FRONTEND_URL || "http://localhost:3000"}/payment/cancel.html`,
+      success_url: `${process.env.FRONTEND_URL || "http://localhost:4200"}/cart/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.FRONTEND_URL || "http://localhost:4200"}/cart/payment/failed`,
       metadata: {
         orderId: String(order._id),
         userId: me,
