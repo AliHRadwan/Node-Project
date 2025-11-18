@@ -43,7 +43,6 @@ app.use(express.json());
 app.use(sessionMiddleware);
 app.use(morgan("combined", { stream: winstonStream }));
 
-app.use(express.static("public"));
 loadSwagger(app);
 
 app.use("/api/auth", authAPILimiter, authRoutes);
