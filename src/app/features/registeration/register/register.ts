@@ -52,6 +52,8 @@ export class Register {
   isLoading = false;
   message = '';
   isError = false;
+  hidePassword: boolean = true;
+  hideConfirmPassword: boolean = true;
 
   onSubmit() {
     if (!this.registerForm.valid) {

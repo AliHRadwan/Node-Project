@@ -94,3 +94,31 @@
   height: 3rem;
 }
 
+/* Snackbar Styles */
+::ng-deep .success-snackbar {
+  background-color: #198754 !important;
+  color: white !important;
+}
+
+::ng-deep .success-snackbar .mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
+::ng-deep .error-snackbar {
+  background-color: #dc3545 !important;
+  color: white !important;
+}
+
+::ng-deep .error-snackbar .mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
+::ng-deep .warning-snackbar {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+::ng-deep .warning-snackbar .mat-mdc-snack-bar-action {
+  color: #000 !important;
+}
+

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AccountRoutingModule } from './account-routing-module';
 import { RequestRestoreAccount } from './request-restore-account/request-restore-account';
+import { RestoreAccount } from './restore-account/restore-account';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserProfile } from './user-profile/user-profile';
 import { MatCardModule } from '@angular/material/card';
@@ -13,9 +14,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 @NgModule({
   declarations: [
     RequestRestoreAccount,
+    RestoreAccount,
     UserProfile
   ],
   imports: [
@@ -30,7 +35,9 @@ import { MatListModule } from '@angular/material/list';
     MatSnackBarModule,
     MatDividerModule,
     MatFormFieldModule,
-    MatListModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatListModule
   ]
 })
 export class AccountModule { }

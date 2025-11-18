@@ -16,6 +16,8 @@ export class Resetpassword {
   message = '';
   isError = false;
   token: string = '';
+  hidePassword: boolean = true;
+  hideConfirmPassword: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -83,7 +85,7 @@ export class Resetpassword {
         this.isLoading = false;
         this.isError = false;
         setTimeout(() => {
-          this.router.navigate(['/features/login']);
+          this.router.navigate(['/login']);
         }, 2000);
       },
       error: (err) => {

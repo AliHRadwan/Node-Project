@@ -3,6 +3,14 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Profileservice } from '../ProfileService/profileservice';
 import { AuthService } from '../../../core/services/auth';
+import { CartService } from '../../../core/services/cart.service';
+import { DownloadService } from '../../../core/services/download.service';
+import { BookService } from '../../../core/services/book';
+import { AuthorService } from '../../../core/services/author';
+import { Cart, CartItem, Book } from '../../../core/models/cart.model';
+import { Subject, firstValueFrom } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-profile',
@@ -42,14 +50,42 @@ export class UserProfile implements OnInit, OnDestroy {
   editingAddressId: string | null = null;  
   addressIdToDelete: string | null = null;  
 
+  // Cart and Orders
+  cart: Cart | null = null;
+  orders: any[] = [];
+  isLoadingCart = false;
+  isLoadingOrders = false;
+  cartError: string | null = null;
+  ordersError: string | null = null;
+
+  // Library (Purchased Books)
+  purchasedBooks: any[] = [];
+  isLoadingLibrary = false;
+  libraryError: string | null = null;
+  downloadingBookId: string | null = null;
+
+  // Author Application
+  authorForm: FormGroup;
+  showAuthorForm: boolean = false;
+  isSubmittingAuthor: boolean = false;
+  authorStatus: string | null = null; // 'pending', 'approved', 'rejected', null (not applied)
+  isLoadingAuthorStatus: boolean = false;
+  authorProfile: any = null;
+
   private messageTimer: any = null;
+  private destroy$ = new Subject<void>();
 
 
   constructor(
     private fb: FormBuilder,         
     private profileService: Profileservice,
     private authService: AuthService,
-    private router: Router                
+    private router: Router,
+    private cartService: CartService,
+    private downloadService: DownloadService,
+    private bookService: BookService,
+    private authorService: AuthorService,
+    private snackBar: MatSnackBar
   ) {
     this.profileForm = this.fb.group({
       FirstName: ['', [Validators.required]], 
@@ -92,6 +128,12 @@ export class UserProfile implements OnInit, OnDestroy {
     this.fieldForms['email'] = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
+
+    // Author application form
+    this.authorForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      bio: ['', [Validators.required, Validators.minLength(10)]]
+    });
   }
 
  
@@ -129,15 +171,21 @@ export class UserProfile implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadProfile();
+    // Check author status if user is authenticated
+    if (this.authService.isAuthenticated()) {
+      this.checkAuthorStatus();
+    }
   }
 
   ngOnDestroy() {
     this.clearMessageTimer();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   
   loadProfile() {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/features/login']);
+      this.router.navigate(['/login']);
       return;
     }
 
@@ -166,7 +214,7 @@ export class UserProfile implements OnInit, OnDestroy {
         if (err.status === 401) {
           setTimeout(() => {
             this.authService.logout();
-            this.router.navigate(['/features/login']);
+            this.router.navigate(['/login']);
           }, 2000);
         }
       }
@@ -229,7 +277,7 @@ export class UserProfile implements OnInit, OnDestroy {
         if (fieldName === 'email') {
           setTimeout(() => {
             this.authService.logout();
-            this.router.navigate(['/features/login']);
+            this.router.navigate(['/login']);
           }, 2000);
         }
       },
@@ -288,7 +336,7 @@ export class UserProfile implements OnInit, OnDestroy {
         if (updateData.email) {
           setTimeout(() => {
             this.authService.logout();
-            this.router.navigate(['/features/login']);
+            this.router.navigate(['/login']);
           }, 2000);
         }
       },
@@ -332,7 +380,7 @@ export class UserProfile implements OnInit, OnDestroy {
         
         setTimeout(() => {
           this.authService.logout();
-          this.router.navigate(['/features/login']);
+          this.router.navigate(['/login']);
         }, 2000);
       },
       error: (err) => {
@@ -370,11 +418,93 @@ export class UserProfile implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout(); 
-    this.router.navigate(['/features/login']); 
+    this.router.navigate(['/login']); 
   }
 
   setActiveSection(section: string) {
     this.activeSection = section;
+    
+    // Load data when switching to cart, orders, library, or author section
+    if (section === 'cart') {
+      this.loadCart();
+    } else if (section === 'orders') {
+      this.loadOrders();
+    } else if (section === 'library') {
+      this.loadLibrary();
+    } else if (section === 'author') {
+      this.checkAuthorStatus();
+    }
+  }
+
+  // Load cart items
+  loadCart(): void {
+    if (this.cart) return; // Already loaded
+    
+    this.isLoadingCart = true;
+    this.cartError = null;
+    
+    this.cartService.getCart()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.cart = response.data;
+          this.isLoadingCart = false;
+        },
+        error: (error) => {
+          console.error('Error loading cart:', error);
+          this.cartError = error.error?.message || 'Error loading cart';
+          this.isLoadingCart = false;
+          this.cart = null;
+        }
+      });
+  }
+
+  // Load user orders
+  loadOrders(): void {
+    if (this.orders.length > 0) return; // Already loaded
+    
+    this.isLoadingOrders = true;
+    this.ordersError = null;
+    
+    this.profileService.getUserOrders()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.orders = response.data?.orders || response.orders || [];
+          this.isLoadingOrders = false;
+        },
+        error: (error) => {
+          console.error('Error loading orders:', error);
+          this.ordersError = error.error?.message || 'Error loading orders';
+          this.isLoadingOrders = false;
+          this.orders = [];
+        }
+      });
+  }
+
+  // Get book from cart item
+  getBook(item: CartItem): Book | null {
+    return typeof item.bookId === 'object' ? item.bookId as Book : null;
+  }
+
+  // Get item total
+  getItemTotal(item: CartItem): number {
+    return item.qty * item.priceAtAdd;
+  }
+
+  // Navigate to cart page
+  goToCart(): void {
+    this.router.navigate(['/cart']);
+  }
+
+  // Get status badge class
+  getStatusBadgeClass(status: string): string {
+    const statusLower = status?.toLowerCase() || '';
+    if (statusLower === 'delivered') return 'bg-success';
+    if (statusLower === 'shipped') return 'bg-primary';
+    if (statusLower === 'paid') return 'bg-info';
+    if (statusLower === 'cancelled') return 'bg-danger';
+    return 'bg-warning';
   }
 
   passwordMatchValidator(form: FormGroup): any {
@@ -605,6 +735,297 @@ export class UserProfile implements OnInit, OnDestroy {
     }
     
     return addressData;
+  }
+
+  // Load library (purchased books)
+  loadLibrary(): void {
+    if (this.purchasedBooks.length > 0) return; // Already loaded
+    
+    this.isLoadingLibrary = true;
+    this.libraryError = null;
+    
+    // First load orders to get purchased books
+    this.profileService.getUserOrders()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          const orders = response.data?.orders || response.orders || [];
+          
+          // Extract unique books from paid orders
+          const purchasedBookMap = new Map<string, any>();
+          
+          orders.forEach((order: any) => {
+            // Check if order payment status is 'paid'
+            const isPaid = order.payment?.status?.toLowerCase() === 'paid' || 
+                          order.status?.toLowerCase() === 'paid';
+            
+            if (isPaid && order.items && order.items.length > 0) {
+              order.items.forEach((item: any) => {
+                const bookId = typeof item.bookId === 'string' 
+                  ? item.bookId 
+                  : (item.bookId?._id || item.bookId?.id || item.book?._id || item.book?.id);
+                
+                if (bookId && !purchasedBookMap.has(bookId)) {
+                  // Store book info - prefer populated book object if available
+                  const book = item.book || item.bookId;
+                  purchasedBookMap.set(bookId, {
+                    bookId: bookId,
+                    book: typeof book === 'object' ? book : null,
+                    purchaseDate: order.placedAt || order.createdAt,
+                    orderId: order._id || order.id
+                  });
+                }
+              });
+            }
+          });
+          
+          // Convert map to array and fetch full book details for books without populated data
+          const bookIds = Array.from(purchasedBookMap.keys());
+          const booksToFetch: string[] = [];
+          
+          this.purchasedBooks = Array.from(purchasedBookMap.values()).map((item: any) => {
+            if (!item.book) {
+              booksToFetch.push(item.bookId);
+            }
+            return item;
+          });
+          
+          // Fetch book details for books that weren't populated
+          if (booksToFetch.length > 0) {
+            const fetchPromises = booksToFetch.map(bookId => 
+              firstValueFrom(this.bookService.getBookById(bookId))
+            );
+            
+            Promise.all(fetchPromises).then((books: any[]) => {
+              books.forEach((book: any, index: number) => {
+                if (book) {
+                  const item = this.purchasedBooks.find((p: any) => p.bookId === booksToFetch[index]);
+                  if (item) {
+                    item.book = book;
+                  }
+                }
+              });
+            }).catch((error) => {
+              console.error('Error fetching book details:', error);
+            });
+          }
+          
+          this.isLoadingLibrary = false;
+        },
+        error: (error) => {
+          console.error('Error loading library:', error);
+          this.libraryError = error.error?.message || 'Error loading library';
+          this.isLoadingLibrary = false;
+          this.purchasedBooks = [];
+        }
+      });
+  }
+
+  // Download a purchased book
+  downloadBook(bookId: string, bookTitle: string = 'book'): void {
+    if (this.downloadingBookId === bookId) return; // Already downloading
+    
+    this.downloadingBookId = bookId;
+    this.snackBar.open('Preparing download...', '', {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    });
+    
+    this.downloadService.downloadBook(bookId).subscribe({
+      next: (blob: Blob) => {
+        // Create a download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${bookTitle.replace(/[^a-z0-9]/gi, '_')}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        this.snackBar.open('Download started!', '', {
+          duration: 2000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+        
+        this.downloadingBookId = null;
+      },
+      error: (error) => {
+        console.error('Error downloading book:', error);
+        const errorMsg = error.error?.message || error.message || 'Failed to download book';
+        this.snackBar.open(`Download failed: ${errorMsg}`, 'Close', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+        this.downloadingBookId = null;
+      }
+    });
+  }
+
+  // Check if a book is being downloaded
+  isDownloading(bookId: string): boolean {
+    return this.downloadingBookId === bookId;
+  }
+
+  // Get book title from purchased book item
+  getBookTitle(item: any): string {
+    if (item.book && item.book.title) {
+      return item.book.title;
+    }
+    return 'Unknown Book';
+  }
+
+  // Get book image from purchased book item
+  getBookImage(item: any): string {
+    if (item.book && item.book.image && item.book.image.url) {
+      return item.book.image.url;
+    }
+    return 'https://res.cloudinary.com/dbelkcsrq/image/upload/book-store/covers/soul.jpg';
+  }
+
+  // Check author status
+  checkAuthorStatus(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.authorStatus = null;
+      return;
+    }
+
+    this.isLoadingAuthorStatus = true;
+    this.authorService.getMyAuthorProfile().subscribe({
+      next: (author) => {
+        if (author) {
+          this.authorProfile = author;
+          this.authorStatus = author.status || 'pending';
+          
+          // Pre-fill form if user has already applied
+          if (author.name || author.bio) {
+            this.authorForm.patchValue({
+              name: author.name || '',
+              bio: author.bio || ''
+            });
+          }
+        } else {
+          this.authorStatus = null;
+          this.authorProfile = null;
+        }
+        this.isLoadingAuthorStatus = false;
+      },
+      error: (error) => {
+        // 404 means user hasn't applied yet, which is fine
+        if (error.status === 404) {
+          this.authorStatus = null;
+          this.authorProfile = null;
+        } else {
+          console.error('Error checking author status:', error);
+        }
+        this.isLoadingAuthorStatus = false;
+      }
+    });
+  }
+
+  // Show author application form
+  showAuthorApplicationForm(): void {
+    if (this.authorStatus === 'approved') {
+      this.snackBar.open('You are already an approved author!', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top'
+      });
+      return;
+    }
+
+    if (this.authorStatus === 'pending') {
+      this.snackBar.open('Your author application is pending review', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top'
+      });
+      return;
+    }
+
+    this.showAuthorForm = true;
+  }
+
+  // Cancel author form
+  cancelAuthorForm(): void {
+    this.showAuthorForm = false;
+    // Reset form to current author profile if exists
+    if (this.authorProfile) {
+      this.authorForm.patchValue({
+        name: this.authorProfile.name || '',
+        bio: this.authorProfile.bio || ''
+      });
+    } else {
+      this.authorForm.reset();
+    }
+  }
+
+  // Submit author application
+  submitAuthorApplication(): void {
+    if (!this.authorForm.valid) {
+      this.authorForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSubmittingAuthor = true;
+    const formData = this.authorForm.value;
+
+    this.authorService.applyAsAuthor(formData.name.trim(), formData.bio.trim()).subscribe({
+      next: (response) => {
+        this.snackBar.open('Author application submitted successfully! It will be reviewed by an admin.', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+        this.showAuthorForm = false;
+        this.isSubmittingAuthor = false;
+        
+        // Reload author status
+        this.checkAuthorStatus();
+      },
+      error: (error) => {
+        console.error('Error submitting author application:', error);
+        const errorMsg = error.error?.error || error.error?.message || error.message || 'Failed to submit author application';
+        this.snackBar.open(errorMsg, 'Close', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+        this.isSubmittingAuthor = false;
+      }
+    });
+  }
+
+  // Get author status badge class
+  getAuthorStatusBadgeClass(status: string | null): string {
+    if (!status) return 'bg-secondary';
+    const statusLower = status.toLowerCase();
+    if (statusLower === 'approved') return 'bg-success';
+    if (statusLower === 'pending') return 'bg-warning text-dark';
+    if (statusLower === 'rejected') return 'bg-danger';
+    if (statusLower === 'revoked') return 'bg-danger';
+    return 'bg-secondary';
+  }
+
+  // Get author status text
+  getAuthorStatusText(status: string | null): string {
+    if (!status) return 'Not Applied';
+    const statusLower = status.toLowerCase();
+    if (statusLower === 'approved') return 'Approved';
+    if (statusLower === 'pending') return 'Pending Review';
+    if (statusLower === 'rejected') return 'Rejected';
+    if (statusLower === 'revoked') return 'Revoked';
+    return status;
+  }
+
+  // Navigate to author profile if approved
+  goToAuthorProfile(): void {
+    if (this.authorStatus === 'approved' && this.authorProfile) {
+      this.router.navigate(['/author-profile']);
+    }
   }
 
 }

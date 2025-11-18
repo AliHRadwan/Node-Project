@@ -105,7 +105,7 @@ export class RestoreAccount implements OnInit, OnDestroy {
         this.startAutoCloseTimer();
         // Redirect to login after 2 seconds
         setTimeout(() => {
-          this.router.navigate(['/features/login']);
+          this.router.navigate(['/login']);
         }, 2000);
       },
       error: (err) => {
@@ -138,7 +138,7 @@ export class RestoreAccount implements OnInit, OnDestroy {
   }
 
   goToLogin() {
-    this.router.navigate(['/features/login']);
+    this.router.navigate(['/login']);
   }
 }
 

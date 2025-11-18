@@ -17,15 +17,42 @@
 
     <!-- links -->
     <nav class="d-none d-lg-flex align-items-center justify-content-center gap-5 flex-grow-1">
-      <a class="nav-link px-2 fs-5 fw-semibold" href="#">HOME</a>
-      <a class="nav-link px-2 fs-5 fw-semibold" href="#">ABOUT</a>
-      <a class="nav-link px-2 fs-5 fw-semibold" href="#">SHOP</a>
-      <a class="nav-link px-2 fs-5 fw-semibold" href="#">CONTACT</a>
+      <a class="nav-link px-2 fs-5 fw-semibold" routerLink="/">HOME</a>
+      <a class="nav-link px-2 fs-5 fw-semibold" routerLink="/about">ABOUT</a>
+      <a class="nav-link px-2 fs-5 fw-semibold" (click)="scrollToShop(); $event.preventDefault()" style="cursor: pointer;">SHOP</a>
+      <a class="nav-link px-2 fs-5 fw-semibold" routerLink="/contact">CONTACT</a>
     </nav>
 
     <!-- icons-->
     <div class="ms-auto d-flex align-items-center gap-3">
-      <a class="bi bi-person fs-4 text-dark" routerLink="/login"></a>
+      <!-- Dashboard Icon (only for admin users) -->
+      <a *ngIf="isAdmin" 
+         class="bi bi-speedometer2 fs-4 text-dark" 
+         style="cursor: pointer; text-decoration: none;"
+         title="Dashboard"
+         routerLink="/dashboard">
+      </a>
+      <!-- Author Profile Icon (only for approved authors) -->
+      <a *ngIf="isAuthor && !isLoadingAuthor" 
+         class="bi bi-person-badge fs-4 text-dark" 
+         style="cursor: pointer; text-decoration: none;"
+         title="Author Profile"
+         routerLink="/author-profile">
+      </a>
+      <!-- User Profile Icon (when logged in) -->
+      <a *ngIf="isAuthenticated" 
+         class="bi bi-person-circle fs-4 text-dark" 
+         style="cursor: pointer; text-decoration: none;"
+         title="User Profile"
+         routerLink="/account/user-profile">
+      </a>
+      <!-- Login Icon (when not logged in) -->
+      <a *ngIf="!isAuthenticated" 
+         class="bi bi-person fs-4 text-dark" 
+         style="cursor: pointer; text-decoration: none;"
+         title="Login"
+         routerLink="/login">
+      </a>
       <button mat-icon-button routerLink="/cart" 
               [matBadge]="cartService.cartCount$ | async" 
               matBadgeColor="warn">

@@ -12,7 +12,7 @@
     <mat-icon class="empty-icon">shopping_cart</mat-icon>
     <h2>Your cart is empty</h2>
     <p>Add some books to get started!</p>
-    <button mat-raised-button color="primary" routerLink="/books">
+    <button mat-raised-button color="primary" routerLink="/">
       Browse Books
     </button>
   </div>
@@ -52,7 +52,7 @@
               <mat-icon *ngIf="!item.isInStock">error</mat-icon>
               <span *ngIf="item.isInStock">
                 In Stock 
-                <span *ngIf="item.stockAvailable">({{ item.stockAvailable }} available)</span>
+                <span *ngIf="item.stockAvailable && item.stockAvailable <= 5">({{ item.stockAvailable }} available)</span>
               </span>
               <span *ngIf="!item.isInStock">Out of Stock</span>
             </div>
@@ -115,7 +115,7 @@
       
       <div class="summary-row">
         <span>Shipping</span>
-        <span class="free">Not FREE</span>
+        <span class="free">Applied on checkout</span>
       </div>
       
       <mat-divider></mat-divider>
@@ -126,11 +126,11 @@
       </div>
 
       <button mat-raised-button color="primary" class="checkout-btn" routerLink="payment"
-      [disabled]="isEmpty">>
+      [disabled]="isEmpty">
         Proceed to Checkout
       </button>
 
-      <button mat-stroked-button class="continue-btn" routerLink="/books">
+      <button mat-stroked-button class="continue-btn" routerLink="/">
         Continue Shopping
       </button>
 

@@ -3,7 +3,7 @@ import { HttpClient , HttpHeaders } from '@angular/common/http';
 // import { environment} from '../../../environments/environment.prod';
 import { Order, SingleOrderResponse } from '../dashboard/pages/ordersTypes';
 import { Observable } from 'rxjs';
-import { environment} from '../../../environments/environment';
+import { environment} from '../../../environments/environment.prod';
 
 export interface PlaceOrderBody {
   shippingAddress?: {
@@ -53,7 +53,7 @@ export class CartOrders {
 
   placeOrder(body: PlaceOrderBody) {
   return this.http.post<PlaceOrderResponse>(
-    `${API}api/orders`,
+    `${API}/orders`,
     body,
     { headers: this.getHeaders() }
   );
@@ -61,7 +61,7 @@ export class CartOrders {
 
   createCheckout(orderId: string) {
   return this.http.post<CheckoutResponse>(
-    `${API}api/payments/create-checkout/${orderId}`,
+    `${API}/payments/create-checkout/${orderId}`,
     {},
     { headers: this.getHeaders() }
   );
@@ -69,7 +69,7 @@ export class CartOrders {
 
   cancelOrder(orderId: string): Observable<SingleOrderResponse> {
     return this.http.post<SingleOrderResponse>(
-      `${API}api/orders/${orderId}/cancel`,
+      `${API}/orders/${orderId}/cancel`,
       {},
       { headers: this.getHeaders() }
     );

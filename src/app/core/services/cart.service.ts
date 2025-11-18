@@ -9,6 +9,7 @@ import {
   UpdateCartRequest 
 } from '../models/cart.model';
 import { environment } from '../../../environments/environment';
+import { AuthService } from './auth';
 
 @Injectable({
   providedIn: 'root'
@@ -24,14 +25,14 @@ export class CartService {
   private cartCountSubject = new BehaviorSubject<number>(0);
   public cartCount$ = this.cartCountSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   // Helper: Get headers with token
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('authToken'); // Changed from 'token' to 'authToken'
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+    return this.authService.getAuthHeaders();
   }
 
   // 1️⃣ Get Cart

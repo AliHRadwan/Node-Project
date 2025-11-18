@@ -141,7 +141,7 @@
                 </span>
                 <span *ngIf="!book.categories || book.categories.length === 0" class="text-muted">No category</span>
               </td>
-              <td>${{ book.price | number:'1.2-2' }}</td>
+              <td>{{ book.price | number:'1.2-2' }} EGP</td>
               <td>{{ book.stock }}</td>
               <td>
                 <span class="badge" [ngClass]="book.isActive ? 'bg-success' : 'bg-secondary'">
@@ -181,20 +181,202 @@
   </div>
 </div>
 
-<!-- Book Form Modal -->
-<div class="modal fade" [class.show]="showBookForm" [style.display]="showBookForm ? 'block' : 'none'" 
-     tabindex="-1" *ngIf="showBookForm" style="background-color: rgba(0,0,0,0.5);">
+<!-- Step 1: Required Fields Form (Create New Book) -->
+<div class="modal fade" [class.show]="showBookForm && !editingBook" [style.display]="(showBookForm && !editingBook) ? 'block' : 'none'" 
+     tabindex="-1" *ngIf="showBookForm && !editingBook" style="background-color: rgba(0,0,0,0.5);">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-danger text-white">
         <h5 class="modal-title">
-          <i class="bi" [ngClass]="editingBook ? 'bi-pencil' : 'bi-plus-circle'"></i>
-          {{ editingBook ? 'Edit Book' : 'Create New Book' }}
+          <i class="bi bi-plus-circle"></i> Create New Book - Step 1: Required Information
         </h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeBookForm()" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle"></i> Please fill in the required fields to create the book. You can add more details in the next step.
+        </div>
         <form>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label for="requiredTitle" class="form-label">Title <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="requiredTitle" [(ngModel)]="requiredForm.title" name="requiredTitle" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="requiredPrice" class="form-label">Price <span class="text-danger">*</span></label>
+                <input type="number" step="0.01" min="0" class="form-control" id="requiredPrice" [(ngModel)]="requiredForm.price" name="requiredPrice" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="requiredStock" class="form-label">Stock <span class="text-danger">*</span></label>
+                <input type="number" min="0" class="form-control" id="requiredStock" [(ngModel)]="requiredForm.stock" name="requiredStock" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Authors <span class="text-danger">*</span></label>
+            <div class="border rounded p-3" style="max-height: 150px; overflow-y: auto;">
+              <div *ngFor="let author of authors" class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  [id]="'required-author-' + (author._id || author.id)"
+                  [checked]="isRequiredAuthorSelected(author._id || author.id)"
+                  (change)="onRequiredAuthorSelect(author._id || author.id)">
+                <label class="form-check-label" [for]="'required-author-' + (author._id || author.id)">
+                  {{ author.name }}
+                </label>
+              </div>
+              <div *ngIf="authors.length === 0" class="text-muted">No authors available</div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeBookForm()">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="submitRequiredForm()">
+          <i class="bi bi-plus-circle"></i> Create Book
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 2: Details Form (Fill Book Details) -->
+<div class="modal fade" [class.show]="showDetailsForm" [style.display]="showDetailsForm ? 'block' : 'none'" 
+     tabindex="-1" *ngIf="showDetailsForm" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil"></i> Fill Book Details - Step 2: Optional Information
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeDetailsForm()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-success">
+          <i class="bi bi-check-circle"></i> Book created successfully! Now you can add optional details.
+        </div>
+        <form enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="detailsDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="detailsDescription" rows="4" [(ngModel)]="detailsForm.description" name="detailsDescription"></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="detailsIsbn" class="form-label">ISBN</label>
+                <input type="text" class="form-control" id="detailsIsbn" [(ngModel)]="detailsForm.isbn" name="detailsIsbn">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="detailsSku" class="form-label">SKU</label>
+                <input type="text" class="form-control" id="detailsSku" [(ngModel)]="detailsForm.sku" name="detailsSku">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="detailsPublisher" class="form-label">Publisher</label>
+                <input type="text" class="form-control" id="detailsPublisher" [(ngModel)]="detailsForm.publisher" name="detailsPublisher">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label for="detailsLanguage" class="form-label">Language</label>
+                <input type="text" class="form-control" id="detailsLanguage" [(ngModel)]="detailsForm.language" name="detailsLanguage">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label for="detailsPublishedAt" class="form-label">Published Date</label>
+                <input type="date" class="form-control" id="detailsPublishedAt" [(ngModel)]="detailsForm.publishedAt" name="detailsPublishedAt">
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="detailsImageFile" class="form-label">Book Cover Image</label>
+            <input type="file" class="form-control" id="detailsImageFile" accept="image/*" (change)="onImageFileSelected($event, false)" name="image">
+            <div class="form-text">Upload a cover image for the book (JPG, PNG, etc.)</div>
+            <small class="text-muted" *ngIf="selectedImageFile">Selected: {{ selectedImageFile.name }}</small>
+          </div>
+
+          <div class="mb-3">
+            <label for="detailsPdfFile" class="form-label">Book PDF</label>
+            <input type="file" class="form-control" id="detailsPdfFile" accept=".pdf" (change)="onPdfFileSelected($event, false)" name="book">
+            <div class="form-text">Upload the book PDF file</div>
+            <small class="text-muted" *ngIf="selectedPdfFile">Selected: {{ selectedPdfFile.name }}</small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Categories</label>
+            <div class="border rounded p-3" style="max-height: 150px; overflow-y: auto;">
+              <div *ngFor="let category of categories" class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  [id]="'details-cat-' + (category._id || category.id)"
+                  [checked]="isDetailsCategorySelected(category._id || category.id)"
+                  (change)="onDetailsCategorySelect(category._id || category.id)">
+                <label class="form-check-label" [for]="'details-cat-' + (category._id || category.id)">
+                  {{ category.name }}
+                </label>
+              </div>
+              <div *ngIf="categories.length === 0" class="text-muted">No categories available</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input 
+                class="form-check-input" 
+                type="checkbox" 
+                id="detailsIsActive"
+                [(ngModel)]="detailsForm.isActive"
+                name="detailsIsActive">
+              <label class="form-check-label" for="detailsIsActive">
+                Active (visible to customers)
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDetailsForm()">Skip & Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitDetailsForm()">
+          <i class="bi bi-check"></i> Update Details
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Book Form (for existing books) -->
+<div class="modal fade" [class.show]="showBookForm && editingBook" [style.display]="(showBookForm && editingBook) ? 'block' : 'none'" 
+     tabindex="-1" *ngIf="showBookForm && editingBook" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil"></i> Edit Book
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeBookForm()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form encrypt="multipart/form-data" method="post">
           <div class="row">
             <div class="col-md-8">
               <div class="mb-3">
@@ -258,13 +440,19 @@
           </div>
 
           <div class="mb-3">
-            <label for="imageUrl" class="form-label">Image URL</label>
-            <input type="url" class="form-control" id="imageUrl" [(ngModel)]="bookForm.image.url" name="imageUrl" placeholder="https://...">
+            <label for="imageFile" class="form-label">Book Cover Image</label>
+            <input type="file" class="form-control" id="imageFile" accept="image/*" (change)="onImageFileSelected($event, true)" name="image">
+            <div class="form-text">Upload a cover image for the book (JPG, PNG, etc.)</div>
+            <small class="text-muted" *ngIf="selectedEditImageFile">Selected: {{ selectedEditImageFile.name }}</small>
+            <small class="text-muted" *ngIf="!selectedEditImageFile && bookForm.image?.url">Current: {{ bookForm.image.url }}</small>
           </div>
 
           <div class="mb-3">
-            <label for="pdfUrl" class="form-label">PDF URL</label>
-            <input type="url" class="form-control" id="pdfUrl" [(ngModel)]="bookForm.pdfUrl" name="pdfUrl" placeholder="https://...">
+            <label for="pdfFile" class="form-label">Book PDF</label>
+            <input type="file" class="form-control" id="pdfFile" accept=".pdf" (change)="onPdfFileSelected($event, true)" name="book">
+            <div class="form-text">Upload the book PDF file</div>
+            <small class="text-muted" *ngIf="selectedEditPdfFile">Selected: {{ selectedEditPdfFile.name }}</small>
+            <small class="text-muted" *ngIf="!selectedEditPdfFile && bookForm.pdfUrl">Current: {{ bookForm.pdfUrl }}</small>
           </div>
 
           <div class="mb-3">
@@ -321,8 +509,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeBookForm()">Cancel</button>
         <button type="button" class="btn btn-danger" (click)="submitBookForm()">
-          <i class="bi" [ngClass]="editingBook ? 'bi-check' : 'bi-plus-circle'"></i>
-          {{ editingBook ? 'Update Book' : 'Create Book' }}
+          <i class="bi bi-check"></i> Update Book
         </button>
       </div>
     </div>

@@ -58,7 +58,7 @@
           </div>
           <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
           <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
-          <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+          <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
         </div>
       </div>
     </div>
@@ -69,20 +69,25 @@
 <app-discount></app-discount>
 
 <!-- Categories section -->
-<section class="categories-section py-5 bg-white">
+<section class="categories-section py-5">
   <div class="container">
-    <h2 class="text-center mb-5 fw-bold">Browse Categories</h2>
-    <div class="row justify-content-center">
-      <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4" *ngFor="let category of categories">
-        <mat-card 
-          class="h-100 border-0 text-center py-3 shadow-sm category-card bg-white" 
-          style="cursor: pointer;"
-          (click)="selectCategory(category)"
-          [class.border-danger]="selectedCategory === (category._id || category.id)"
-          [class.border]="selectedCategory === (category._id || category.id)">
-          <mat-icon class="mb-2" [ngStyle]="{'color': category.color || '#dc3545', 'font-size.px': 36}">{{ category.icon }}</mat-icon>
-          <div class="fw-semibold text-dark">{{ category.name }}</div>
-        </mat-card>
+    <h2 class="text-center mb-5 fw-bold category-title">Browse Categories</h2>
+    <div class="row justify-content-center g-4">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4" *ngFor="let category of categories; let i = index">
+        <div 
+          class="category-card-wrapper"
+          [attr.data-index]="i"
+          (click)="selectCategory(category)">
+          <mat-card 
+            class="h-100 border-0 text-center py-4 shadow-lg category-card" 
+            style="cursor: pointer;"
+            [class.selected]="selectedCategory === (category._id || category.id)">
+            <div class="category-icon-wrapper mb-3">
+              <mat-icon class="category-icon" [ngStyle]="{'color': category.color || '#dc3545', 'font-size.px': 40}">{{ category.icon }}</mat-icon>
+            </div>
+            <div class="fw-semibold category-name">{{ category.name }}</div>
+          </mat-card>
+        </div>
       </div>
     </div>
   </div>
@@ -105,7 +110,7 @@
             <div class="flex-grow-1">
               <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
               <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
-              <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+              <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
             </div>
           </div>
         </div>
@@ -123,7 +128,7 @@
             <div class="flex-grow-1">
               <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
               <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
-              <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+              <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
             </div>
           </div>
         </div>
@@ -141,7 +146,7 @@
             <div class="flex-grow-1">
               <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
               <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
-              <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+              <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
             </div>
           </div>
         </div>
@@ -160,8 +165,8 @@
               <h6 class="fw-semibold mb-1 small text-dark">{{ book.title }}</h6>
               <p class="text-muted mb-1 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
               <p class="fw-bold mb-0 text-danger">
-                <span class="text-decoration-line-through text-muted me-2" *ngIf="book.originalPrice">${{ book.originalPrice }}</span>
-                ${{ book.price }}
+                <span class="text-decoration-line-through text-muted me-2" *ngIf="book.originalPrice">{{ book.originalPrice }} EGP</span>
+                {{ book.price }} EGP
               </p>
             </div>
           </div>
@@ -172,7 +177,7 @@
 </section>
 
 <!-- Books section with filtering and pagination -->
-<section class="books-section py-5 bg-light">
+<section id="all-books" class="books-section py-5 bg-light">
   <div class="container">
     <h2 class="text-center mb-4 fw-bold">All Books</h2>
     
@@ -278,7 +283,7 @@
             <h6 class="fw-semibold mb-1 text-dark">{{ book.title }}</h6>
             <p class="text-muted mb-2 small">{{ book.author?.name || (book.authors && book.authors[0]?.name) || book.author || 'Unknown Author' }}</p>
             <div class="d-flex justify-content-between align-items-center">
-              <p class="fw-bold mb-0 text-danger">${{ book.price }}</p>
+              <p class="fw-bold mb-0 text-danger">{{ book.price }} EGP</p>
               <button mat-icon-button class="ms-2 text-danger" (click)="addToCart(book, $event)">
                 <i class="bi bi-cart-plus fs-5"></i>
               </button>
@@ -340,3 +345,5 @@
 </section>
 
 <app-footer [categories]="categories"></app-footer>
+
+<app-chatbot></app-chatbot>

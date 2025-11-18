@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 import { AuthService } from './auth';
 import { CartService } from './cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -41,7 +42,8 @@ export class BookService {
     private http: HttpClient,
     private authService: AuthService,
     private cartService: CartService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   // Fetch all books with pagination and filtering
@@ -109,16 +111,51 @@ export class BookService {
   }
   
   addToCart(book: any): void {
-  this.cartService.addToCart({
-    bookId: book._id,
-    qty: 1
-  }).subscribe({
-    next: (response) => {
-      this.snackBar.open('✅ Added to cart!', 'View', { duration: 3000 });
-    },
-    error: (error) => {
-      this.snackBar.open('❌ ' + error.error?.message, 'Close', { duration: 3000 });
+    // Check if user is authenticated
+    if (!this.authService.isAuthenticated()) {
+      const snackBarRef = this.snackBar.open('Please login to add items to cart', 'Login', {
+        duration: 4000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top'
+      });
+      
+      snackBarRef.onAction().subscribe(() => {
+        this.router.navigate(['/login']);
+      });
+      
+      // Auto-navigate after a short delay if user doesn't click
+      setTimeout(() => {
+        if (!this.authService.isAuthenticated()) {
+          this.router.navigate(['/login']);
+        }
+      }, 4000);
+      
+      return;
     }
-  });
-}
+
+    this.cartService.addToCart({
+      bookId: book._id,
+      qty: 1
+    }).subscribe({
+      next: (response) => {
+        const snackBarRef = this.snackBar.open('✅ Added to cart!', 'View', { 
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+        
+        snackBarRef.onAction().subscribe(() => {
+          this.router.navigate(['/cart']);
+        });
+      },
+      error: (error) => {
+        const errorMessage = error.error?.message || error.message || 'Failed to add item to cart';
+        this.snackBar.open('❌ ' + errorMessage, 'Close', { 
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+      }
+    });
+  }
 }

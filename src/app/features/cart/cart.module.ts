@@ -15,14 +15,17 @@ import { FormsModule } from '@angular/forms';
 import { PaymentSuccess } from './payment-success/payment-success';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
 import { PaymentFailed } from './payment-failed/payment-failed';
 import { Payment } from './payment/payment';
+import { ConfirmDialogModule } from './confirm-dialog/confirm-dialog.module';
+import { AuthGuard } from '../../core/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: CartComponent },
-  { path: 'payment', component: Payment },          
-  { path: 'payment/success', component: PaymentSuccess }, 
-  { path: 'payment/failed', component: PaymentFailed },  
+  { path: '', component: CartComponent, canActivate: [AuthGuard] },
+  { path: 'payment', component: Payment, canActivate: [AuthGuard] },          
+  { path: 'payment/success', component: PaymentSuccess, canActivate: [AuthGuard] }, 
+  { path: 'payment/failed', component: PaymentFailed, canActivate: [AuthGuard] },  
 ];
 
 @NgModule({
@@ -36,10 +39,12 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDividerModule,
+    MatDialogModule,
     CoreModule,
     FormsModule,
     MatFormFieldModule, 
     MatInputModule, 
+    ConfirmDialogModule
 ]
 })
 export class CartModule { }
