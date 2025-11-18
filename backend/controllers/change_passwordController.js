@@ -60,7 +60,7 @@ const password_change = async (req, res) => {
       </p>
 
       <div style="text-align: center; margin: 25px 0;">
-        <a href="http://18.184.165.152:3000/login" target="_blank" 
+        <a href="http://18.184.165.152/login" target="_blank" 
           style="background-color: #28a745; color: white; text-decoration: none; padding: 12px 25px; border-radius: 5px; display: inline-block; font-weight: bold;">
           Go to Login
         </a>

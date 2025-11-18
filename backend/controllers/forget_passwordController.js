@@ -36,7 +36,7 @@ export async function newPasswordResetToken(user) {
       used: false,
     });
 
-    const resetLink = `http://18.184.165.152:3000/password-management/reset-password/${reset_token}`;
+    const resetLink = `http://18.184.165.152/password-management/reset-password/${reset_token}`;
     //const resetLink = `http://localhost:4200/password-management/reset-password/${reset_token}`;
 
     const fullName = `${user.FirstName} ${user.LastName}`;

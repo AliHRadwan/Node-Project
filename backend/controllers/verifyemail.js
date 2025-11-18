@@ -2,7 +2,7 @@ import crypto from "crypto";
 import Token from "../models/Token.js";
 import User from "../models/User.js";
 
-const FRONTEND_LOGIN_URL = "http://18.184.165.152:3000/login";
+const FRONTEND_LOGIN_URL = "http://18.184.165.152/login";
 
 
 const generateHtmlResponse = (title, message, linkHref = null, linkText = null, isError = false) => {

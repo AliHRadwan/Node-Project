@@ -55,7 +55,7 @@ const pass_reset = async (req, res) => {
         <p>Hello ${fullName || "User"},</p>
         <p>Your password has been <strong>reset successfully</strong>! 🎉</p>
         <p>You can now log in with your new password:</p>
-        <a href="http://18.184.165.152:3000/login"style="background-color: #f93c65ff; color: white; padding: 10px 16px;text-decoration: none; border-radius: 5px; font-weight: bold;">
+        <a href="http://18.184.165.152/login"style="background-color: #f93c65ff; color: white; padding: 10px 16px;text-decoration: none; border-radius: 5px; font-weight: bold;">
         Log in Now
         </a>
         <br /><br />
