@@ -8,14 +8,14 @@ import {
   AddToCartRequest, 
   UpdateCartRequest 
 } from '../models/cart.model';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.prod';
 import { AuthService } from './auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private apiUrl = `${environment.apiUrl}/cart`;
+  private apiUrl = environment.apiUrl + '/cart';
   
   // Observable للـ cart
   private cartSubject = new BehaviorSubject<Cart | null>(null);

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from './auth';
+import { environment } from '../../../environments/environment.prod';
 
 export interface AuthorFilters {
   status?: 'pending' | 'approved' | 'rejected' | 'revoked';
@@ -25,7 +26,7 @@ export interface AuthorsResponse {
   providedIn: 'root',
 })
 export class AuthorService {
-  private readonly API_URL = 'http://18.184.165.152:3000/api/authors';
+  private readonly API_URL = environment.apiUrl + '/authors';
 
   constructor(
     private http: HttpClient,

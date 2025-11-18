@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
-
+import { environment } from '../../../environments/environment.prod';
 @Injectable({
   providedIn: 'root',
 })
 export class DownloadService {
-  private readonly API_URL = 'http://18.184.165.152:3000/api/download';
+  private readonly API_URL = environment.apiUrl + '/download';
 
   constructor(
     private http: HttpClient,
