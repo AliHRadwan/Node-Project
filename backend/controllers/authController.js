@@ -122,11 +122,11 @@ const sendLoginAlertEmail = async (user, req) => {
             <p style="margin:0 0 18px; color:#333;">If this wasn't you, please secure your account immediately.</p>
 
             <p style="margin:0 0 24px;">
-              <a href="http://localhost:4200/features/login" style="display:inline-block; padding:10px 16px; background:#f93c65ff; color:#eef2f6; text-decoration:none; border-radius:6px; font-weight:600;">Secure my account</a>
+              <a href="http://18.184.165.152:3000/login" style="display:inline-block; padding:10px 16px; background:#f93c65ff; color:#eef2f6; text-decoration:none; border-radius:6px; font-weight:600;">Secure my account</a>
             </p>
           </div>
           <div style="padding:14px 24px; background:#fbfdff; border-top:1px solid #eef2f6; color:#6b7280; font-size:13px;">
-            — BookStore Security Team
+            Bookly BookStore Security Team
           </div>
         </div>
       </div>

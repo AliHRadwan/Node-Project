@@ -161,13 +161,37 @@ components:
     Author:
       type: object
       properties:
-        _id:
+        id:
           type: string
+          example: 68fa2432b05cf7ddb8a12345
+        userId:
+          type: string
+          description: The user account this author profile is linked to
+          example: 68f41c446885fac533ebc3cf
         name:
           type: string
           example: John Smith
+          description: Public facing author name
         bio:
           type: string
+          example: Bestselling author of...
+        status:
+          type: string
+          enum: [pending, approved, rejected, revoked]
+          example: approved
+        appliedAt:
+          type: string
+          format: date-time
+        approvedAt:
+          type: string
+          format: date-time
+        rejectedAt:
+          type: string
+          format: date-time
+        reason:
+          type: string
+          description: Reason for rejection or revocation
+          example: Application incomplete.
     Category:
       type: object
       properties:
@@ -285,19 +309,26 @@ components:
     # --- Request Body Schemas ---
     RegisterRequest:
       type: object
-      required: [name, email, password]
+      required: [FirstName, LastName, email, password, confirmPassword]
       properties:
-        name:
+        FirstName:
           type: string
-          example: Jane Doe
+          example: Ali
+        LastName:
+          type: string
+          example: ITI
         email:
           type: string
           format: email
-          example: jane.doe@example.com
+          example: email@example.com
         password:
           type: string
           format: password
-          example: Str0ngP@ss!
+          example: Mypass12345@iti
+        confirmPassword:
+          type: string
+          format: password
+          example: Mypass12345@iti
     LoginRequest:
       type: object
       required: [email, password]
@@ -305,11 +336,11 @@ components:
         email:
           type: string
           format: email
-          example: jane.doe@example.com
+          example: email@example.com
         password:
           type: string
           format: password
-          example: Str0ngP@ss!
+          example: Mypass12345@iti
     LoginResponse:
       type: object
       properties:
@@ -363,6 +394,39 @@ components:
         password:
           type: string
           format: password
+    AuthorApplyRequest:
+      type: object
+      required: [name, bio]
+      properties:
+        name:
+          type: string
+          example: Jane Doe
+        bio:
+          type: string
+          example: I am a fantasy author based in New York...
+    AuthorApproveRequest:
+      type: object
+      description: Optional fields to update on approval
+      properties:
+        name:
+          type: string
+          example: Jane A. Doe
+        bio:
+          type: string
+          example: Updated bio at time of approval.
+    AuthorRejectRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason:
+          type: string
+          example: Application does not meet our current needs.
+    AuthorRevokeRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          example: Violation of terms of service.
     CreateReviewRequest:
       type: object
       required: [bookId, rating]
@@ -467,6 +531,28 @@ components:
 
   # 4. Define Global Components
   responses:
+    ListAuthorsResponse:
+      type: object
+      properties:
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 50
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 20
+            pages:
+              type: integer
+              example: 3
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
     Error400:
       description: Bad Request
       content:
@@ -512,6 +598,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RegisterRequest'
+            example:
+              FirstName: "Ali"
+              LastName: "ITI"
+              email: "email@example.com"
+              password: "Mypass12345@iti"
+              confirmPassword: "Mypass12345@iti"
       responses:
         '201':
           description: User registered successfully. Verification email sent.
@@ -526,13 +618,20 @@ paths:
                   user:
                     $ref: '#/components/schemas/User'
         '400':
-          $ref: '#/components/responses/Error400'
+          description: Bad Request (e.g., validation error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
         '409':
           description: Email already exists
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error400'
+        '500':
+          $ref: '#/components/responses/Error500'
+
   /api/auth/login:
     post:
       tags: [Auth]
@@ -543,6 +642,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: "email@example.com"
+              password: "Mypass12345@iti"
       responses:
         '200':
           description: Login successful
@@ -551,7 +653,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
         '401':
-          $ref: '#/components/responses/Error401'
+          description: Unauthorized. Reasons include- 'Invalid email or password', 'Please verify your email first', or 'Email has been deleted'.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        '500':
+          $ref: '#/components/responses/Error500'
   /api/auth/logout:
     post:
       tags: [Auth]
@@ -848,19 +956,41 @@ paths:
   /api/authors:
     get:
       tags: [Authors]
-      summary: List all authors
+      summary: List authors (public, filterable)
+      description: Get a public, paginated list of authors. Can be filtered by admins.
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+        - name: sort
+          in: query
+          schema: { type: string, default: "name" }
+        - name: q
+          in: query
+          description: Search by author name
+          schema: { type: string }
+        - name: status
+          in: query
+          description: (Admin) Filter by status
+          schema: { type: string, enum: [pending, approved, rejected, revoked] }
       responses:
         '200':
-          description: A list of authors
+          description: A paginated list of authors
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Author'
+                $ref: '#/components/schemas/ListAuthorsResponse'
+        '500':
+          $ref: '#/components/responses/Error500'
+
+  /api/authors/apply:
     post:
       tags: [Authors]
-      summary: (Admin) Create a new author
+      summary: (User) Apply to become an author
+      description: Submits an application to become an author. User must be authenticated.
       security:
         - bearerAuth: []
       requestBody:
@@ -868,14 +998,47 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Author'
+              $ref: '#/components/schemas/AuthorApplyRequest'
       responses:
         '201':
-          description: Author created
+          description: Application submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          description: You have already applied
+        '401':
+          $ref: '#/components/responses/Error401'
+        '500':
+          $ref: '#/components/responses/Error500'
+
+  /api/authors/me/profile:
+    get:
+      tags: [Authors]
+      summary: (User) Get my author application/profile
+      description: Gets the logged-in user's own author record, which could be pending, approved, etc.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Author record found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '404':
+          description: No author record found
+        '500':
+          $ref: '#/components/responses/Error500'
+
   /api/authors/{id}:
     get:
       tags: [Authors]
-      summary: Get a single author by ID
+      summary: Get a single author profile (public)
+      description: Get the public profile of a single author by their ID.
       parameters:
         - name: id
           in: path
@@ -884,32 +1047,18 @@ paths:
       responses:
         '200':
           description: Author details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
         '404':
           $ref: '#/components/responses/Error404'
-    put:
-      tags: [Authors]
-      summary: (Admin) Update an author
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Author'
-      responses:
-        '200':
-          description: Author updated
-        '404':
-          $ref: '#/components/responses/Error404'
+        '500':
+          $ref: '#/components/responses/Error500'
     delete:
       tags: [Authors]
-      summary: (Admin) Delete an author
+      summary: (Admin) Hard delete an author record
+      description: Permanently deletes an author record. This is a destructive action.
       security:
         - bearerAuth: []
       parameters:
@@ -920,6 +1069,100 @@ paths:
       responses:
         '200':
           description: Author deleted
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '500':
+          $ref: '#/components/responses/Error500'
+
+  /api/authors/{id}/approve:
+    patch:
+      tags: [Authors]
+      summary: (Admin) Approve an author
+      description: Approves a 'pending' author application and updates their role to 'author'.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorApproveRequest'
+      responses:
+        '200':
+          description: Author approved
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+
+  /api/authors/{id}/reject:
+    patch:
+      tags: [Authors]
+      summary: (Admin) Reject an author
+      description: Rejects a 'pending' author application.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRejectRequest'
+      responses:
+        '200':
+          description: Author rejected
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+
+  /api/authors/{id}/revoke:
+    patch:
+      tags: [Authors]
+      summary: (Admin) Revoke an author
+      description: Revokes an 'approved' author's privileges and demotes their role to 'user'.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRevokeRequest'
+      responses:
+        '200':
+          description: Author revoked
+        '400':
+          description: Only approved authors can be revoked
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
         '404':
           $ref: '#/components/responses/Error404'
 
@@ -1193,7 +1436,7 @@ paths:
           
     delete:
       tags: [Reviews]
-      summary: (User) Delete a review
+      summary: (Admin/User) Delete a review
       description: Allows a user or an admin to delete a review.
       security:
         - bearerAuth: []
