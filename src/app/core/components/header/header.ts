@@ -94,7 +94,7 @@ export class Header implements OnInit, OnDestroy {
       const host = window.location.host;
 
       // 3. Initialize
-      this.socket = new WebSocket(`${protocol}//${host}`);
+      this.socket = new WebSocket(`${protocol}//${host}/ws`);
 
       this.socket.onopen = (event) => {
         console.log('WebSocket connection established.');
