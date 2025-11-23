@@ -176,16 +176,22 @@ export const getBook = async (req, res) => {
  */
 export const createBook = async (req, res) => {
   try {
-    const book = await Book.create(req.body);
+    // 1. Create the book
+    let book = await Book.create(req.body);
     
-    // Send real-time notification to all users of this new book
+    // 2. IMPORTANT: Populate author data so the frontend can show the name
+    //    (adjust 'authors' or 'author' based on your schema definition)
+    book = await book.populate('authors categories'); 
+
+    // 3. Send real-time notification
     wssBroadcast({
       type: "NEW_BOOK",
-      payload: newBook
+      payload: book
     });
 
     res.status(201).json({ message: "Book created successfully", book });
   } catch (err) {
+    console.error("Create Book Error:", err); // Log error to server console
     res.status(400).json({ message: err.message });
   }
 };
