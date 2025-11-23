@@ -1,6 +1,7 @@
 import Book from "../models/Book.js";
 import Author from "../models/Author.js";
 import Category from "../models/Category.js";
+import { wssBroadcast } from "../utils/websocket.js";
 
 /**
  * Build query filters for books (by name instead of ID)
@@ -176,6 +177,13 @@ export const getBook = async (req, res) => {
 export const createBook = async (req, res) => {
   try {
     const book = await Book.create(req.body);
+    
+    // Send real-time notification to all users of this new book
+    wssBroadcast({
+      type: "NEW_BOOK",
+      payload: newBook
+    });
+
     res.status(201).json({ message: "Book created successfully", book });
   } catch (err) {
     res.status(400).json({ message: err.message });
