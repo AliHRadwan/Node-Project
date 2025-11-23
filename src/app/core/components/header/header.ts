@@ -24,7 +24,7 @@ export class Header implements OnInit, OnDestroy {
     private authorService: AuthorService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Check authentication status (check both possible token keys)
@@ -87,12 +87,14 @@ export class Header implements OnInit, OnDestroy {
 
   initWebSocket(): void {
     try {
-      // Get WebSocket URL - connect to the API server
-      // Since the backend is on HTTP (port 3000), we use ws://
-      const wsHost = '18.184.165.152:3000'; // API server host
-      const wsUrl = `ws://${wsHost}`;
+      // 1. Determine protocol: if the site is https, use wss (secure), otherwise ws
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
 
-      this.socket = new WebSocket(wsUrl);
+      // 2. Get the host (e.g., "18.184.165.152" or "example.com")
+      const host = window.location.host;
+
+      // 3. Initialize
+      this.socket = new WebSocket(`${protocol}//${host}`);
 
       this.socket.onopen = (event) => {
         console.log('WebSocket connection established.');
