@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class Restoreaccountservice {
-  private apiUrl = `${environment.apiUrl}profile`;
+  private apiUrl = `${environment.apiUrl}/profile`;
 
   constructor(private http: HttpClient) {}
 
