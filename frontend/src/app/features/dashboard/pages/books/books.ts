@@ -4,6 +4,7 @@ import { CategoryService } from '../../../../core/services/category';
 import { AuthorService } from '../../../../core/services/author';
 import { AuthService } from '../../../../core/services/auth';
 import { UploadService } from '../../../../core/services/upload.service';
+import { ToastService } from '../../../../core/services/toast.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -64,25 +65,24 @@ export class Books implements OnInit {
     categories: [],
     isActive: true
   };
-  // Step 1 form (required fields only)
+  // Step 1 form (required fields: title, price, stock, authors, description, category, language, isActive, PDF)
   requiredForm: any = {
     title: '',
     price: 0,
     stock: 0,
-    authors: []
-  };
-  // Step 2 form (optional details)
-  detailsForm: any = {
+    authors: [],
     description: '',
-    pdfUrl: '',
-    image: { url: '' },
+    categories: [],
+    language: '',
+    isActive: true
+  };
+  // Step 2 form (optional details: isbn, sku, publisher, publishedAt, cover image)
+  detailsForm: any = {
     isbn: '',
     sku: '',
     publisher: '',
-    language: '',
     publishedAt: '',
-    categories: [],
-    isActive: true
+    image: { url: '' }
   };
 
   // File uploads
@@ -96,7 +96,8 @@ export class Books implements OnInit {
     private categoryService: CategoryService,
     private authorService: AuthorService,
     private authService: AuthService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -119,11 +120,11 @@ export class Books implements OnInit {
   loadAuthors() {
     this.authorService.getAuthors().subscribe({
       next: (response: any) => {
-        // Handle both array and object with items
+        // Handle both array and object with items - show all authors
         if (Array.isArray(response)) {
-          this.authors = response.filter((a: any) => a.status === 'approved');
+          this.authors = response;
         } else if (response.items) {
-          this.authors = response.items.filter((a: any) => a.status === 'approved');
+          this.authors = response.items;
         } else {
           this.authors = [];
         }
@@ -253,19 +254,18 @@ export class Books implements OnInit {
       title: '',
       price: 0,
       stock: 0,
-      authors: []
+      authors: [],
+      description: '',
+      categories: [],
+      language: '',
+      isActive: true
     };
     this.detailsForm = {
-      description: '',
-      pdfUrl: '',
-      image: { url: '' },
       isbn: '',
       sku: '',
       publisher: '',
-      language: '',
       publishedAt: '',
-      categories: [],
-      isActive: true
+      image: { url: '' }
     };
     this.selectedImageFile = null;
     this.selectedPdfFile = null;
@@ -384,6 +384,23 @@ export class Books implements OnInit {
     return this.requiredForm.authors && this.requiredForm.authors.includes(authorId);
   }
 
+  // For required form (step 1) - category selection
+  onRequiredCategorySelect(categoryId: string) {
+    if (!this.requiredForm.categories) {
+      this.requiredForm.categories = [];
+    }
+    const index = this.requiredForm.categories.indexOf(categoryId);
+    if (index > -1) {
+      this.requiredForm.categories.splice(index, 1);
+    } else {
+      this.requiredForm.categories.push(categoryId);
+    }
+  }
+
+  isRequiredCategorySelected(categoryId: string): boolean {
+    return this.requiredForm.categories && this.requiredForm.categories.includes(categoryId);
+  }
+
   // For details form (step 2)
   onDetailsCategorySelect(categoryId: string) {
     if (!this.detailsForm.categories) {
@@ -405,45 +422,91 @@ export class Books implements OnInit {
   submitRequiredForm() {
     // Validation
     if (!this.requiredForm.title || !this.requiredForm.title.trim()) {
-      alert('Title is required');
+      this.toastService.warning('Title is required');
       return;
     }
 
     if (this.requiredForm.price < 0) {
-      alert('Price must be 0 or greater');
+      this.toastService.warning('Price must be 0 or greater');
       return;
     }
 
     if (this.requiredForm.stock < 0) {
-      alert('Stock must be 0 or greater');
+      this.toastService.warning('Stock must be 0 or greater');
       return;
     }
 
     if (!this.requiredForm.authors || this.requiredForm.authors.length === 0) {
-      alert('At least one author is required');
+      this.toastService.warning('At least one author is required');
       return;
     }
 
-    // Prepare required data only
+    if (!this.requiredForm.description || !this.requiredForm.description.trim()) {
+      this.toastService.warning('Description is required');
+      return;
+    }
+
+    if (!this.requiredForm.categories || this.requiredForm.categories.length === 0) {
+      this.toastService.warning('At least one category is required');
+      return;
+    }
+
+    if (!this.requiredForm.language || !this.requiredForm.language.trim()) {
+      this.toastService.warning('Language is required');
+      return;
+    }
+
+    if (!this.selectedPdfFile) {
+      this.toastService.warning('Book PDF file is required');
+      return;
+    }
+
+    // Prepare required data
     const requiredData: any = {
       title: this.requiredForm.title.trim(),
       price: parseFloat(this.requiredForm.price),
       stock: parseInt(this.requiredForm.stock),
-      authors: this.requiredForm.authors
+      authors: this.requiredForm.authors,
+      description: this.requiredForm.description.trim(),
+      categories: this.requiredForm.categories,
+      language: this.requiredForm.language.trim(),
+      isActive: this.requiredForm.isActive
     };
 
-    // Create book with required fields only
+    // Create book with required fields
     this.bookService.createBook(requiredData).subscribe({
       next: (response) => {
         // Store the newly created book
         this.newlyCreatedBook = response.book || response;
-        // Close the required form and show details form
-        this.showBookForm = false;
-        this.showDetailsForm = true;
-        alert('Book created successfully! Now fill in the details.');
+        const bookId = this.newlyCreatedBook._id || this.newlyCreatedBook.id;
+
+        // Upload PDF file (required in step 1)
+        if (this.selectedPdfFile && bookId) {
+          firstValueFrom(this.uploadService.uploadPdf(bookId, this.selectedPdfFile))
+            .then(() => {
+              console.log('PDF uploaded successfully');
+              // Close the required form and show details form
+              this.showBookForm = false;
+              this.showDetailsForm = true;
+              this.toastService.success('Book created successfully! Now you can add optional details.');
+            })
+            .catch((err) => {
+              console.error('Error uploading PDF:', err);
+              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload PDF';
+              this.toastService.warning(`Book created but PDF upload failed: ${errorMsg}. You can upload the PDF later.`);
+              // Still proceed to step 2
+              this.showBookForm = false;
+              this.showDetailsForm = true;
+            });
+        } else {
+          // Close the required form and show details form
+          this.showBookForm = false;
+          this.showDetailsForm = true;
+          this.toastService.success('Book created successfully! Now you can add optional details.');
+        }
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to create book');
+        this.toastService.error(err.error?.message || 'Failed to create book');
         console.error('Error creating book:', err);
       }
     });
@@ -452,22 +515,18 @@ export class Books implements OnInit {
   // Step 2: Submit optional details to update the book
   submitDetailsForm() {
     if (!this.newlyCreatedBook) {
-      alert('Error: Book not found. Please try again.');
+      this.toastService.error('Error: Book not found. Please try again.');
       this.closeDetailsForm();
       return;
     }
 
-    // Prepare details data
+    // Prepare details data (Step 2: isbn, sku, publisher, publishedAt, cover image)
     const detailsData: any = {};
 
-    if (this.detailsForm.description) detailsData.description = this.detailsForm.description.trim();
     if (this.detailsForm.isbn) detailsData.isbn = this.detailsForm.isbn.trim();
     if (this.detailsForm.sku) detailsData.sku = this.detailsForm.sku.trim();
     if (this.detailsForm.publisher) detailsData.publisher = this.detailsForm.publisher.trim();
-    if (this.detailsForm.language) detailsData.language = this.detailsForm.language.trim();
     if (this.detailsForm.publishedAt) detailsData.publishedAt = new Date(this.detailsForm.publishedAt).toISOString();
-    if (this.detailsForm.categories && this.detailsForm.categories.length > 0) detailsData.categories = this.detailsForm.categories;
-    if (this.detailsForm.isActive !== undefined) detailsData.isActive = this.detailsForm.isActive;
 
     // Initialize image object if image file is selected (prevents backend error)
     if (this.selectedImageFile && !detailsData.image) {
@@ -477,72 +536,86 @@ export class Books implements OnInit {
     // Update the book with details
     const bookId = this.newlyCreatedBook._id || this.newlyCreatedBook.id;
     if (!bookId) {
-      alert('Error: Book ID not found. Please try again.');
+      this.toastService.error('Error: Book ID not found. Please try again.');
       return;
     }
 
-    this.bookService.updateBook(bookId, detailsData).subscribe({
-      next: (response) => {
-        let uploadPromises: Promise<any>[] = [];
+    // Check if there's any data to update or image to upload
+    const hasDataToUpdate = Object.keys(detailsData).length > 0;
+    const hasImageToUpload = this.selectedImageFile !== null;
 
-        // Upload image if selected
-        if (this.selectedImageFile) {
-          const imageUpload = firstValueFrom(this.uploadService.uploadImage(bookId, this.selectedImageFile))
-            .then(() => {
-              console.log('Image uploaded successfully');
-              alert('Image uploaded successfully!');
-            })
-            .catch((err) => {
-              console.error('Error uploading image:', err);
-              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload image';
-              alert(`Image upload failed: ${errorMsg}`);
-            });
-          uploadPromises.push(imageUpload);
+    if (!hasDataToUpdate && !hasImageToUpload) {
+      // No changes, just close the form
+      this.toastService.info('No changes to save.');
+      this.closeDetailsForm();
+      this.loadBooks();
+      return;
+    }
+
+    // If there's data to update, send the update request
+    if (hasDataToUpdate) {
+      this.bookService.updateBook(bookId, detailsData).subscribe({
+        next: (response) => {
+          // Upload cover image if selected
+          if (this.selectedImageFile) {
+            firstValueFrom(this.uploadService.uploadImage(bookId, this.selectedImageFile))
+              .then(() => {
+                console.log('Cover image uploaded successfully');
+                this.toastService.success('Book details and cover image updated successfully!');
+                this.closeDetailsForm();
+                this.loadBooks();
+              })
+              .catch((err) => {
+                console.error('Error uploading image:', err);
+                const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload image';
+                this.toastService.warning(`Book details saved but cover image upload failed: ${errorMsg}`);
+                this.closeDetailsForm();
+                this.loadBooks();
+              });
+          } else {
+            this.toastService.success('Book details updated successfully!');
+            this.closeDetailsForm();
+            this.loadBooks();
+          }
+        },
+        error: (err) => {
+          this.toastService.error(err.error?.message || 'Failed to update book details');
+          console.error('Error updating book details:', err);
         }
-
-        // Upload PDF if selected
-        if (this.selectedPdfFile) {
-          const pdfUpload = firstValueFrom(this.uploadService.uploadPdf(bookId, this.selectedPdfFile))
-            .then(() => {
-              console.log('PDF uploaded successfully');
-              alert('PDF uploaded successfully!');
-            })
-            .catch((err) => {
-              console.error('Error uploading PDF:', err);
-              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload PDF';
-              alert(`PDF upload failed: ${errorMsg}`);
-            });
-          uploadPromises.push(pdfUpload);
-        }
-
-        // Wait for all uploads to complete
-        Promise.all(uploadPromises).finally(() => {
-          alert('Book details updated successfully!');
+      });
+    } else if (hasImageToUpload) {
+      // Only image to upload, no other data
+      firstValueFrom(this.uploadService.uploadImage(bookId, this.selectedImageFile!))
+        .then(() => {
+          console.log('Cover image uploaded successfully');
+          this.toastService.success('Cover image uploaded successfully!');
+          this.closeDetailsForm();
+          this.loadBooks();
+        })
+        .catch((err) => {
+          console.error('Error uploading image:', err);
+          const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload image';
+          this.toastService.error(`Cover image upload failed: ${errorMsg}`);
           this.closeDetailsForm();
           this.loadBooks();
         });
-      },
-      error: (err) => {
-        alert(err.error?.message || 'Failed to update book details');
-        console.error('Error updating book details:', err);
-      }
-    });
+    }
   }
 
   // For editing existing books (keep the old form)
   submitBookForm() {
     if (!this.bookForm.title || !this.bookForm.title.trim()) {
-      alert('Title is required');
+      this.toastService.warning('Title is required');
       return;
     }
 
     if (this.bookForm.price < 0) {
-      alert('Price must be 0 or greater');
+      this.toastService.warning('Price must be 0 or greater');
       return;
     }
 
     if (this.bookForm.stock < 0) {
-      alert('Stock must be 0 or greater');
+      this.toastService.warning('Stock must be 0 or greater');
       return;
     }
 
@@ -570,7 +643,7 @@ export class Books implements OnInit {
 
     const bookId = this.editingBook._id || this.editingBook.id;
     if (!bookId) {
-      alert('Error: Book ID not found. Please try again.');
+      this.toastService.error('Error: Book ID not found. Please try again.');
       return;
     }
 
@@ -584,12 +657,12 @@ export class Books implements OnInit {
           const imageUpload = firstValueFrom(this.uploadService.uploadImage(bookId, this.selectedEditImageFile))
             .then(() => {
               console.log('Image uploaded successfully');
-              alert('Image uploaded successfully!');
+              this.toastService.success('Image uploaded successfully!');
             })
             .catch((err) => {
               console.error('Error uploading image:', err);
               const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload image';
-              alert(`Image upload failed: ${errorMsg}`);
+              this.toastService.error(`Image upload failed: ${errorMsg}`);
             });
           uploadPromises.push(imageUpload);
         }
@@ -599,25 +672,25 @@ export class Books implements OnInit {
           const pdfUpload = firstValueFrom(this.uploadService.uploadPdf(bookId, this.selectedEditPdfFile))
             .then(() => {
               console.log('PDF uploaded successfully');
-              alert('PDF uploaded successfully!');
+              this.toastService.success('PDF uploaded successfully!');
             })
             .catch((err) => {
               console.error('Error uploading PDF:', err);
               const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload PDF';
-              alert(`PDF upload failed: ${errorMsg}`);
+              this.toastService.error(`PDF upload failed: ${errorMsg}`);
             });
           uploadPromises.push(pdfUpload);
         }
 
         // Wait for all uploads to complete
         Promise.all(uploadPromises).finally(() => {
-          alert('Book updated successfully!');
+          this.toastService.success('Book updated successfully!');
           this.closeBookForm();
           this.loadBooks();
         });
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to update book');
+        this.toastService.error(err.error?.message || 'Failed to update book');
         console.error('Error updating book:', err);
       }
     });
@@ -630,11 +703,11 @@ export class Books implements OnInit {
 
     this.bookService.deleteBook(book._id || book.id).subscribe({
       next: (response) => {
-        alert('Book deleted successfully!');
+        this.toastService.success('Book deleted successfully!');
         this.loadBooks();
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to delete book');
+        this.toastService.error(err.error?.message || 'Failed to delete book');
         console.error('Error deleting book:', err);
       }
     });

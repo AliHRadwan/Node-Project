@@ -194,7 +194,7 @@
       </div>
       <div class="modal-body">
         <div class="alert alert-info">
-          <i class="bi bi-info-circle"></i> Please fill in the required fields to create the book. You can add more details in the next step.
+          <i class="bi bi-info-circle"></i> Please fill in all required fields to create the book. You can add optional details in the next step.
         </div>
         <form>
           <div class="row">
@@ -219,10 +219,16 @@
                 <input type="number" min="0" class="form-control" id="requiredStock" [(ngModel)]="requiredForm.stock" name="requiredStock" required>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="requiredLanguage" class="form-label">Language <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="requiredLanguage" [(ngModel)]="requiredForm.language" name="requiredLanguage" placeholder="e.g., English, Arabic" required>
+              </div>
+            </div>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Authors <span class="text-danger">*</span></label>
+            <label class="form-label">Author(s) <span class="text-danger">*</span></label>
             <div class="border rounded p-3" style="max-height: 150px; overflow-y: auto;">
               <div *ngFor="let author of authors" class="form-check">
                 <input 
@@ -238,12 +244,56 @@
               <div *ngIf="authors.length === 0" class="text-muted">No authors available</div>
             </div>
           </div>
+
+          <div class="mb-3">
+            <label for="requiredDescription" class="form-label">Description <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="requiredDescription" rows="4" [(ngModel)]="requiredForm.description" name="requiredDescription" required placeholder="Enter book description..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Category <span class="text-danger">*</span></label>
+            <div class="border rounded p-3" style="max-height: 150px; overflow-y: auto;">
+              <div *ngFor="let category of categories" class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  [id]="'required-cat-' + (category._id || category.id)"
+                  [checked]="isRequiredCategorySelected(category._id || category.id)"
+                  (change)="onRequiredCategorySelect(category._id || category.id)">
+                <label class="form-check-label" [for]="'required-cat-' + (category._id || category.id)">
+                  {{ category.name }}
+                </label>
+              </div>
+              <div *ngIf="categories.length === 0" class="text-muted">No categories available</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="requiredPdfFile" class="form-label">Book PDF File <span class="text-danger">*</span></label>
+            <input type="file" class="form-control" id="requiredPdfFile" accept=".pdf" (change)="onPdfFileSelected($event, false)" name="book" required>
+            <div class="form-text">Upload the book PDF file (required)</div>
+            <small class="text-muted" *ngIf="selectedPdfFile">Selected: {{ selectedPdfFile.name }}</small>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input 
+                class="form-check-input" 
+                type="checkbox" 
+                id="requiredIsActive"
+                [(ngModel)]="requiredForm.isActive"
+                name="requiredIsActive">
+              <label class="form-check-label" for="requiredIsActive">
+                Active (visible to customers)
+              </label>
+            </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeBookForm()">Cancel</button>
         <button type="button" class="btn btn-danger" (click)="submitRequiredForm()">
-          <i class="bi bi-plus-circle"></i> Create Book
+          <i class="bi bi-arrow-right"></i> Create & Continue to Step 2
         </button>
       </div>
     </div>
@@ -257,31 +307,26 @@
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
         <h5 class="modal-title">
-          <i class="bi bi-pencil"></i> Fill Book Details - Step 2: Optional Information
+          <i class="bi bi-pencil"></i> Book Details - Step 2: Optional Information
         </h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeDetailsForm()" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="alert alert-success">
-          <i class="bi bi-check-circle"></i> Book created successfully! Now you can add optional details.
+          <i class="bi bi-check-circle"></i> Book created successfully! You can now add optional details or skip this step.
         </div>
         <form enctype="multipart/form-data">
-          <div class="mb-3">
-            <label for="detailsDescription" class="form-label">Description</label>
-            <textarea class="form-control" id="detailsDescription" rows="4" [(ngModel)]="detailsForm.description" name="detailsDescription"></textarea>
-          </div>
-
           <div class="row">
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="detailsIsbn" class="form-label">ISBN</label>
-                <input type="text" class="form-control" id="detailsIsbn" [(ngModel)]="detailsForm.isbn" name="detailsIsbn">
+                <input type="text" class="form-control" id="detailsIsbn" [(ngModel)]="detailsForm.isbn" name="detailsIsbn" placeholder="e.g., 978-3-16-148410-0">
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="detailsSku" class="form-label">SKU</label>
-                <input type="text" class="form-control" id="detailsSku" [(ngModel)]="detailsForm.sku" name="detailsSku">
+                <input type="text" class="form-control" id="detailsSku" [(ngModel)]="detailsForm.sku" name="detailsSku" placeholder="e.g., BOOK-001">
               </div>
             </div>
           </div>
@@ -290,18 +335,12 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="detailsPublisher" class="form-label">Publisher</label>
-                <input type="text" class="form-control" id="detailsPublisher" [(ngModel)]="detailsForm.publisher" name="detailsPublisher">
+                <input type="text" class="form-control" id="detailsPublisher" [(ngModel)]="detailsForm.publisher" name="detailsPublisher" placeholder="e.g., Penguin Books">
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
               <div class="mb-3">
-                <label for="detailsLanguage" class="form-label">Language</label>
-                <input type="text" class="form-control" id="detailsLanguage" [(ngModel)]="detailsForm.language" name="detailsLanguage">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3">
-                <label for="detailsPublishedAt" class="form-label">Published Date</label>
+                <label for="detailsPublishedAt" class="form-label">Publish Date</label>
                 <input type="date" class="form-control" id="detailsPublishedAt" [(ngModel)]="detailsForm.publishedAt" name="detailsPublishedAt">
               </div>
             </div>
@@ -313,51 +352,12 @@
             <div class="form-text">Upload a cover image for the book (JPG, PNG, etc.)</div>
             <small class="text-muted" *ngIf="selectedImageFile">Selected: {{ selectedImageFile.name }}</small>
           </div>
-
-          <div class="mb-3">
-            <label for="detailsPdfFile" class="form-label">Book PDF</label>
-            <input type="file" class="form-control" id="detailsPdfFile" accept=".pdf" (change)="onPdfFileSelected($event, false)" name="book">
-            <div class="form-text">Upload the book PDF file</div>
-            <small class="text-muted" *ngIf="selectedPdfFile">Selected: {{ selectedPdfFile.name }}</small>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Categories</label>
-            <div class="border rounded p-3" style="max-height: 150px; overflow-y: auto;">
-              <div *ngFor="let category of categories" class="form-check">
-                <input 
-                  class="form-check-input" 
-                  type="checkbox" 
-                  [id]="'details-cat-' + (category._id || category.id)"
-                  [checked]="isDetailsCategorySelected(category._id || category.id)"
-                  (change)="onDetailsCategorySelect(category._id || category.id)">
-                <label class="form-check-label" [for]="'details-cat-' + (category._id || category.id)">
-                  {{ category.name }}
-                </label>
-              </div>
-              <div *ngIf="categories.length === 0" class="text-muted">No categories available</div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <div class="form-check">
-              <input 
-                class="form-check-input" 
-                type="checkbox" 
-                id="detailsIsActive"
-                [(ngModel)]="detailsForm.isActive"
-                name="detailsIsActive">
-              <label class="form-check-label" for="detailsIsActive">
-                Active (visible to customers)
-              </label>
-            </div>
-          </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeDetailsForm()">Skip & Close</button>
         <button type="button" class="btn btn-primary" (click)="submitDetailsForm()">
-          <i class="bi bi-check"></i> Update Details
+          <i class="bi bi-check"></i> Save Details
         </button>
       </div>
     </div>
