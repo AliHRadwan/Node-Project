@@ -79,13 +79,15 @@
           [attr.data-index]="i"
           (click)="selectCategory(category)">
           <mat-card 
-            class="h-100 border-0 text-center py-4 shadow-lg category-card" 
+            class="h-100 border-0 text-center shadow-lg category-card" 
             style="cursor: pointer;"
             [class.selected]="selectedCategory === (category._id || category.id)">
-            <div class="category-icon-wrapper mb-3">
-              <mat-icon class="category-icon" [ngStyle]="{'color': category.color || '#dc3545', 'font-size.px': 40}">{{ category.icon }}</mat-icon>
+            <div class="category-content">
+              <div class="category-icon-wrapper">
+                <mat-icon class="category-icon" [ngStyle]="{'color': 'inherit', 'font-size.px': 44}">{{ category.icon }}</mat-icon>
+              </div>
+              <div class="category-name">{{ category.name }}</div>
             </div>
-            <div class="fw-semibold category-name">{{ category.name }}</div>
           </mat-card>
         </div>
       </div>
@@ -203,8 +205,8 @@
               </div>
               <div class="col-12 col-md-3 mb-3 mb-md-0">
                 <select class="form-select" [(ngModel)]="sortBy" (change)="onSortChange()">
-                  <option value="createdAt">Newest First</option>
-                  <option value="-createdAt">Oldest First</option>
+                  <option value="-createdAt">Newest First</option>
+                  <option value="createdAt">Oldest First</option>
                   <option value="title">Title A-Z</option>
                   <option value="-title">Title Z-A</option>
                   <option value="price">Price: Low to High</option>

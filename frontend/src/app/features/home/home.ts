@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
   filters: BookFilters = {
     page: 1,
     limit: 12,
-    sort: 'createdAt',
+    sort: '-createdAt',
     isActive: true
   };
   
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
   selectedAuthor: string = '';
   minPrice: number | string | null = null;
   maxPrice: number | string | null = null;
-  sortBy: string = 'createdAt';
+  sortBy: string = '-createdAt';
 
   // Customer reviews
   customerReviews: any[] = [
@@ -216,7 +216,7 @@ export class HomeComponent implements OnInit {
     this.selectedAuthor = '';
     this.minPrice = null;
     this.maxPrice = null;
-    this.sortBy = 'createdAt';
+    this.sortBy = '-createdAt';
     this.currentPage = 1;
     this.loadBooks();
   }
