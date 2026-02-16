@@ -4,6 +4,11 @@ import User from "../models/User.js";
 import Token from "../models/Token.js";
 import sendEmail from "../services/sendemail.js";
 import { registerSchema } from "../validators/register.validation.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const frontUrl = process.env.FRONTEND_URL || "http://localhost";
 
 const user_register = async (req, res) => {
   try {
@@ -74,7 +79,7 @@ export  async function newEmailVerificationToken(email,newuser)
       expiresAt: new Date(Date.now() + 60 * 60 * 1000),
       used: false,
     });
-    const verifyLink = `http://18.184.165.152/api/auth/verify/${verifyToken}`;
+    const verifyLink = `${frontUrl}/api/auth/verify/${verifyToken}`;
     //const verifyLink = `http://localhost:3000/api/auth/verify/${verifyToken}`;
 
     const html = `

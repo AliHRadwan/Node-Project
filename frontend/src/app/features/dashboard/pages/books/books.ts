@@ -41,7 +41,7 @@ export class Books implements OnInit {
   selectedAuthor = '';
   minPrice: number | string | null = null;
   maxPrice: number | string | null = null;
-  sortBy = 'createdAt';
+  sortBy = '-createdAt'; // Newest first
   statusFilter = 'all'; // all, active, inactive
 
   // Form state
@@ -229,7 +229,7 @@ export class Books implements OnInit {
     this.selectedAuthor = '';
     this.minPrice = null;
     this.maxPrice = null;
-    this.sortBy = 'createdAt';
+    this.sortBy = '-createdAt'; // Newest first
     this.statusFilter = 'all';
     this.currentPage = 1;
     this.loadBooks();

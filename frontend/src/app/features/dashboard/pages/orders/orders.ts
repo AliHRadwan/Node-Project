@@ -19,6 +19,10 @@ export class Orders {
   flashType: 'success' | 'danger' | 'info' = 'info';
   flashTimeout?: any;
 
+  // Pagination
+  currentPage = 1;
+  itemsPerPage = 10;
+
   constructor(private api: OrderService) { }
 
   ngOnInit(): void {
@@ -83,6 +87,56 @@ export class Orders {
       o.shippingAddress.fullName.toLowerCase().includes(q) ||
       o.status.toLowerCase().includes(q)
     );
+  }
+
+  // Pagination computed properties
+  get totalPages(): number {
+    return Math.ceil(this.filtered.length / this.itemsPerPage);
+  }
+
+  get paginatedOrders(): Order[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.filtered.slice(start, end);
+  }
+
+  get pageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisible - 1);
+    
+    if (endPage - startPage + 1 < maxVisible) {
+      startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  // Reset pagination when search changes
+  onSearchChange(): void {
+    this.currentPage = 1;
   }
 
   openDetails(o: Order) {

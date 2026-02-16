@@ -5,6 +5,11 @@ import { logout } from "../controllers/authController.js";
 import sendEmail from "../services/sendemail.js";
 import { newEmailVerificationToken } from "./registerController.js";
 import crypto from 'crypto';
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const frontUrl = process.env.FRONTEND_URL || "http://localhost";
 
 // Helper Functions
 const formatUser = (user) => ({
@@ -218,7 +223,7 @@ const requestRestoreAccount = async (req, res) => {
       used: false,
     });
 
-    const restoreLink = `http://18.184.165.152/account/restored-account/${restoreToken}`;
+    const restoreLink = `${frontUrl}/account/restored-account/${restoreToken}`;
     await sendEmail(user.email, "Restore Your Account",
       `<h2>Restore Your Account</h2>
       <p>Click the link below to restore your account:</p>

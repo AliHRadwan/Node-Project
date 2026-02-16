@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from './auth';
 import { CartService } from './cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 
 export interface BookFilters {
   page?: number;

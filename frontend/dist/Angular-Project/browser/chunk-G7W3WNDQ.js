@@ -1,0 +1,1 @@
+import{a as i}from"./chunk-NBQWY3F3.js";import"./chunk-WRCOELZI.js";import"./chunk-SIIUWBFL.js";import"./chunk-AUGEL3RD.js";import{C as t,Nb as r,ea as e}from"./chunk-OLWEDU7Q.js";var s=[{path:"",component:i}],n=class o{static \u0275fac=function(m){return new(m||o)};static \u0275mod=e({type:o});static \u0275inj=t({imports:[r.forChild(s)]})};export{n as ReviewAuthorsModule};

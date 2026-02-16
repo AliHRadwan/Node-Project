@@ -27,17 +27,28 @@
 
 .pagination .page-link {
   color: #dc3545;
-  border-color: #dc3545;
+  border-color: #dee2e6;
+  border-radius: 8px;
+  margin: 0 2px;
+  transition: all 0.2s ease;
 }
 
 .pagination .page-item.active .page-link {
   background-color: #dc3545;
   border-color: #dc3545;
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .pagination .page-link:hover {
   background-color: #dc3545;
-  color: white;
+  border-color: #dc3545;
+  color: #ffffff;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #adb5bd;
+  background-color: #f8f9fa;
 }
 
 .modal {

@@ -90,6 +90,23 @@
   background: #dc2626 !important;
 }
 
+/* Back to Home Button */
+:host ::ng-deep .mat-mdc-list-item.back-to-home {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+}
+
+:host ::ng-deep .mat-mdc-list-item.back-to-home:hover {
+  background: linear-gradient(135deg, var(--brand) 0%, #c82333 100%) !important;
+  color: #ffffff !important;
+  border-color: var(--brand);
+  transform: translateX(4px);
+}
+
+:host ::ng-deep .mat-mdc-list-item.back-to-home:hover mat-icon {
+  color: #ffffff !important;
+}
+
 /* Main Content Card */
 .content-card {
   border-radius: 20px !important;
