@@ -14,7 +14,17 @@ export const uploadImage = async (req, res) => {
     multerUploadImage(req, res, async (error) => {
       if (error) {
         winstonLogger.warn(`Failed to upload image ${error}`);
-        return res.status(400).send(error.message);
+        // Check for file size limit error
+        if (error.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ 
+            message: 'Image file too large. Maximum size is 2MB.',
+            error: 'LIMIT_FILE_SIZE'
+          });
+        }
+        return res.status(400).json({ 
+          message: error.message || 'Failed to upload image',
+          error: error.message 
+        });
       }
 
       try {
@@ -50,7 +60,17 @@ export const uploadBook = async (req, res) => {
     multerUploadBook(req, res, async (error) => {
       if (error) {
         winstonLogger.warn(`Failed to upload book ${error}`);
-        return res.status(400).send(error.message);
+        // Check for file size limit error
+        if (error.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ 
+            message: 'PDF file too large. Maximum size is 5MB.',
+            error: 'LIMIT_FILE_SIZE'
+          });
+        }
+        return res.status(400).json({ 
+          message: error.message || 'Failed to upload PDF',
+          error: error.message 
+        });
       }
 
       try {

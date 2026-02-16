@@ -32,7 +32,7 @@ export const multerUploadImage = multer({
     contentType: multerS3.AUTO_CONTENT_TYPE,
   }),
 
-  limits: { fileSize: 1 * 1024 * 1024 }, // 1 MB file size limit
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB file size limit
   fileFilter: function (req, file, cb) {
     checkImageType(file, cb);
   },

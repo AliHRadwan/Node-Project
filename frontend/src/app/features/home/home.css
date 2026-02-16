@@ -42,9 +42,25 @@
   transition: transform 0.3s ease;
 }
 
+/* Book card links */
+a[routerLink] .book-card,
+a[routerLink] .book-item {
+  cursor: pointer;
+}
+
 .book-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid #e9ecef;
+}
+
+.book-item {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.book-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
 .book-card:hover {

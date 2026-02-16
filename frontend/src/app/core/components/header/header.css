@@ -46,3 +46,74 @@
 ::ng-deep .new-book-notification .mat-mdc-snack-bar-action:hover {
   opacity: 0.8;
 }
+
+/* WebSocket Notification Styles */
+.ws-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  animation: slideIn 0.3s ease-out;
+  cursor: pointer;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.ws-notification-content {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #198754 0%, #157347 100%);
+  color: white;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(25, 135, 84, 0.4);
+  font-weight: 500;
+  max-width: 400px;
+}
+
+.ws-notification-content:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 28px rgba(25, 135, 84, 0.5);
+}
+
+.ws-notification-content i.bi-book {
+  font-size: 1.25rem;
+}
+
+.ws-notification-close {
+  background: none;
+  border: none;
+  color: white;
+  margin-left: 1rem;
+  padding: 0.25rem;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.ws-notification-close:hover {
+  opacity: 1;
+}
+
+@media (max-width: 576px) {
+  .ws-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .ws-notification-content {
+    max-width: 100%;
+  }
+}

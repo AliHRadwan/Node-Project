@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from './auth';
 import { CartService } from './cart.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from './toast.service';
 import { environment } from '../../../environments/environment';
 
 export interface BookFilters {
@@ -43,7 +43,7 @@ export class BookService {
     private http: HttpClient,
     private authService: AuthService,
     private cartService: CartService,
-    private snackBar: MatSnackBar,
+    private toastService: ToastService,
     private router: Router
   ) {}
 
@@ -114,11 +114,7 @@ export class BookService {
   addToCart(book: any): void {
     // Check if user is authenticated
     if (!this.authService.isAuthenticated()) {
-      const snackBarRef = this.snackBar.open('Please login to add items to cart', 'Login', {
-        duration: 4000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      const snackBarRef = this.toastService.warning('Please login to add items to cart', 'Login', 4000);
       
       snackBarRef.onAction().subscribe(() => {
         this.router.navigate(['/login']);
@@ -139,11 +135,7 @@ export class BookService {
       qty: 1
     }).subscribe({
       next: (response) => {
-        const snackBarRef = this.snackBar.open('✅ Added to cart!', 'View', { 
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        const snackBarRef = this.toastService.success('Added to cart!', 'View');
         
         snackBarRef.onAction().subscribe(() => {
           this.router.navigate(['/cart']);
@@ -151,11 +143,7 @@ export class BookService {
       },
       error: (error) => {
         const errorMessage = error.error?.message || error.message || 'Failed to add item to cart';
-        this.snackBar.open('❌ ' + errorMessage, 'Close', { 
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toastService.error(errorMessage);
       }
     });
   }

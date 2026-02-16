@@ -229,19 +229,38 @@
 
           <div class="mb-3">
             <label class="form-label">Author(s) <span class="text-danger">*</span></label>
-            <div class="border rounded p-3" style="max-height: 150px; overflow-y: auto;">
-              <div *ngFor="let author of authors" class="form-check">
-                <input 
-                  class="form-check-input" 
-                  type="checkbox" 
-                  [id]="'required-author-' + (author._id || author.id)"
-                  [checked]="isRequiredAuthorSelected(author._id || author.id)"
-                  (change)="onRequiredAuthorSelect(author._id || author.id)">
-                <label class="form-check-label" [for]="'required-author-' + (author._id || author.id)">
+            <div class="author-chips-container">
+              <mat-chip-set>
+                <mat-chip *ngFor="let author of selectedAuthorsForCreate" 
+                          (removed)="removeAuthorFromCreate(author)"
+                          class="author-chip">
                   {{ author.name }}
-                </label>
-              </div>
-              <div *ngIf="authors.length === 0" class="text-muted">No authors available</div>
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+            <mat-form-field class="w-100" appearance="outline">
+              <mat-label>Search authors...</mat-label>
+              <input matInput
+                     #authorInput
+                     [formControl]="authorSearchCtrl"
+                     [matAutocomplete]="autoAuthor"
+                     placeholder="Type to search authors">
+              <mat-autocomplete #autoAuthor="matAutocomplete" 
+                                (optionSelected)="onAuthorSelected($event)"
+                                [displayWith]="displayAuthorName">
+                <mat-option *ngFor="let author of filteredAuthors$ | async" [value]="author">
+                  {{ author.name }}
+                </mat-option>
+                <mat-option *ngIf="(filteredAuthors$ | async)?.length === 0" disabled>
+                  No authors found
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <div *ngIf="selectedAuthorsForCreate.length === 0" class="text-muted small mt-1">
+              <i class="bi bi-info-circle"></i> Select at least one author
             </div>
           </div>
 
@@ -457,20 +476,36 @@
 
           <div class="mb-3">
             <label class="form-label">Authors</label>
-            <div class="border rounded p-3" style="max-height: 150px; overflow-y: auto;">
-              <div *ngFor="let author of authors" class="form-check">
-                <input 
-                  class="form-check-input" 
-                  type="checkbox" 
-                  [id]="'author-' + (author._id || author.id)"
-                  [checked]="isAuthorSelected(author._id || author.id)"
-                  (change)="onAuthorSelect(author._id || author.id)">
-                <label class="form-check-label" [for]="'author-' + (author._id || author.id)">
+            <div class="author-chips-container">
+              <mat-chip-set>
+                <mat-chip *ngFor="let author of selectedAuthorsForEdit" 
+                          (removed)="removeAuthorFromEdit(author)"
+                          class="author-chip">
                   {{ author.name }}
-                </label>
-              </div>
-              <div *ngIf="authors.length === 0" class="text-muted">No authors available</div>
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip>
+              </mat-chip-set>
             </div>
+            <mat-form-field class="w-100" appearance="outline">
+              <mat-label>Search authors...</mat-label>
+              <input matInput
+                     #editAuthorInput
+                     [formControl]="editAuthorSearchCtrl"
+                     [matAutocomplete]="autoEditAuthor"
+                     placeholder="Type to search authors">
+              <mat-autocomplete #autoEditAuthor="matAutocomplete" 
+                                (optionSelected)="onEditAuthorSelected($event)"
+                                [displayWith]="displayAuthorName">
+                <mat-option *ngFor="let author of filteredAuthorsForEdit$ | async" [value]="author">
+                  {{ author.name }}
+                </mat-option>
+                <mat-option *ngIf="(filteredAuthorsForEdit$ | async)?.length === 0" disabled>
+                  No authors found
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
           </div>
 
           <div class="mb-3">

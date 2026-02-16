@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -8,9 +8,9 @@ export type ToastType = 'success' | 'error' | 'warning' | 'info';
 })
 export class ToastService {
   private defaultConfig: MatSnackBarConfig = {
-    duration: 4000,
-    horizontalPosition: 'right',
-    verticalPosition: 'top'
+    duration: 3000,
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom'
   };
 
   constructor(private snackBar: MatSnackBar) {}
@@ -18,42 +18,42 @@ export class ToastService {
   /**
    * Show a success toast message
    */
-  success(message: string, action: string = 'Close', duration?: number): void {
-    this.show(message, action, 'success', duration);
+  success(message: string, action: string = 'Close', duration?: number): MatSnackBarRef<TextOnlySnackBar> {
+    return this.show(message, action, 'success', duration);
   }
 
   /**
    * Show an error toast message
    */
-  error(message: string, action: string = 'Close', duration?: number): void {
-    this.show(message, action, 'error', duration);
+  error(message: string, action: string = 'Close', duration?: number): MatSnackBarRef<TextOnlySnackBar> {
+    return this.show(message, action, 'error', duration);
   }
 
   /**
    * Show a warning toast message
    */
-  warning(message: string, action: string = 'Close', duration?: number): void {
-    this.show(message, action, 'warning', duration);
+  warning(message: string, action: string = 'Close', duration?: number): MatSnackBarRef<TextOnlySnackBar> {
+    return this.show(message, action, 'warning', duration);
   }
 
   /**
    * Show an info toast message
    */
-  info(message: string, action: string = 'Close', duration?: number): void {
-    this.show(message, action, 'info', duration);
+  info(message: string, action: string = 'Close', duration?: number): MatSnackBarRef<TextOnlySnackBar> {
+    return this.show(message, action, 'info', duration);
   }
 
   /**
    * Show a toast message with custom type
    */
-  private show(message: string, action: string, type: ToastType, duration?: number): void {
+  private show(message: string, action: string, type: ToastType, duration?: number): MatSnackBarRef<TextOnlySnackBar> {
     const config: MatSnackBarConfig = {
       ...this.defaultConfig,
       duration: duration || this.defaultConfig.duration,
       panelClass: [`toast-${type}`]
     };
 
-    this.snackBar.open(message, action, config);
+    return this.snackBar.open(message, action, config);
   }
 
   /**

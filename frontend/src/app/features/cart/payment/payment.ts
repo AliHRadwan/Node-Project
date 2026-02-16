@@ -3,7 +3,8 @@ import { Cart, CartItem } from '../../../core/models/cart.model';
 import { Subscription } from 'rxjs';
 import { CartOrders, PlaceOrderBody } from '../cart-orders';
 import { CartService } from '../../../core/services/cart.service';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 
 declare const bootstrap: any; 
@@ -41,6 +42,7 @@ export class Payment implements OnInit, OnDestroy {
   constructor(
     private cartService: CartService,
     private cartOrders: CartOrders,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -184,37 +186,49 @@ export class Payment implements OnInit, OnDestroy {
   cancelCurrentOrder() {
     if (!this.lastOrder?._id || this.checkoutLoading) return;
 
-    if (!confirm('Are you sure you want to cancel this order?')) return;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Cancel Order',
+        message: 'Are you sure you want to cancel this order?',
+        confirmText: 'Yes, Cancel',
+        cancelText: 'No, Keep Order'
+      }
+    });
 
-    this.checkoutLoading = true;
-    this.showMessageIn('info', 'Cancelling your order...');
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.checkoutLoading = true;
+        this.showMessageIn('info', 'Cancelling your order...');
 
-    const orderId = this.lastOrder._id;
+        const orderId = this.lastOrder._id;
 
-    this.cartOrders.cancelOrder(orderId).subscribe({
-      next: (res: any) => {
-        this.checkoutLoading = false;
+        this.cartOrders.cancelOrder(orderId).subscribe({
+          next: (res: any) => {
+            this.checkoutLoading = false;
 
-        try {
-          localStorage.removeItem('lastOrder');
-        } catch {}
+            try {
+              localStorage.removeItem('lastOrder');
+            } catch {}
 
-        this.lastOrder = null;
+            this.lastOrder = null;
 
-        this.showMessageIn('success', res.message || 'Order cancelled successfully.');
+            this.showMessageIn('success', res.message || 'Order cancelled successfully.');
 
-        const modalEl = document.getElementById('paymentConfirmModal');
-        if (modalEl) {
-          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-          modal.hide();
-        }
+            const modalEl = document.getElementById('paymentConfirmModal');
+            if (modalEl) {
+              const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+              modal.hide();
+            }
 
-        this.loadCart();
-      },
-      error: (err) => {
-        this.checkoutLoading = false;
-        const msg = err.error?.message || 'Failed to cancel order.';
-        this.showMessageIn('danger', msg);
+            this.loadCart();
+          },
+          error: (err) => {
+            this.checkoutLoading = false;
+            const msg = err.error?.message || 'Failed to cancel order.';
+            this.showMessageIn('danger', msg);
+          }
+        });
       }
     });
   }

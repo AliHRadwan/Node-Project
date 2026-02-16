@@ -18,7 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { PaymentFailed } from './payment-failed/payment-failed';
 import { Payment } from './payment/payment';
-import { ConfirmDialogModule } from './confirm-dialog/confirm-dialog.module';
+import { SharedModule } from '../../shared/shared-module';
 import { AuthGuard } from '../../core/guards/auth.guard';
 
 const routes: Routes = [
@@ -44,7 +44,7 @@ const routes: Routes = [
     FormsModule,
     MatFormFieldModule, 
     MatInputModule, 
-    ConfirmDialogModule
+    SharedModule
 ]
 })
 export class CartModule { }

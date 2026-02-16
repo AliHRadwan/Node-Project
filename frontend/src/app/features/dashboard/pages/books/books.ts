@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { BookService, BookFilters } from '../../../../core/services/book';
 import { CategoryService } from '../../../../core/services/category';
 import { AuthorService } from '../../../../core/services/author';
 import { AuthService } from '../../../../core/services/auth';
 import { UploadService } from '../../../../core/services/upload.service';
 import { ToastService } from '../../../../core/services/toast.service';
-import { firstValueFrom } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
+import { firstValueFrom, Observable, map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-books',
@@ -91,19 +95,60 @@ export class Books implements OnInit {
   selectedEditImageFile: File | null = null;
   selectedEditPdfFile: File | null = null;
 
+  // Author autocomplete for create form
+  authorSearchCtrl = new FormControl('');
+  filteredAuthors$!: Observable<any[]>;
+  selectedAuthorsForCreate: any[] = [];
+  @ViewChild('authorInput') authorInput!: ElementRef<HTMLInputElement>;
+
+  // Author autocomplete for edit form
+  editAuthorSearchCtrl = new FormControl('');
+  filteredAuthorsForEdit$!: Observable<any[]>;
+  selectedAuthorsForEdit: any[] = [];
+  @ViewChild('editAuthorInput') editAuthorInput!: ElementRef<HTMLInputElement>;
+
   constructor(
     private bookService: BookService,
     private categoryService: CategoryService,
     private authorService: AuthorService,
     private authService: AuthService,
     private uploadService: UploadService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
     this.loadCategories();
     this.loadAuthors();
     this.loadBooks();
+    this.initAuthorAutocomplete();
+  }
+
+  initAuthorAutocomplete() {
+    // For create form
+    this.filteredAuthors$ = this.authorSearchCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterAuthors(value || '', this.selectedAuthorsForCreate))
+    );
+
+    // For edit form
+    this.filteredAuthorsForEdit$ = this.editAuthorSearchCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterAuthors(value || '', this.selectedAuthorsForEdit))
+    );
+  }
+
+  filterAuthors(searchTerm: string, excludeList: any[]): any[] {
+    const filterValue = typeof searchTerm === 'string' ? searchTerm.toLowerCase() : '';
+    const excludeIds = excludeList.map(a => a._id || a.id);
+    return this.authors.filter(author => 
+      (author.name?.toLowerCase().includes(filterValue)) &&
+      !excludeIds.includes(author._id || author.id)
+    );
+  }
+
+  displayAuthorName(author: any): string {
+    return author ? author.name : '';
   }
 
   loadCategories() {
@@ -269,8 +314,52 @@ export class Books implements OnInit {
     };
     this.selectedImageFile = null;
     this.selectedPdfFile = null;
+    this.selectedAuthorsForCreate = [];
+    this.authorSearchCtrl.setValue('');
     this.showBookForm = true;
     this.showDetailsForm = false;
+  }
+
+  // Author autocomplete methods for create form
+  onAuthorSelected(event: MatAutocompleteSelectedEvent): void {
+    const author = event.option.value;
+    if (!this.selectedAuthorsForCreate.find(a => (a._id || a.id) === (author._id || author.id))) {
+      this.selectedAuthorsForCreate.push(author);
+      this.requiredForm.authors = this.selectedAuthorsForCreate.map(a => a._id || a.id);
+    }
+    this.authorSearchCtrl.setValue('');
+    if (this.authorInput) {
+      this.authorInput.nativeElement.value = '';
+    }
+  }
+
+  removeAuthorFromCreate(author: any): void {
+    const index = this.selectedAuthorsForCreate.findIndex(a => (a._id || a.id) === (author._id || author.id));
+    if (index >= 0) {
+      this.selectedAuthorsForCreate.splice(index, 1);
+      this.requiredForm.authors = this.selectedAuthorsForCreate.map(a => a._id || a.id);
+    }
+  }
+
+  // Author autocomplete methods for edit form
+  onEditAuthorSelected(event: MatAutocompleteSelectedEvent): void {
+    const author = event.option.value;
+    if (!this.selectedAuthorsForEdit.find(a => (a._id || a.id) === (author._id || author.id))) {
+      this.selectedAuthorsForEdit.push(author);
+      this.bookForm.authors = this.selectedAuthorsForEdit.map(a => a._id || a.id);
+    }
+    this.editAuthorSearchCtrl.setValue('');
+    if (this.editAuthorInput) {
+      this.editAuthorInput.nativeElement.value = '';
+    }
+  }
+
+  removeAuthorFromEdit(author: any): void {
+    const index = this.selectedAuthorsForEdit.findIndex(a => (a._id || a.id) === (author._id || author.id));
+    if (index >= 0) {
+      this.selectedAuthorsForEdit.splice(index, 1);
+      this.bookForm.authors = this.selectedAuthorsForEdit.map(a => a._id || a.id);
+    }
   }
 
   openEditBookForm(book: any) {
@@ -291,6 +380,10 @@ export class Books implements OnInit {
       categories: book.categories ? (Array.isArray(book.categories) ? book.categories.map((c: any) => c._id || c.id || c) : []) : [],
       isActive: book.isActive !== undefined ? book.isActive : true
     };
+    // Populate selected authors for edit autocomplete
+    this.selectedAuthorsForEdit = book.authors ? 
+      (Array.isArray(book.authors) ? book.authors.filter((a: any) => typeof a === 'object') : []) : [];
+    this.editAuthorSearchCtrl.setValue('');
     this.selectedEditImageFile = null;
     this.selectedEditPdfFile = null;
     this.showBookForm = true;
@@ -310,6 +403,20 @@ export class Books implements OnInit {
   onImageFileSelected(event: any, isEdit: boolean = false) {
     const file = event.target.files[0];
     if (file) {
+      // Check file size (max 2MB)
+      const maxSize = 2 * 1024 * 1024; // 2MB
+      if (file.size > maxSize) {
+        this.toastService.error('Image file too large. Maximum size is 2MB.');
+        event.target.value = ''; // Clear the input
+        return;
+      }
+      // Check file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        this.toastService.error('Only JPG, JPEG, and PNG images are allowed.');
+        event.target.value = ''; // Clear the input
+        return;
+      }
       if (isEdit) {
         this.selectedEditImageFile = file;
       } else {
@@ -321,6 +428,19 @@ export class Books implements OnInit {
   onPdfFileSelected(event: any, isEdit: boolean = false) {
     const file = event.target.files[0];
     if (file) {
+      // Check file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        this.toastService.error('PDF file too large. Maximum size is 5MB.');
+        event.target.value = ''; // Clear the input
+        return;
+      }
+      // Check file type
+      if (file.type !== 'application/pdf') {
+        this.toastService.error('Only PDF files are allowed.');
+        event.target.value = ''; // Clear the input
+        return;
+      }
       if (isEdit) {
         this.selectedEditPdfFile = file;
       } else {
@@ -492,8 +612,17 @@ export class Books implements OnInit {
             })
             .catch((err) => {
               console.error('Error uploading PDF:', err);
-              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload PDF';
-              this.toastService.warning(`Book created but PDF upload failed: ${errorMsg}. You can upload the PDF later.`);
+              let errorMsg = 'Failed to upload PDF';
+              if (err.error?.message) {
+                errorMsg = err.error.message;
+              } else if (err.error?.error) {
+                errorMsg = err.error.error;
+              } else if (typeof err.error === 'string') {
+                errorMsg = err.error;
+              } else if (err.message) {
+                errorMsg = err.message;
+              }
+              this.toastService.error(`PDF upload failed: ${errorMsg}`);
               // Still proceed to step 2
               this.showBookForm = false;
               this.showDetailsForm = true;
@@ -506,7 +635,15 @@ export class Books implements OnInit {
         }
       },
       error: (err) => {
-        this.toastService.error(err.error?.message || 'Failed to create book');
+        let errorMsg = 'Failed to create book';
+        if (err.error?.message) {
+          errorMsg = err.error.message;
+        } else if (typeof err.error === 'string') {
+          errorMsg = err.error;
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        this.toastService.error(errorMsg);
         console.error('Error creating book:', err);
       }
     });
@@ -567,8 +704,17 @@ export class Books implements OnInit {
               })
               .catch((err) => {
                 console.error('Error uploading image:', err);
-                const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload image';
-                this.toastService.warning(`Book details saved but cover image upload failed: ${errorMsg}`);
+                let errorMsg = 'Failed to upload image';
+                if (err.error?.message) {
+                  errorMsg = err.error.message;
+                } else if (err.error?.error) {
+                  errorMsg = err.error.error;
+                } else if (typeof err.error === 'string') {
+                  errorMsg = err.error;
+                } else if (err.message) {
+                  errorMsg = err.message;
+                }
+                this.toastService.error(`Cover image upload failed: ${errorMsg}`);
                 this.closeDetailsForm();
                 this.loadBooks();
               });
@@ -579,7 +725,15 @@ export class Books implements OnInit {
           }
         },
         error: (err) => {
-          this.toastService.error(err.error?.message || 'Failed to update book details');
+          let errorMsg = 'Failed to update book details';
+          if (err.error?.message) {
+            errorMsg = err.error.message;
+          } else if (typeof err.error === 'string') {
+            errorMsg = err.error;
+          } else if (err.message) {
+            errorMsg = err.message;
+          }
+          this.toastService.error(errorMsg);
           console.error('Error updating book details:', err);
         }
       });
@@ -594,7 +748,16 @@ export class Books implements OnInit {
         })
         .catch((err) => {
           console.error('Error uploading image:', err);
-          const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload image';
+          let errorMsg = 'Failed to upload image';
+          if (err.error?.message) {
+            errorMsg = err.error.message;
+          } else if (err.error?.error) {
+            errorMsg = err.error.error;
+          } else if (typeof err.error === 'string') {
+            errorMsg = err.error;
+          } else if (err.message) {
+            errorMsg = err.message;
+          }
           this.toastService.error(`Cover image upload failed: ${errorMsg}`);
           this.closeDetailsForm();
           this.loadBooks();
@@ -661,7 +824,16 @@ export class Books implements OnInit {
             })
             .catch((err) => {
               console.error('Error uploading image:', err);
-              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload image';
+              let errorMsg = 'Failed to upload image';
+              if (err.error?.message) {
+                errorMsg = err.error.message;
+              } else if (err.error?.error) {
+                errorMsg = err.error.error;
+              } else if (typeof err.error === 'string') {
+                errorMsg = err.error;
+              } else if (err.message) {
+                errorMsg = err.message;
+              }
               this.toastService.error(`Image upload failed: ${errorMsg}`);
             });
           uploadPromises.push(imageUpload);
@@ -676,7 +848,16 @@ export class Books implements OnInit {
             })
             .catch((err) => {
               console.error('Error uploading PDF:', err);
-              const errorMsg = err.error?.error || err.error?.message || err.message || 'Failed to upload PDF';
+              let errorMsg = 'Failed to upload PDF';
+              if (err.error?.message) {
+                errorMsg = err.error.message;
+              } else if (err.error?.error) {
+                errorMsg = err.error.error;
+              } else if (typeof err.error === 'string') {
+                errorMsg = err.error;
+              } else if (err.message) {
+                errorMsg = err.message;
+              }
               this.toastService.error(`PDF upload failed: ${errorMsg}`);
             });
           uploadPromises.push(pdfUpload);
@@ -690,25 +871,43 @@ export class Books implements OnInit {
         });
       },
       error: (err) => {
-        this.toastService.error(err.error?.message || 'Failed to update book');
+        let errorMsg = 'Failed to update book';
+        if (err.error?.message) {
+          errorMsg = err.error.message;
+        } else if (typeof err.error === 'string') {
+          errorMsg = err.error;
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        this.toastService.error(errorMsg);
         console.error('Error updating book:', err);
       }
     });
   }
 
   deleteBook(book: any) {
-    if (!confirm(`Are you sure you want to delete "${book.title}"?`)) {
-      return;
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Book',
+        message: `Are you sure you want to delete "${book.title}"?`,
+        confirmText: 'Delete',
+        cancelText: 'Cancel'
+      }
+    });
 
-    this.bookService.deleteBook(book._id || book.id).subscribe({
-      next: (response) => {
-        this.toastService.success('Book deleted successfully!');
-        this.loadBooks();
-      },
-      error: (err) => {
-        this.toastService.error(err.error?.message || 'Failed to delete book');
-        console.error('Error deleting book:', err);
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.bookService.deleteBook(book._id || book.id).subscribe({
+          next: (response) => {
+            this.toastService.success('Book deleted successfully!');
+            this.loadBooks();
+          },
+          error: (err) => {
+            this.toastService.error(err.error?.message || 'Failed to delete book');
+            console.error('Error deleting book:', err);
+          }
+        });
       }
     });
   }

@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { AuthorService } from '../../core/services/author';
 import { BookService } from '../../core/services/book';
 import { CategoryService } from '../../core/services/category';
 import { AuthService } from '../../core/services/auth';
 import { UploadService } from '../../core/services/upload.service';
 import { ToastService } from '../../core/services/toast.service';
-import { firstValueFrom } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { firstValueFrom, Observable, map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-author-profile',
@@ -74,18 +78,122 @@ export class AuthorProfileComponent implements OnInit {
   totalBooks = 0;
   totalPages = 0;
 
+  // All authors for autocomplete
+  allAuthors: any[] = [];
+
+  // Author autocomplete for create form
+  authorSearchCtrl = new FormControl('');
+  filteredAuthors$!: Observable<any[]>;
+  selectedAuthorsForCreate: any[] = [];
+  @ViewChild('authorInput') authorInput!: ElementRef<HTMLInputElement>;
+
+  // Author autocomplete for edit form
+  editAuthorSearchCtrl = new FormControl('');
+  filteredAuthorsForEdit$!: Observable<any[]>;
+  selectedAuthorsForEdit: any[] = [];
+  @ViewChild('editAuthorInput') editAuthorInput!: ElementRef<HTMLInputElement>;
+
   constructor(
     private authorService: AuthorService,
     private bookService: BookService,
     private categoryService: CategoryService,
     private authService: AuthService,
     private uploadService: UploadService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
     this.loadAuthorProfile();
     this.loadCategories();
+    this.loadAllAuthors();
+    this.initAuthorAutocomplete();
+  }
+
+  loadAllAuthors() {
+    this.authorService.getAuthors().subscribe({
+      next: (response: any) => {
+        if (Array.isArray(response)) {
+          this.allAuthors = response;
+        } else if (response.items) {
+          this.allAuthors = response.items;
+        } else {
+          this.allAuthors = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error loading authors:', err);
+      }
+    });
+  }
+
+  initAuthorAutocomplete() {
+    // For create form
+    this.filteredAuthors$ = this.authorSearchCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterAuthors(value || '', this.selectedAuthorsForCreate))
+    );
+
+    // For edit form
+    this.filteredAuthorsForEdit$ = this.editAuthorSearchCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterAuthors(value || '', this.selectedAuthorsForEdit))
+    );
+  }
+
+  filterAuthors(searchTerm: string, excludeList: any[]): any[] {
+    const filterValue = typeof searchTerm === 'string' ? searchTerm.toLowerCase() : '';
+    const excludeIds = excludeList.map(a => a._id || a.id);
+    return this.allAuthors.filter(author => 
+      (author.name?.toLowerCase().includes(filterValue)) &&
+      !excludeIds.includes(author._id || author.id)
+    );
+  }
+
+  displayAuthorName(author: any): string {
+    return author ? author.name : '';
+  }
+
+  // Author autocomplete methods for create form
+  onAuthorSelected(event: MatAutocompleteSelectedEvent): void {
+    const author = event.option.value;
+    if (!this.selectedAuthorsForCreate.find(a => (a._id || a.id) === (author._id || author.id))) {
+      this.selectedAuthorsForCreate.push(author);
+      this.requiredForm.authors = this.selectedAuthorsForCreate.map(a => a._id || a.id);
+    }
+    this.authorSearchCtrl.setValue('');
+    if (this.authorInput) {
+      this.authorInput.nativeElement.value = '';
+    }
+  }
+
+  removeAuthorFromCreate(author: any): void {
+    const index = this.selectedAuthorsForCreate.findIndex(a => (a._id || a.id) === (author._id || author.id));
+    if (index >= 0) {
+      this.selectedAuthorsForCreate.splice(index, 1);
+      this.requiredForm.authors = this.selectedAuthorsForCreate.map(a => a._id || a.id);
+    }
+  }
+
+  // Author autocomplete methods for edit form
+  onEditAuthorSelected(event: MatAutocompleteSelectedEvent): void {
+    const author = event.option.value;
+    if (!this.selectedAuthorsForEdit.find(a => (a._id || a.id) === (author._id || author.id))) {
+      this.selectedAuthorsForEdit.push(author);
+      this.bookForm.authors = this.selectedAuthorsForEdit.map(a => a._id || a.id);
+    }
+    this.editAuthorSearchCtrl.setValue('');
+    if (this.editAuthorInput) {
+      this.editAuthorInput.nativeElement.value = '';
+    }
+  }
+
+  removeAuthorFromEdit(author: any): void {
+    const index = this.selectedAuthorsForEdit.findIndex(a => (a._id || a.id) === (author._id || author.id));
+    if (index >= 0) {
+      this.selectedAuthorsForEdit.splice(index, 1);
+      this.bookForm.authors = this.selectedAuthorsForEdit.map(a => a._id || a.id);
+    }
   }
 
   loadAuthorProfile() {
@@ -306,6 +414,9 @@ export class AuthorProfileComponent implements OnInit {
       stock: 0,
       authors: [authorId] // Pre-fill with current author ID
     };
+    // Initialize selected authors for autocomplete with current author pre-selected
+    this.selectedAuthorsForCreate = [this.author];
+    this.authorSearchCtrl.setValue('');
     console.log('Required form authors:', this.requiredForm.authors);
     this.detailsForm = {
       description: '',
@@ -343,6 +454,10 @@ export class AuthorProfileComponent implements OnInit {
       image: book.image || { url: '' },
       pdfUrl: book.pdfUrl || ''
     };
+    // Initialize selected authors for edit autocomplete
+    this.selectedAuthorsForEdit = book.authors ? 
+      (Array.isArray(book.authors) ? book.authors.filter((a: any) => typeof a === 'object') : []) : [];
+    this.editAuthorSearchCtrl.setValue('');
     this.selectedEditImageFile = null;
     this.selectedEditPdfFile = null;
     this.showBookForm = true;
@@ -715,18 +830,28 @@ export class AuthorProfileComponent implements OnInit {
   }
 
   deleteBook(book: any) {
-    if (!confirm(`Are you sure you want to delete "${book.title}"? This action cannot be undone.`)) {
-      return;
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Book',
+        message: `Are you sure you want to delete "${book.title}"? This action cannot be undone.`,
+        confirmText: 'Delete',
+        cancelText: 'Cancel'
+      }
+    });
 
-    this.bookService.deleteBook(book._id).subscribe({
-      next: (response) => {
-        this.toastService.success('Book deleted successfully!');
-        this.loadMyBooks();
-      },
-      error: (err) => {
-        this.toastService.error(err.error?.message || 'Failed to delete book');
-        console.error('Error deleting book:', err);
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.bookService.deleteBook(book._id).subscribe({
+          next: (response) => {
+            this.toastService.success('Book deleted successfully!');
+            this.loadMyBooks();
+          },
+          error: (err) => {
+            this.toastService.error(err.error?.message || 'Failed to delete book');
+            console.error('Error deleting book:', err);
+          }
+        });
       }
     });
   }
