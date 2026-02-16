@@ -65,3 +65,26 @@ a,.btn-link{color:var(--brand);}
   border-radius: 8px !important;
 }
 
+/* Category Card Vertical Centering - Global Override */
+.category-card.mat-mdc-card {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.category-card .mat-mdc-card-content {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.category-card .mdc-card {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
