@@ -6,13 +6,8 @@
     <h2 class="text-success mb-2">Thank you!</h2>
     <p>Your payment was successful and your order is being processed.</p>
 
-    <p class="text-muted">
-      Payment session ID:
-      <span class="fw-semibold">{{ sessionId || 'N/A' }}</span>
-    </p>
-
     <p class="text-muted mb-4">
-      You can go back to the homepage anytime.
+      Redirecting to homepage in <span class="fw-bold text-danger">{{ seconds }}</span> seconds...
     </p>
 
     <button class="btn btn-outline-dark mb-4" (click)="goNow()">

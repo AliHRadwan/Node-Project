@@ -32,18 +32,15 @@ interface LastOrder {
   templateUrl: './payment-success.html',
   styleUrl: './payment-success.css',
 })
-export class PaymentSuccess implements OnInit {
-  // seconds = 5;
-  sessionId?: string | null;
-  // private timerId: any;
+export class PaymentSuccess implements OnInit, OnDestroy {
+  seconds = 8;
+  private timerId: any;
   order: LastOrder | null = null;
 
   constructor(private route: ActivatedRoute,
               private router: Router) {}
 
   ngOnInit(): void {
-    this.sessionId = this.route.snapshot.queryParamMap.get('session_id');
-
     try {
       const saved = localStorage.getItem('lastOrder');
       if (saved) {
@@ -54,24 +51,26 @@ export class PaymentSuccess implements OnInit {
       this.order = null;
     }
 
-
-
-    // this.timerId = setInterval(() => {
-    //   this.seconds--;
-    //   if (this.seconds <= 0) {
-    //     clearInterval(this.timerId);
-    //     this.router.navigateByUrl('/');
-    //   }
-    // }, 1000);
+    // Auto-redirect to home after 8 seconds
+    this.timerId = setInterval(() => {
+      this.seconds--;
+      if (this.seconds <= 0) {
+        clearInterval(this.timerId);
+        this.router.navigateByUrl('/');
+      }
+    }, 1000);
   }
 
-  // ngOnDestroy(): void {
-  //   if (this.timerId) {
-  //     clearInterval(this.timerId);
-  //   }
-  // }
+  ngOnDestroy(): void {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
+  }
 
   goNow() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
     this.router.navigateByUrl('/');
   }
 }

@@ -10,7 +10,7 @@ const routes: Routes = [
     loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)  // Lazy load HomeModule
   },
   {
-    path: 'book',
+    path: 'books',
     loadChildren: () => import('./features/book-detail/book-detail.module').then(m => m.BookDetailModule)
   },
   {
