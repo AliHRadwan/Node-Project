@@ -182,9 +182,38 @@
           </div>
 
           <div class="mb-3">
-            <div class="alert alert-success">
-              <i class="bi bi-person-check"></i> Author: <strong>{{ author?.name }}</strong> (pre-selected)
+            <label class="form-label">Author(s) <span class="text-danger">*</span></label>
+            <div class="author-chips-container">
+              <mat-chip-set>
+                <mat-chip *ngFor="let auth of selectedAuthorsForCreate" 
+                          (removed)="removeAuthorFromCreate(auth)"
+                          class="author-chip">
+                  {{ auth.name }}
+                  <button matChipRemove *ngIf="(auth._id || auth.id) !== (author._id || author.id)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip>
+              </mat-chip-set>
             </div>
+            <mat-form-field class="w-100" appearance="outline">
+              <mat-label>Add co-author...</mat-label>
+              <input matInput
+                     #authorInput
+                     [formControl]="authorSearchCtrl"
+                     [matAutocomplete]="autoAuthor"
+                     placeholder="Type to search authors">
+              <mat-autocomplete #autoAuthor="matAutocomplete" 
+                                (optionSelected)="onAuthorSelected($event)"
+                                [displayWith]="displayAuthorName">
+                <mat-option *ngFor="let auth of filteredAuthors$ | async" [value]="auth">
+                  {{ auth.name }}
+                </mat-option>
+                <mat-option *ngIf="(filteredAuthors$ | async)?.length === 0" disabled>
+                  No authors found
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <small class="text-muted"><i class="bi bi-info-circle"></i> You are automatically added as author. You can add co-authors above.</small>
           </div>
         </form>
       </div>
@@ -321,6 +350,41 @@
             <label for="description" class="form-label">Description</label>
             <textarea class="form-control" id="description" rows="4" 
                       [(ngModel)]="bookForm.description" name="description"></textarea>
+          </div>
+
+          <!-- Authors -->
+          <div class="mb-3">
+            <label class="form-label">Author(s)</label>
+            <div class="author-chips-container">
+              <mat-chip-set>
+                <mat-chip *ngFor="let auth of selectedAuthorsForEdit" 
+                          (removed)="removeAuthorFromEdit(auth)"
+                          class="author-chip">
+                  {{ auth.name }}
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+            <mat-form-field class="w-100" appearance="outline">
+              <mat-label>Add author...</mat-label>
+              <input matInput
+                     #editAuthorInput
+                     [formControl]="editAuthorSearchCtrl"
+                     [matAutocomplete]="autoEditAuthor"
+                     placeholder="Type to search authors">
+              <mat-autocomplete #autoEditAuthor="matAutocomplete" 
+                                (optionSelected)="onEditAuthorSelected($event)"
+                                [displayWith]="displayAuthorName">
+                <mat-option *ngFor="let auth of filteredAuthorsForEdit$ | async" [value]="auth">
+                  {{ auth.name }}
+                </mat-option>
+                <mat-option *ngIf="(filteredAuthorsForEdit$ | async)?.length === 0" disabled>
+                  No authors found
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
           </div>
 
           <!-- Price and Stock -->

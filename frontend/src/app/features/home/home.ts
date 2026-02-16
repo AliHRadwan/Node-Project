@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   // Filters
   filters: BookFilters = {
     page: 1,
-    limit: 12,
+    limit: 8,
     sort: '-createdAt',
     isActive: true
   };
@@ -207,7 +207,13 @@ export class HomeComponent implements OnInit {
   onPageChange(page: number) {
     this.currentPage = page;
     this.loadBooks();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to the all-books section
+    setTimeout(() => {
+      const element = document.getElementById('all-books');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   }
 
   clearFilters() {

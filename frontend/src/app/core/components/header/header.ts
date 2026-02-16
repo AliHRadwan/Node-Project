@@ -17,6 +17,10 @@ export class Header implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   isAdmin: boolean = false;
   private socket: WebSocket | null = null;
+  
+  // WebSocket notification
+  wsNotification: { message: string; bookId: string } | null = null;
+  private wsNotificationTimeout: any = null;
 
   constructor(
     public cartService: CartService,
@@ -143,21 +147,37 @@ export class Header implements OnInit, OnDestroy {
     const authorName = book.author?.name || book.author || book.authors?.[0]?.name || 'Unknown Author';
     const bookId = book._id || book.id;
 
-    const message = `New Book Published: "${bookTitle}" by ${authorName}`;
+    const message = `New Book: "${bookTitle}" by ${authorName}`;
 
-    const snackBarRef = this.snackBar.open(message, 'View', {
-      duration: 5000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-      panelClass: ['new-book-notification']
-    });
+    // Clear any existing notification timeout
+    if (this.wsNotificationTimeout) {
+      clearTimeout(this.wsNotificationTimeout);
+    }
 
-    // Navigate to book detail page when "View" is clicked
-    snackBarRef.onAction().subscribe(() => {
-      if (bookId) {
-        this.router.navigate(['/book', bookId]);
-      }
-    });
+    // Show custom notification
+    this.wsNotification = { message, bookId };
+
+    // Auto-hide after 6 seconds
+    this.wsNotificationTimeout = setTimeout(() => {
+      this.wsNotification = null;
+    }, 6000);
+  }
+
+  onWsNotificationClick(): void {
+    if (this.wsNotification?.bookId) {
+      this.router.navigate(['/books', this.wsNotification.bookId]);
+      this.closeWsNotification();
+    }
+  }
+
+  closeWsNotification(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.wsNotification = null;
+    if (this.wsNotificationTimeout) {
+      clearTimeout(this.wsNotificationTimeout);
+    }
   }
 
   updateAuthStatus(): void {

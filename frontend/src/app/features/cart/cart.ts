@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { CartService } from '../../core/services/cart.service';
 import { Cart, CartItem, Book } from '../../core/models/cart.model';
 import { CartOrders, PlaceOrderBody } from './cart-orders';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-cart',
