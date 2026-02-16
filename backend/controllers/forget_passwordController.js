@@ -2,6 +2,11 @@ import crypto from "crypto";
 import Token from "../models/Token.js";
 import User from "../models/User.js";
 import sendEmail from "../services/sendemail.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const frontUrl = process.env.FRONTEND_URL || "http://localhost";
 
 const pass_forgot = async (req, res) => {
   try {
@@ -36,7 +41,7 @@ export async function newPasswordResetToken(user) {
       used: false,
     });
 
-    const resetLink = `http://18.184.165.152/password-management/reset-password/${reset_token}`;
+    const resetLink = `${frontUrl}/password-management/reset-password/${reset_token}`;
     //const resetLink = `http://localhost:4200/password-management/reset-password/${reset_token}`;
 
     const fullName = `${user.FirstName} ${user.LastName}`;

@@ -1,12 +1,62 @@
+/* Orders page container */
+:host {
+  display: block;
+  padding: 1.5rem;
+}
+
 .tall-modal { max-width: 520px; }        
 .tall-modal .modal-content { min-height: 80vh; } 
-
 
 @media (min-width: 992px){
   .tall-modal { max-width: 480px; }
 }
 
-
 .modal-backdrop { display: none !important; }
 
+/* Pagination styles */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+  border-top: 1px solid #e9ecef;
+}
+
+.pagination-info {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.pagination {
+  margin: 0;
+}
+
+.pagination .page-link {
+  border-radius: 8px;
+  margin: 0 2px;
+  padding: 0.5rem 0.85rem;
+  color: #dc3545;
+  border: 1px solid #dee2e6;
+  transition: all 0.2s ease;
+}
+
+.pagination .page-link:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #ffffff;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #adb5bd;
+  background-color: #f8f9fa;
+}
 

@@ -4,6 +4,11 @@ import Joi from "joi";
 import User from "../models/User.js";
 import Token from "../models/Token.js";
 import sendEmail from "../services/sendemail.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const frontUrl = process.env.FRONTEND_URL || "http://localhost";
 
 const resetpassSchema = Joi.object({
   password: Joi.string()
@@ -55,7 +60,7 @@ const pass_reset = async (req, res) => {
         <p>Hello ${fullName || "User"},</p>
         <p>Your password has been <strong>reset successfully</strong>! 🎉</p>
         <p>You can now log in with your new password:</p>
-        <a href="http://18.184.165.152/login"style="background-color: #f93c65ff; color: white; padding: 10px 16px;text-decoration: none; border-radius: 5px; font-weight: bold;">
+        <a href="${frontUrl}/login"style="background-color: #f93c65ff; color: white; padding: 10px 16px;text-decoration: none; border-radius: 5px; font-weight: bold;">
         Log in Now
         </a>
         <br /><br />

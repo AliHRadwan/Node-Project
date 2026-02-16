@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API documentation for the online e-book store. Manages users, authentication, books, reviews, cart, orders, and payments.
 servers:
-  - url: http://18.184.165.152:3000
+  - url: https://bookly.duckdns.org
     description: API Server
 tags:
   - name: Auth

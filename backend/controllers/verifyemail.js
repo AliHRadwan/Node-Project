@@ -1,8 +1,13 @@
 import crypto from "crypto";
 import Token from "../models/Token.js";
 import User from "../models/User.js";
+import dotenv from "dotenv";
 
-const FRONTEND_LOGIN_URL = "http://18.184.165.152/login";
+dotenv.config();
+
+const frontUrl = process.env.FRONTEND_URL || "http://localhost";
+
+const FRONTEND_LOGIN_URL = `${frontUrl}/login`;
 
 
 const generateHtmlResponse = (title, message, linkHref = null, linkText = null, isError = false) => {

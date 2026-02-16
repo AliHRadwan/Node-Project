@@ -2,6 +2,11 @@ import bcrypt from "bcrypt";
 import Joi from "joi";
 import User from "../models/User.js";
 import sendEmail from "../services/sendemail.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const frontUrl = process.env.FRONTEND_URL || "http://localhost";
 
 const newpasswordSchema = Joi.object({
   new_password: Joi.string()
@@ -60,7 +65,7 @@ const password_change = async (req, res) => {
       </p>
 
       <div style="text-align: center; margin: 25px 0;">
-        <a href="http://18.184.165.152/login" target="_blank" 
+        <a href="${frontUrl}/login" target="_blank" 
           style="background-color: #28a745; color: white; text-decoration: none; padding: 12px 25px; border-radius: 5px; display: inline-block; font-weight: bold;">
           Go to Login
         </a>

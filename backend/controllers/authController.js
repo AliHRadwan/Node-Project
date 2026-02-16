@@ -3,7 +3,11 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import Session from "../models/Session.js";
 import sendEmail from "../services/sendemail.js";
+import dotenv from "dotenv";
 
+dotenv.config();
+
+const frontUrl = process.env.FRONTEND_URL || "http://localhost";
 
 // Login function
 const login = async (req, res) => {
@@ -122,7 +126,7 @@ const sendLoginAlertEmail = async (user, req) => {
             <p style="margin:0 0 18px; color:#333;">If this wasn't you, please secure your account immediately.</p>
 
             <p style="margin:0 0 24px;">
-              <a href="http://18.184.165.152/login" style="display:inline-block; padding:10px 16px; background:#f93c65ff; color:#eef2f6; text-decoration:none; border-radius:6px; font-weight:600;">Secure my account</a>
+              <a href="${frontUrl}/login" style="display:inline-block; padding:10px 16px; background:#f93c65ff; color:#eef2f6; text-decoration:none; border-radius:6px; font-weight:600;">Secure my account</a>
             </p>
           </div>
           <div style="padding:14px 24px; background:#fbfdff; border-top:1px solid #eef2f6; color:#6b7280; font-size:13px;">

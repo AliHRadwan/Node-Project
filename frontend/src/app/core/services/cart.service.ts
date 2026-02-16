@@ -8,7 +8,7 @@ import {
   AddToCartRequest, 
   UpdateCartRequest 
 } from '../models/cart.model';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 import { AuthService } from './auth';
 
 @Injectable({
