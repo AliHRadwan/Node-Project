@@ -263,7 +263,7 @@ export class HomeComponent implements OnInit {
   }
 
   navigateToBook(bookId: string) {
-    this.router.navigate(['/book', bookId]);
+    this.router.navigate(['/books', bookId]);
   }
 
   addToCart(book: any, event?: Event) {
