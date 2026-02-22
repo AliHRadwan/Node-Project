@@ -117,6 +117,8 @@ export class AuthService {
   // Logout
   logout(): void {
     this.removeToken();
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
   }
 }
 

@@ -6,7 +6,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 :root{
-  --bg-grad-1:#fdf2f6; --bg-grad-2:#eef2ff; --brand:#ff5a7a; --ink:#2a2a2a;
+  --bg-grad-1:#fdf2f6; --bg-grad-2:#eef2ff; --brand:#dc3545; --ink:#2a2a2a;
 }
 .body-grad{background:linear-gradient(135deg,var(--bg-grad-1) 0%,var(--bg-grad-2) 100%);}
 .shadow-soft{box-shadow:0 8px 24px rgba(0,0,0,.08);}
@@ -31,56 +31,26 @@ a,.btn-link{color:var(--brand);}
 .tall-modal .modal-content { min-height: 80vh; }
 .table-responsive { overflow: visible; }  
 
-/* Toast Notification Styles */
-.toast-success {
-  --mdc-snackbar-container-color: #f0fdf4 !important;
-  --mdc-snackbar-supporting-text-color: #166534 !important;
-  --mat-snack-bar-button-color: #16a34a !important;
-}
-
-.toast-error {
-  --mdc-snackbar-container-color: #fef2f2 !important;
-  --mdc-snackbar-supporting-text-color: #991b1b !important;
-  --mat-snack-bar-button-color: #dc2626 !important;
-}
-
-.toast-warning {
-  --mdc-snackbar-container-color: #fffbeb !important;
-  --mdc-snackbar-supporting-text-color: #92400e !important;
-  --mat-snack-bar-button-color: #d97706 !important;
-}
-
+/* Toast Notification Styles — unified brand palette */
+.toast-success,
+.toast-error,
+.toast-warning,
 .toast-info {
-  --mdc-snackbar-container-color: #eff6ff !important;
-  --mdc-snackbar-supporting-text-color: #1e40af !important;
-  --mat-snack-bar-button-color: #2563eb !important;
+  --mdc-snackbar-container-color: #fdf2f4 !important;
+  --mdc-snackbar-supporting-text-color: #2c3e50 !important;
+  --mat-snack-bar-button-color: #dc3545 !important;
 }
 
 .mat-mdc-snack-bar-container {
   border-radius: 12px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 8px 24px rgba(220, 53, 69, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06) !important;
   margin-bottom: 16px !important;
 }
 
 .mat-mdc-snack-bar-container .mdc-snackbar__surface {
   border-radius: 12px !important;
   padding: 4px 8px !important;
-}
-
-.toast-success .mdc-snackbar__surface {
-  border-left: 4px solid #22c55e !important;
-}
-
-.toast-error .mdc-snackbar__surface {
-  border-left: 4px solid #ef4444 !important;
-}
-
-.toast-warning .mdc-snackbar__surface {
-  border-left: 4px solid #f59e0b !important;
-}
-
-.toast-info .mdc-snackbar__surface {
-  border-left: 4px solid #3b82f6 !important;
+  border-left: 4px solid #dc3545 !important;
 }
 
 .mat-mdc-snack-bar-container .mdc-snackbar__label {
