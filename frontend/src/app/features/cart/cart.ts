@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../core/services/toast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -38,7 +38,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   constructor(
     private cartService: CartService,
-    private snackBar: MatSnackBar,
+    private toastService: ToastService,
     private router: Router,
     private cartOrders: CartOrders,
     private dialog: MatDialog
@@ -67,7 +67,7 @@ export class CartComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error loading cart:', error);
-          this.showMessage(error.error?.message || 'Error loading cart');
+          this.toastService.error(error.error?.message || 'Error loading cart');
           this.loading = false;
           this.isEmpty = true;
         }
@@ -106,7 +106,7 @@ export class CartComponent implements OnInit, OnDestroy {
     const maxStock = item.stockAvailable || book?.stock || 0;
     
     if (item.qty >= maxStock) {
-      this.showMessage('Maximum stock reached!');
+      this.toastService.warning('Maximum stock reached!');
       return;
     }
 
@@ -135,7 +135,7 @@ export class CartComponent implements OnInit, OnDestroy {
     }
 
     if (newQty > maxStock) {
-      this.showMessage(`Only ${maxStock} items available`);
+      this.toastService.warning(`Only ${maxStock} items available`);
       event.target.value = maxStock;
       this.updateQuantity(item, maxStock);
       return;
@@ -153,11 +153,11 @@ export class CartComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.cart = response.data;
-          this.showMessage('Cart updated');
+          this.toastService.success('Cart updated');
         },
         error: (error) => {
           console.error('Error updating cart:', error);
-          this.showMessage(error.error?.message || 'Error updating cart');
+          this.toastService.error(error.error?.message || 'Error updating cart');
           this.loadCart(); // Reload to get correct data
         }
       });
@@ -188,11 +188,11 @@ export class CartComponent implements OnInit, OnDestroy {
             next: (response) => {
               this.cart = response.data;
               this.isEmpty = this.cart.items.length === 0;
-              this.showMessage('Item removed from cart');
+              this.toastService.success('Item removed from cart');
             },
             error: (error) => {
               console.error('Error removing item:', error);
-              this.showMessage(error.error?.message || 'Error removing item');
+              this.toastService.error(error.error?.message || 'Error removing item');
             }
           });
       }
@@ -219,11 +219,11 @@ export class CartComponent implements OnInit, OnDestroy {
             next: (response) => {
               this.cart = response.data;
               this.isEmpty = true;
-              this.showMessage('Cart cleared');
+              this.toastService.success('Cart cleared');
             },
             error: (error) => {
               console.error('Error clearing cart:', error);
-              this.showMessage(error.error?.message || 'Error clearing cart');
+              this.toastService.error(error.error?.message || 'Error clearing cart');
             }
           });
       }
@@ -233,14 +233,14 @@ export class CartComponent implements OnInit, OnDestroy {
   // الـ checkout
   checkout(): void {
     if (this.isEmpty) {
-      this.showMessage('Cart is empty!');
+      this.toastService.warning('Cart is empty!');
       return;
     }
 
     const outOfStockItems = this.cartItems.filter(item => !item.isInStock);
     
     if (outOfStockItems.length > 0) {
-      this.showMessage('Some items are out of stock. Please remove them before checkout.');
+      this.toastService.warning('Some items are out of stock. Please remove them before checkout.');
       return;
     }
 
@@ -253,14 +253,6 @@ export class CartComponent implements OnInit, OnDestroy {
     return item.priceAtAdd * item.qty;
   }
 
-  // Show snackbar message
-  private showMessage(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'top'
-    });
-  }
 //=====================payment & orders ==============================================
   // showMessageIn(type: 'success'|'danger'|'info', text: string) {
   //   this.flashType = type;

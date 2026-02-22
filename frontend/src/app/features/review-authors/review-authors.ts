@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ToastService } from '../../core/services/toast.service';
 import { AuthorService, AuthorFilters } from '../../core/services/author';
 import { AuthService } from '../../core/services/auth';
 import { CoreModule } from '../../core/core-module';
@@ -51,7 +52,7 @@ export class ReviewAuthorsComponent implements OnInit {
     private authorService: AuthorService,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -165,22 +166,12 @@ export class ReviewAuthorsComponent implements OnInit {
       this.approveData.name || this.approveData.bio ? this.approveData : undefined
     ).subscribe({
       next: (response) => {
-        this.snackBar.open('Author approved successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['success-snackbar']
-        });
+        this.toastService.success('Author approved successfully!');
         this.closeModals();
         this.loadAuthors();
       },
       error: (err) => {
-        this.snackBar.open(err.error?.message || 'Failed to approve author', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['error-snackbar']
-        });
+        this.toastService.error(err.error?.message || 'Failed to approve author', 'Close', 5000);
         console.error('Error approving author:', err);
       }
     });
@@ -194,22 +185,12 @@ export class ReviewAuthorsComponent implements OnInit {
       this.rejectReason
     ).subscribe({
       next: (response) => {
-        this.snackBar.open('Author rejected successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['success-snackbar']
-        });
+        this.toastService.success('Author rejected successfully!');
         this.closeModals();
         this.loadAuthors();
       },
       error: (err) => {
-        this.snackBar.open(err.error?.message || 'Failed to reject author', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['error-snackbar']
-        });
+        this.toastService.error(err.error?.message || 'Failed to reject author', 'Close', 5000);
         console.error('Error rejecting author:', err);
       }
     });
@@ -219,12 +200,7 @@ export class ReviewAuthorsComponent implements OnInit {
     if (!this.selectedAuthor) return;
 
     if (this.selectedAuthor.status !== 'approved') {
-      this.snackBar.open('Only approved authors can be revoked', 'Close', {
-        duration: 4000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-        panelClass: ['warning-snackbar']
-      });
+      this.toastService.warning('Only approved authors can be revoked', 'Close', 4000);
       return;
     }
 
@@ -233,22 +209,12 @@ export class ReviewAuthorsComponent implements OnInit {
       this.revokeReason || 'Revoked by admin'
     ).subscribe({
       next: (response) => {
-        this.snackBar.open('Author privileges revoked successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['success-snackbar']
-        });
+        this.toastService.success('Author privileges revoked successfully!');
         this.closeModals();
         this.loadAuthors();
       },
       error: (err) => {
-        this.snackBar.open(err.error?.message || 'Failed to revoke author', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['error-snackbar']
-        });
+        this.toastService.error(err.error?.message || 'Failed to revoke author', 'Close', 5000);
         console.error('Error revoking author:', err);
       }
     });

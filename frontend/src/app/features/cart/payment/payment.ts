@@ -1,13 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Cart, CartItem } from '../../../core/models/cart.model';
 import { Subscription } from 'rxjs';
 import { CartOrders, PlaceOrderBody } from '../cart-orders';
 import { CartService } from '../../../core/services/cart.service';
+import { Profileservice } from '../../account/ProfileService/profileservice';
+import { ToastService } from '../../../core/services/toast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
-
-declare const bootstrap: any; 
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-payment',
@@ -16,42 +18,51 @@ declare const bootstrap: any;
   styleUrl: './payment.css',
 })
 export class Payment implements OnInit, OnDestroy {
- 
+
   cart: Cart | null = null;
   loading = false;
 
   lastOrder: any = null;
-
-  shippingName = '';
-  shippingCity = '';
-  shippingCountry = '';
-  shippingPhone = '';
-  shippingLine1 = '';
-  shippingLine2 = '';
-  shippingPostalCode = '';
-
   couponCode = '';
 
-  flashText: string | null = null;
-  flashType: 'success' | 'danger' | 'info' = 'info';
-  flashTimeout?: any;
-  checkoutLoading = false;
+  addresses: any[] = [];
+  selectedAddressIndex: number = -1;
+  showNewAddressForm = false;
+  addressError = '';
+  newAddressForm: FormGroup;
+  isAddingAddress = false;
 
+  checkoutLoading = false;
   private sub?: Subscription;
 
   constructor(
     private cartService: CartService,
     private cartOrders: CartOrders,
-    private dialog: MatDialog
-  ) {}
+    private profileService: Profileservice,
+    private toastService: ToastService,
+    private dialog: MatDialog,
+    private fb: FormBuilder
+  ) {
+    this.newAddressForm = this.fb.group({
+      label: ['', Validators.required],
+      fullName: ['', Validators.required],
+      phone: ['', Validators.required],
+      line1: ['', Validators.required],
+      line2: [''],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      country: ['', Validators.required],
+      postalCode: ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     this.loadCart();
+    this.loadAddresses();
   }
 
   ngOnDestroy(): void {
     if (this.sub) this.sub.unsubscribe();
-    if (this.flashTimeout) clearTimeout(this.flashTimeout);
   }
 
   loadCart() {
@@ -64,7 +75,24 @@ export class Payment implements OnInit, OnDestroy {
       error: err => {
         console.error(err);
         this.loading = false;
-        this.showMessageIn('danger', err.error?.message || 'Failed to load cart');
+        this.toastService.error(err.error?.message || 'Failed to load cart');
+      }
+    });
+  }
+
+  loadAddresses() {
+    this.profileService.getProfile().subscribe({
+      next: (res) => {
+        this.addresses = res.user?.addresses || [];
+        const defaultIdx = this.addresses.findIndex((a: any) => a.isDefault);
+        if (defaultIdx !== -1) {
+          this.selectedAddressIndex = defaultIdx;
+        } else if (this.addresses.length > 0) {
+          this.selectedAddressIndex = 0;
+        }
+      },
+      error: () => {
+        this.addresses = [];
       }
     });
   }
@@ -81,46 +109,81 @@ export class Payment implements OnInit, OnDestroy {
     return this.cart?.totals.subTotal || 0;
   }
 
-  showMessageIn(type: 'success'|'danger'|'info', text: string) {
-    this.flashType = type;
-    this.flashText = text;
-
-    if (this.flashTimeout) {
-      clearTimeout(this.flashTimeout);
-    }
-    this.flashTimeout = setTimeout(() => {
-      this.flashText = null;
-    }, 3000);
+  selectAddress(index: number) {
+    this.selectedAddressIndex = index;
+    this.addressError = '';
   }
 
-  checkoutOfOrder() {
-    if (this.checkoutLoading || this.isEmpty) return;
-
-    this.checkoutLoading = true;
-    this.showMessageIn('info', 'Placing your order...');
-
-    const body: PlaceOrderBody = {};
-
-    const hasShipping =
-      this.shippingName.trim() ||
-      this.shippingCity.trim() ||
-      this.shippingCountry.trim() ||
-      this.shippingPhone.trim() ||
-      this.shippingLine1.trim() ||
-      this.shippingLine2.trim() ||
-      this.shippingPostalCode.trim();
-
-    if (hasShipping) {
-      body.shippingAddress = {
-        fullName: this.shippingName.trim() || undefined,
-        phone: this.shippingPhone.trim() || undefined,
-        city: this.shippingCity.trim() || undefined,
-        country: this.shippingCountry.trim() || undefined,
-        line1: this.shippingLine1.trim() || undefined,
-        line2: this.shippingLine2.trim() || undefined,
-        postalCode: this.shippingPostalCode.trim() || undefined,
-      } as any;
+  toggleNewAddressForm() {
+    this.showNewAddressForm = !this.showNewAddressForm;
+    if (!this.showNewAddressForm) {
+      this.newAddressForm.reset();
     }
+  }
+
+  addNewAddress() {
+    if (!this.newAddressForm.valid) {
+      this.newAddressForm.markAllAsTouched();
+      return;
+    }
+
+    this.isAddingAddress = true;
+    const addressData = this.newAddressForm.value;
+
+    this.profileService.addAddress(addressData).subscribe({
+      next: () => {
+        this.isAddingAddress = false;
+        this.showNewAddressForm = false;
+        this.newAddressForm.reset();
+        this.toastService.success('Address added successfully');
+        this.profileService.getProfile().subscribe({
+          next: (res) => {
+            this.addresses = res.user?.addresses || [];
+            this.selectedAddressIndex = this.addresses.length - 1;
+            this.addressError = '';
+          }
+        });
+      },
+      error: (err) => {
+        this.isAddingAddress = false;
+        this.toastService.error(err.error?.error || err.error?.message || 'Failed to add address');
+      }
+    });
+  }
+
+  openCheckoutModal() {
+    if (this.isEmpty) return;
+
+    this.addressError = '';
+    this.lastOrder = null;
+
+    const modalEl = document.getElementById('paymentConfirmModal');
+    if (!modalEl) return;
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+  }
+
+  confirmAndPay() {
+    if (this.selectedAddressIndex < 0 || !this.addresses[this.selectedAddressIndex]) {
+      this.addressError = 'Please select a shipping address or add a new one.';
+      return;
+    }
+
+    this.addressError = '';
+    this.checkoutLoading = true;
+
+    const addr = this.addresses[this.selectedAddressIndex];
+    const body: PlaceOrderBody = {
+      shippingAddress: {
+        fullName: addr.fullName,
+        phone: addr.phone,
+        city: addr.city,
+        country: addr.country,
+        line1: addr.line1,
+        line2: addr.line2 || undefined,
+        postalCode: addr.postalCode,
+      }
+    };
 
     if (this.couponCode.trim()) {
       body.payment = { couponCode: this.couponCode.trim() } as any;
@@ -128,57 +191,28 @@ export class Payment implements OnInit, OnDestroy {
 
     this.cartOrders.placeOrder(body).subscribe({
       next: (res: any) => {
-        this.checkoutLoading = false;
-
         this.lastOrder = res.order;
-        try {
-          localStorage.setItem('lastOrder', JSON.stringify(res.order));
-        } catch {}
+        try { localStorage.setItem('lastOrder', JSON.stringify(res.order)); } catch {}
 
-        this.showMessageIn('success', res.message || 'Order placed successfully.');
-
-        this.openConfirmModal();
+        this.cartOrders.createCheckout(res.order._id).subscribe({
+          next: (chk: any) => {
+            this.checkoutLoading = false;
+            const url = chk.url || chk.checkoutUrl || '';
+            if (url) {
+              window.location.href = url;
+            } else {
+              this.toastService.error('Payment URL not found from server.');
+            }
+          },
+          error: (err) => {
+            this.checkoutLoading = false;
+            this.toastService.error(err.error?.message || 'Failed to start payment session.');
+          }
+        });
       },
       error: (err) => {
         this.checkoutLoading = false;
-        const msg = err.error?.message || 'Failed to place order.';
-        this.showMessageIn('danger', msg);
-      }
-    });
-  }
-
-  openConfirmModal() {
-    const modalEl = document.getElementById('paymentConfirmModal');
-    if (!modalEl) return;
-
-    const modal = new bootstrap.Modal(modalEl);
-    modal.show();
-  }
-
-  startStripeCheckout() {
-    const id = this.lastOrder?._id;
-    if (!id) {
-      this.showMessageIn('danger', 'No order found to pay.');
-      return;
-    }
-
-    this.checkoutLoading = true;
-    this.showMessageIn('info', 'Redirecting to payment...');
-
-    this.cartOrders.createCheckout(id).subscribe({
-      next: (chk: any) => {
-        this.checkoutLoading = false;
-        const url = chk.url || chk.checkoutUrl || '';
-        if (url) {
-          window.location.href = url;
-        } else {
-          this.showMessageIn('danger', 'Payment URL not found from server.');
-        }
-      },
-      error: (err) => {
-        this.checkoutLoading = false;
-        const msg = err.error?.message || 'Failed to start payment session.';
-        this.showMessageIn('danger', msg);
+        this.toastService.error(err.error?.message || 'Failed to place order.');
       }
     });
   }
@@ -199,39 +233,27 @@ export class Payment implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
         this.checkoutLoading = true;
-        this.showMessageIn('info', 'Cancelling your order...');
 
-        const orderId = this.lastOrder._id;
-
-        this.cartOrders.cancelOrder(orderId).subscribe({
-          next: (res: any) => {
+        this.cartOrders.cancelOrder(this.lastOrder._id).subscribe({
+          next: () => {
             this.checkoutLoading = false;
-
-            try {
-              localStorage.removeItem('lastOrder');
-            } catch {}
-
+            try { localStorage.removeItem('lastOrder'); } catch {}
             this.lastOrder = null;
-
-            this.showMessageIn('success', res.message || 'Order cancelled successfully.');
+            this.toastService.success('Order cancelled successfully.');
 
             const modalEl = document.getElementById('paymentConfirmModal');
             if (modalEl) {
               const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
               modal.hide();
             }
-
             this.loadCart();
           },
           error: (err) => {
             this.checkoutLoading = false;
-            const msg = err.error?.message || 'Failed to cancel order.';
-            this.showMessageIn('danger', msg);
+            this.toastService.error(err.error?.message || 'Failed to cancel order.');
           }
         });
       }
     });
   }
-
-
 }

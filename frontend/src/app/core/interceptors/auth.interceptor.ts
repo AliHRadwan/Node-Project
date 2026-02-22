@@ -19,7 +19,14 @@ export class AuthInterceptor implements HttpInterceptor {
     private authService: AuthService
   ) {}
 
+  private readonly publicPaths = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password', '/auth/verify'];
+
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    const isPublic = this.publicPaths.some(path => request.url.includes(path));
+    if (isPublic) {
+      return next.handle(request);
+    }
+
     // Check for token in localStorage (support both 'authToken' and 'auth_token' keys)
     const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
     

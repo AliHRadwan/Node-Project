@@ -11,7 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { CartComponent } from './cart';
 import { CoreModule } from "../../core/core-module";
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaymentSuccess } from './payment-success/payment-success';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -42,6 +42,7 @@ const routes: Routes = [
     MatDialogModule,
     CoreModule,
     FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule, 
     MatInputModule, 
     SharedModule

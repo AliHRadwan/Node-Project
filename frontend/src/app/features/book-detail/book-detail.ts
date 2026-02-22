@@ -5,7 +5,7 @@ import { BookService } from '../../core/services/book';
 import { ReviewService, ReviewsResponse } from '../../core/services/review-service';
 import { AuthService } from '../../core/services/auth';
 import { Profileservice } from '../account/ProfileService/profileservice';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-book-detail',
@@ -41,7 +41,7 @@ export class BookDetailComponent implements OnInit {
     private reviewService: ReviewService,
     private authService: AuthService,
     private profileService: Profileservice,
-    private snackBar: MatSnackBar,
+    private toastService: ToastService,
     private fb: FormBuilder
   ) {
     this.reviewForm = this.fb.group({
@@ -224,31 +224,20 @@ export class BookDetailComponent implements OnInit {
   // Show review form
   showReviewFormDialog(): void {
     if (!this.authService.isAuthenticated()) {
-      this.snackBar.open('Please login to write a review', 'Login', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      }).onAction().subscribe(() => {
-        this.router.navigate(['/login']);
-      });
+      this.toastService.warning('Please login to write a review', 'Login')
+        .onAction().subscribe(() => {
+          this.router.navigate(['/login']);
+        });
       return;
     }
 
     if (!this.hasPurchasedBook) {
-      this.snackBar.open('You must purchase this book before you can review it', 'Close', {
-        duration: 4000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.toastService.info('You must purchase this book before you can review it', 'Close', 4000);
       return;
     }
 
     if (this.userHasReviewed) {
-      this.snackBar.open('You have already reviewed this book', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.toastService.info('You have already reviewed this book');
       return;
     }
 
@@ -269,11 +258,7 @@ export class BookDetailComponent implements OnInit {
     }
 
     if (!this.hasPurchasedBook) {
-      this.snackBar.open('You must purchase this book before you can review it', 'Close', {
-        duration: 4000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.toastService.info('You must purchase this book before you can review it', 'Close', 4000);
       return;
     }
 
@@ -286,11 +271,7 @@ export class BookDetailComponent implements OnInit {
 
     this.reviewService.createReview(reviewData).subscribe({
       next: (response) => {
-        this.snackBar.open('Review submitted successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toastService.success('Review submitted successfully!');
         this.showReviewForm = false;
         this.reviewForm.reset({ rating: 5, review: '' });
         this.isSubmittingReview = false;
@@ -303,11 +284,7 @@ export class BookDetailComponent implements OnInit {
       error: (error) => {
         console.error('Error submitting review:', error);
         const errorMsg = error.error?.error || error.error?.message || error.message || 'Failed to submit review';
-        this.snackBar.open(errorMsg, 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toastService.error(errorMsg, 'Close', 5000);
         this.isSubmittingReview = false;
       }
     });

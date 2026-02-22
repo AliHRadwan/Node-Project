@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../core/services/auth';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../core/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -32,13 +32,7 @@ export class LoginComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params['expired'] === 'true') {
         this.expiredMessage = 'Your session has expired. Please login again.';
-        // Show snackbar notification
-        this.snackBar.open('Your session has expired. Please login again.', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['error-snackbar']
-        });
+        this.toastService.warning('Your session has expired. Please login again.', 'Close', 5000);
       }
     });
   }

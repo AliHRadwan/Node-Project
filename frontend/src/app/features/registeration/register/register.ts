@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators, ValidationErrors, ValidatorFn , FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, ValidatorFn, AbstractControl, FormBuilder } from '@angular/forms';
 import { Registerservice } from '../registerService/registerservice'
 
 @Component({
@@ -12,29 +12,44 @@ import { Registerservice } from '../registerService/registerservice'
 export class Register {
 
   registerForm: FormGroup;
-  constructor(private fb: FormBuilder , private RS:Registerservice, private router:Router) {
+  isLoading = false;
+  serverError = '';
+  registrationComplete = false;
+  registeredEmail = '';
+  hidePassword = true;
+  hideConfirmPassword = true;
+
+  constructor(private fb: FormBuilder, private RS: Registerservice, private router: Router) {
     this.registerForm = this.fb.group({
-    FirstName: ['', [Validators.required, Validators.minLength(3)]],
-    LastName: ['', [Validators.required, Validators.minLength(3)]],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [
-      Validators.required,
-      Validators.minLength(6),
-      Validators.pattern('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$')
-    ]],
-    confirmPassword: ['', [Validators.required]]
-  },
-  { validators: this.passwordMatchValidator }
-  );
+      FirstName: ['', [Validators.required, Validators.minLength(2)]],
+      LastName: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        this.patternValidator(/[a-z]/, 'lowercase'),
+        this.patternValidator(/[A-Z]/, 'uppercase'),
+        this.patternValidator(/\d/, 'hasNumber'),
+      ]],
+      confirmPassword: ['', [Validators.required]]
+    },
+    { validators: this.passwordMatchValidator }
+    );
   }
-  
-    passwordMatchValidator(form: FormGroup) {
+
+  patternValidator(regex: RegExp, errorKey: string): ValidatorFn {
+    return (control: AbstractControl) => {
+      if (!control.value) return null;
+      return regex.test(control.value) ? null : { [errorKey]: true };
+    };
+  }
+
+  passwordMatchValidator(form: FormGroup) {
     const passwordCtrl = form.get('password');
     const confirmCtrl = form.get('confirmPassword');
     const password = passwordCtrl?.value;
     const confirm = confirmCtrl?.value;
 
-    // apply mismatch error directly on confirm control for realtime feedback
     if (confirmCtrl) {
       if (password && confirm && password !== confirm) {
         const existing = confirmCtrl.errors || {};
@@ -49,47 +64,57 @@ export class Register {
 
     return password === confirm ? null : { mismatch: true };
   }
-  isLoading = false;
-  message = '';
-  isError = false;
-  hidePassword: boolean = true;
-  hideConfirmPassword: boolean = true;
 
   onSubmit() {
+    this.serverError = '';
     if (!this.registerForm.valid) {
       this.registerForm.markAllAsTouched();
       return;
     }
     this.isLoading = true;
-    this.isError = false;
-    this.message = '';
-    if (this.registerForm.valid) {
-      const formData = this.registerForm.value;
-     this.RS.userRegisteration(formData).subscribe({
-      next:(res) =>{
-       this.message = 'Registeration Successfully ';
-        this.isLoading = false;
-       this.isError = false;
-       setTimeout(() => {
-        this.message = 'Redirecting you  to login page...';
-        this.router.navigate(['/features/login']);
-       }, 2000);
 
-      },
-      error:(err)=>{
-       // map backend errors to form for better UX
-       const backendMsg = err?.error?.error || err?.message || 'Registeration Failed ';
-       this.message = backendMsg;
-       this.isError = true;
+    const formData = this.registerForm.value;
+    this.RS.userRegisteration(formData).subscribe({
+      next: () => {
         this.isLoading = false;
+        this.registrationComplete = true;
+        this.registeredEmail = formData.email;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        const backendMsg = err?.error?.error || err?.message || 'Registration failed. Please try again.';
+        this.mapBackendError(backendMsg);
       }
- 
-     })
-    } else {
-      // safety: shouldn't reach here due to early return
+    });
+  }
+
+  private mapBackendError(msg: string) {
+    const lower = msg.toLowerCase();
+
+    if (lower.includes('email already exists')) {
+      this.registerForm.get('email')?.setErrors({ serverError: msg });
+      this.registerForm.get('email')?.markAsTouched();
+      return;
     }
+
+    if (lower.includes('password') && !lower.includes('confirm')) {
+      this.registerForm.get('password')?.setErrors({ serverError: msg });
+      this.registerForm.get('password')?.markAsTouched();
+      return;
+    }
+
+    if (lower.includes('firstname') || lower.includes('first name')) {
+      this.registerForm.get('FirstName')?.setErrors({ serverError: msg });
+      this.registerForm.get('FirstName')?.markAsTouched();
+      return;
+    }
+
+    if (lower.includes('lastname') || lower.includes('last name')) {
+      this.registerForm.get('LastName')?.setErrors({ serverError: msg });
+      this.registerForm.get('LastName')?.markAsTouched();
+      return;
+    }
+
+    this.serverError = msg;
   }
 }
- 
-
-
