@@ -9,8 +9,8 @@ export type ToastType = 'success' | 'error' | 'warning' | 'info';
 export class ToastService {
   private defaultConfig: MatSnackBarConfig = {
     duration: 3000,
-    horizontalPosition: 'center',
-    verticalPosition: 'bottom'
+    horizontalPosition: 'end',
+    verticalPosition: 'top'
   };
 
   constructor(private snackBar: MatSnackBar) {}

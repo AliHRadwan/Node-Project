@@ -10,7 +10,7 @@ import { AuthorService } from '../../../core/services/author';
 import { Cart, CartItem, Book } from '../../../core/models/cart.model';
 import { Subject, firstValueFrom } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -85,7 +85,7 @@ export class UserProfile implements OnInit, OnDestroy {
     private downloadService: DownloadService,
     private bookService: BookService,
     private authorService: AuthorService,
-    private snackBar: MatSnackBar
+    private toastService: ToastService
   ) {
     this.profileForm = this.fb.group({
       FirstName: ['', [Validators.required]], 
@@ -826,11 +826,7 @@ export class UserProfile implements OnInit, OnDestroy {
     if (this.downloadingBookId === bookId) return; // Already downloading
     
     this.downloadingBookId = bookId;
-    this.snackBar.open('Preparing download...', '', {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
-    });
+    this.toastService.info('Preparing download...', '', 2000);
     
     this.downloadService.downloadBook(bookId).subscribe({
       next: (blob: Blob) => {
@@ -844,22 +840,14 @@ export class UserProfile implements OnInit, OnDestroy {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
         
-        this.snackBar.open('Download started!', '', {
-          duration: 2000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toastService.success('Download started!', '', 2000);
         
         this.downloadingBookId = null;
       },
       error: (error) => {
         console.error('Error downloading book:', error);
         const errorMsg = error.error?.message || error.message || 'Failed to download book';
-        this.snackBar.open(`Download failed: ${errorMsg}`, 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toastService.error(`Download failed: ${errorMsg}`, 'Close', 5000);
         this.downloadingBookId = null;
       }
     });
@@ -929,20 +917,12 @@ export class UserProfile implements OnInit, OnDestroy {
   // Show author application form
   showAuthorApplicationForm(): void {
     if (this.authorStatus === 'approved') {
-      this.snackBar.open('You are already an approved author!', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.toastService.info('You are already an approved author!');
       return;
     }
 
     if (this.authorStatus === 'pending') {
-      this.snackBar.open('Your author application is pending review', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.toastService.info('Your author application is pending review');
       return;
     }
 
@@ -975,11 +955,7 @@ export class UserProfile implements OnInit, OnDestroy {
 
     this.authorService.applyAsAuthor(formData.name.trim(), formData.bio.trim()).subscribe({
       next: (response) => {
-        this.snackBar.open('Author application submitted successfully! It will be reviewed by an admin.', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toastService.success('Author application submitted successfully! It will be reviewed by an admin.', 'Close', 5000);
         this.showAuthorForm = false;
         this.isSubmittingAuthor = false;
         
@@ -989,11 +965,7 @@ export class UserProfile implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error submitting author application:', error);
         const errorMsg = error.error?.error || error.error?.message || error.message || 'Failed to submit author application';
-        this.snackBar.open(errorMsg, 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toastService.error(errorMsg, 'Close', 5000);
         this.isSubmittingAuthor = false;
       }
     });

@@ -2,11 +2,6 @@
 
 <div class="cart-container d-flex align-items-center justify-content-center">
   <div class="w-100" style="max-width: 720px;">
-    
-    <!-- Flash message -->
-    <div *ngIf="flashText" class="cart-flash-message mb-3" [ngClass]="flashType">
-      {{ flashText }}
-    </div>
 
     <!-- Loading -->
     <div *ngIf="loading" class="loading-container text-center py-5">
@@ -25,7 +20,7 @@
     <!-- Payment card -->
     <div *ngIf="!loading && !isEmpty && cart">
       <mat-card class="cart-summary payment-card shadow-sm">
-        <h2 class="mb-3">Order Summary</h2>
+        <h2 class="mb-3">Checkout</h2>
 
         <div class="summary-row d-flex justify-content-between mb-1">
           <span>Subtotal ({{ cartItems.length }} items)</span>
@@ -46,65 +41,6 @@
 
         <mat-divider class="my-2"></mat-divider>
 
-        <h3 class="section-title mt-3 mb-2 text-uppercase small text-muted">Shipping details (optional)</h3>
-
-        <div class="row g-2">
-          <div class="col-12 col-sm-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Full name</mat-label>
-              <input matInput [(ngModel)]="shippingName" name="shippingName">
-            </mat-form-field>
-          </div>
-
-          <div class="col-12 col-sm-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Phone</mat-label>
-              <input matInput [(ngModel)]="shippingPhone" name="shippingPhone">
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="row g-2">
-          <div class="col-12 col-sm-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Address line 1</mat-label>
-              <input matInput [(ngModel)]="shippingLine1" name="shippingLine1">
-            </mat-form-field>
-          </div>
-
-          <div class="col-12 col-sm-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Address line 2</mat-label>
-              <input matInput [(ngModel)]="shippingLine2" name="shippingLine2">
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="row g-2">
-          <div class="col-12 col-sm-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>City</mat-label>
-              <input matInput [(ngModel)]="shippingCity" name="shippingCity">
-            </mat-form-field>
-          </div>
-
-          <div class="col-12 col-sm-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Postal code</mat-label>
-              <input matInput [(ngModel)]="shippingPostalCode" name="shippingPostalCode">
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="row g-2">
-          <div class="col-12 col-sm-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Country</mat-label>
-              <input matInput [(ngModel)]="shippingCountry" name="shippingCountry">
-            </mat-form-field>
-          </div>
-        </div>
-
         <h3 class="section-title mt-3 mb-2 text-uppercase small text-muted">Coupon code (optional)</h3>
 
         <div class="row g-2 mb-3">
@@ -121,7 +57,7 @@
             mat-raised-button
             color="primary"
             class="flex-grow-1"
-            (click)="checkoutOfOrder()"
+            (click)="openCheckoutModal()"
             [disabled]="checkoutLoading || isEmpty">
             <ng-container *ngIf="!checkoutLoading">
               Place order
@@ -145,98 +81,197 @@
   </div>
 </div>
 
-<!-- Payment Confirm Modal -->
+<!-- Confirm & Pay Modal -->
 <div class="modal fade" id="paymentConfirmModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
+    <div class="modal-content confirm-modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">
-          Confirm your order
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                aria-label="Close"></button>
+        <h5 class="modal-title">Confirm your order</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                [disabled]="checkoutLoading"></button>
       </div>
 
-      <div class="modal-body" *ngIf="lastOrder as o">
+      <div class="modal-body">
         <p class="text-muted small mb-3">
-          Please review your order before proceeding to payment.
+          Select a shipping address and confirm your order.
         </p>
 
-        <div class="row g-3 mb-3">
-          <div class="col-12 col-md-6">
-            <div class="border rounded p-3 h-100">
-              <div class="fw-semibold mb-2">Order info</div>
-              <div class="small text-muted">
-                <div><span class="text-dark fw-semibold">Order ID:</span> {{ o._id }}</div>
-                <div><span class="text-dark fw-semibold">Status:</span> {{ o.status | titlecase }}</div>
-                <div><span class="text-dark fw-semibold">Placed at:</span> {{ o.placedAt | date:'short' }}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6">
-            <div class="border rounded p-3 h-100">
-              <div class="fw-semibold mb-2">Amounts</div>
-              <div class="small">
-                <div class="d-flex justify-content-between">
-                  <span class="text-muted">Items total</span>
-                  <span class="fw-semibold">{{ o.amounts.itemsTotal | currency:o.currency }}</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <span class="text-muted">Shipping</span>
-                  <span class="fw-semibold">{{ o.amounts.shipping | currency:o.currency }}</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <span class="text-muted">Discount</span>
-                  <span class="fw-semibold text-danger">
-                    -{{ o.amounts.discount | currency:o.currency }}
-                  </span>
-                </div>
-                <hr class="my-2">
-                <div class="d-flex justify-content-between">
-                  <span class="fw-semibold">Grand total</span>
-                  <span class="fw-bold">{{ o.amounts.grandTotal | currency:o.currency }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- Address Error -->
+        <div class="address-error-alert" *ngIf="addressError">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ addressError }}</span>
         </div>
 
-        <div class="border rounded p-3 mb-2" *ngIf="o.shippingAddress">
-          <div class="fw-semibold mb-2">Shipping address</div>
-          <div class="small text-muted">
-            <div class="fw-semibold text-dark">{{ o.shippingAddress.fullName || 'Unknown' }}</div>
-            <div *ngIf="o.shippingAddress.line1">{{ o.shippingAddress.line1 }}</div>
-            <div *ngIf="o.shippingAddress.line2">{{ o.shippingAddress.line2 }}</div>
-            <div>
-              <span *ngIf="o.shippingAddress.city">{{ o.shippingAddress.city }}, </span>
-              <span *ngIf="o.shippingAddress.postalCode">{{ o.shippingAddress.postalCode }}, </span>
-              <span *ngIf="o.shippingAddress.country">{{ o.shippingAddress.country }}</span>
-            </div>
-            <div *ngIf="o.shippingAddress.phone">Phone: {{ o.shippingAddress.phone }}</div>
-          </div>
+        <!-- Shipping Address Selection -->
+        <h6 class="fw-semibold mb-2">Shipping Address</h6>
+
+        <!-- No addresses -->
+        <div *ngIf="addresses.length === 0 && !showNewAddressForm" class="no-address-box">
+          <mat-icon>location_off</mat-icon>
+          <p>You don't have any saved addresses.</p>
+          <button mat-stroked-button color="primary" (click)="toggleNewAddressForm()">
+            <mat-icon class="me-1">add</mat-icon> Add Address
+          </button>
         </div>
 
+        <!-- Saved addresses -->
+        <div class="address-list" *ngIf="addresses.length > 0">
+          <div
+            *ngFor="let addr of addresses; let i = index"
+            class="address-card"
+            [class.selected]="selectedAddressIndex === i"
+            (click)="selectAddress(i)">
+            <div class="address-card-radio">
+              <div class="radio-dot" [class.active]="selectedAddressIndex === i"></div>
+            </div>
+            <div class="address-card-body">
+              <div class="address-card-label">
+                {{ addr.label || 'Address ' + (i + 1) }}
+                <span class="badge-default" *ngIf="addr.isDefault">Default</span>
+              </div>
+              <div class="address-card-detail">{{ addr.fullName }}</div>
+              <div class="address-card-detail">
+                {{ addr.line1 }}<span *ngIf="addr.line2">, {{ addr.line2 }}</span>
+              </div>
+              <div class="address-card-detail">
+                {{ addr.city }}<span *ngIf="addr.state">, {{ addr.state }}</span>
+                <span *ngIf="addr.postalCode"> {{ addr.postalCode }}</span>
+              </div>
+              <div class="address-card-detail">{{ addr.country }}</div>
+              <div class="address-card-detail" *ngIf="addr.phone">Phone: {{ addr.phone }}</div>
+            </div>
+          </div>
+
+          <button mat-stroked-button class="add-address-btn mt-2" (click)="toggleNewAddressForm()">
+            <mat-icon class="me-1">add</mat-icon>
+            {{ showNewAddressForm ? 'Cancel' : 'Add new address' }}
+          </button>
+        </div>
+
+        <!-- New Address Form -->
+        <div class="new-address-form" *ngIf="showNewAddressForm">
+          <h6 class="fw-semibold mt-3 mb-2">New Address</h6>
+          <form [formGroup]="newAddressForm">
+            <div class="row g-2">
+              <div class="col-12 col-sm-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Label (e.g. Home, Work)</mat-label>
+                  <input matInput formControlName="label">
+                  <mat-error *ngIf="newAddressForm.get('label')?.errors?.['required']">Required</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-sm-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Full Name</mat-label>
+                  <input matInput formControlName="fullName">
+                  <mat-error *ngIf="newAddressForm.get('fullName')?.errors?.['required']">Required</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-12 col-sm-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Phone</mat-label>
+                  <input matInput formControlName="phone">
+                  <mat-error *ngIf="newAddressForm.get('phone')?.errors?.['required']">Required</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-sm-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Address Line 1</mat-label>
+                  <input matInput formControlName="line1">
+                  <mat-error *ngIf="newAddressForm.get('line1')?.errors?.['required']">Required</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-12 col-sm-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Address Line 2 (optional)</mat-label>
+                  <input matInput formControlName="line2">
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-sm-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>City</mat-label>
+                  <input matInput formControlName="city">
+                  <mat-error *ngIf="newAddressForm.get('city')?.errors?.['required']">Required</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-12 col-sm-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>State</mat-label>
+                  <input matInput formControlName="state">
+                  <mat-error *ngIf="newAddressForm.get('state')?.errors?.['required']">Required</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-sm-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Country</mat-label>
+                  <input matInput formControlName="country">
+                  <mat-error *ngIf="newAddressForm.get('country')?.errors?.['required']">Required</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-sm-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Postal Code</mat-label>
+                  <input matInput formControlName="postalCode">
+                  <mat-error *ngIf="newAddressForm.get('postalCode')?.errors?.['required']">Required</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="addNewAddress()"
+              [disabled]="isAddingAddress"
+              class="mt-1">
+              <ng-container *ngIf="!isAddingAddress">Save Address</ng-container>
+              <ng-container *ngIf="isAddingAddress">
+                <mat-spinner diameter="18"></mat-spinner> &nbsp;Saving...
+              </ng-container>
+            </button>
+          </form>
+        </div>
+
+        <!-- Order Summary in Modal -->
+        <mat-divider class="my-3"></mat-divider>
+        <h6 class="fw-semibold mb-2">Order Summary</h6>
+        <div class="modal-summary">
+          <div class="d-flex justify-content-between mb-1">
+            <span class="text-muted">Items ({{ cartItems.length }})</span>
+            <span class="fw-semibold">{{ subtotal }} EGP</span>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <span class="text-muted">Shipping</span>
+            <span class="text-success fw-semibold">Calculated at checkout</span>
+          </div>
+          <div *ngIf="couponCode.trim()" class="d-flex justify-content-between mb-1">
+            <span class="text-muted">Coupon</span>
+            <span class="fw-semibold text-primary">{{ couponCode }}</span>
+          </div>
+          <hr class="my-2">
+          <div class="d-flex justify-content-between">
+            <span class="fw-semibold">Estimated Total</span>
+            <span class="fw-bold">{{ subtotal }} EGP</span>
+          </div>
+        </div>
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-outline-danger me-auto"
-                (click)="cancelCurrentOrder()"
-                [disabled]="checkoutLoading">
-          Cancel this order
-        </button>
-
         <button class="btn btn-outline-secondary" data-bs-dismiss="modal"
                 [disabled]="checkoutLoading">
-          Back
+          Cancel
         </button>
 
         <button class="btn btn-dark"
-                (click)="startStripeCheckout()"
+                (click)="confirmAndPay()"
                 [disabled]="checkoutLoading">
           <ng-container *ngIf="!checkoutLoading">
-            Checkout &amp; pay
+            Confirm &amp; Pay
           </ng-container>
           <ng-container *ngIf="checkoutLoading">
             <span class="spinner-border spinner-border-sm me-1" role="status"></span>

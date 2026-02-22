@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth';
 import { AuthorService } from '../../services/author';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-header',
@@ -26,8 +25,7 @@ export class Header implements OnInit, OnDestroy {
     public cartService: CartService,
     private authService: AuthService,
     private authorService: AuthorService,
-    private router: Router,
-    private snackBar: MatSnackBar
+    private router: Router
   ) { }
 
   ngOnInit(): void {

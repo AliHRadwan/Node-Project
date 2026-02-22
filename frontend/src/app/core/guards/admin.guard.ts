@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../services/toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ export class AdminGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private toastService: ToastService
   ) {}
 
   canActivate(
@@ -19,13 +19,10 @@ export class AdminGuard implements CanActivate {
   ): boolean {
     // First check if user is authenticated
     if (!this.authService.isAuthenticated()) {
-      this.snackBar.open('Please login to access the dashboard', 'Login', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      }).onAction().subscribe(() => {
-        this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-      });
+      this.toastService.warning('Please login to access the dashboard', 'Login')
+        .onAction().subscribe(() => {
+          this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+        });
       this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
       return false;
     }
@@ -34,11 +31,7 @@ export class AdminGuard implements CanActivate {
     const isAdmin = this.checkAdminStatus();
     
     if (!isAdmin) {
-      this.snackBar.open('Access denied. Admin privileges required.', 'OK', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.toastService.error('Access denied. Admin privileges required.');
       this.router.navigate(['/']);
       return false;
     }
