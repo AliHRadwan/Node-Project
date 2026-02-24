@@ -140,10 +140,22 @@ export const addToCartAuth = async (req, res) => {
     // Populate book details
     await cart.populate('items.bookId', 'title price author stock image');
 
+    const itemsWithStockStatus = cart.items.map(item => {
+      const book = item.bookId;
+      return {
+        ...item.toObject(),
+        stockAvailable: book ? book.stock : 0,
+        isInStock: book ? book.stock >= item.qty : false
+      };
+    });
+
     res.status(200).json({
       success: true,
       message: 'Book added to cart successfully',
-      data: cart
+      data: {
+        ...cart.toObject(),
+        items: itemsWithStockStatus
+      }
     });
   } catch (error) {
     console.error('Error in addToCartAuth:', error);
@@ -229,10 +241,22 @@ export const updateCartItemAuth = async (req, res) => {
     // Populate book details
     await cart.populate('items.bookId', 'title price author stock image');
 
+    const itemsWithStockStatus = cart.items.map(item => {
+      const book = item.bookId;
+      return {
+        ...item.toObject(),
+        stockAvailable: book ? book.stock : 0,
+        isInStock: book ? book.stock >= item.qty : false
+      };
+    });
+
     res.status(200).json({
       success: true,
       message: 'Cart updated successfully',
-      data: cart
+      data: {
+        ...cart.toObject(),
+        items: itemsWithStockStatus
+      }
     });
   } catch (error) {
     console.error('Error in updateCartItemAuth:', error);
@@ -281,10 +305,22 @@ export const removeFromCartAuth = async (req, res) => {
     // Populate book details
     await cart.populate('items.bookId', 'title price author stock image');
 
+    const itemsWithStockStatus = cart.items.map(item => {
+      const book = item.bookId;
+      return {
+        ...item.toObject(),
+        stockAvailable: book ? book.stock : 0,
+        isInStock: book ? book.stock >= item.qty : false
+      };
+    });
+
     res.status(200).json({
       success: true,
       message: 'Book removed from cart successfully',
-      data: cart
+      data: {
+        ...cart.toObject(),
+        items: itemsWithStockStatus
+      }
     });
   } catch (error) {
     console.error('Error in removeFromCartAuth:', error);
