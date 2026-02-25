@@ -166,16 +166,10 @@ export const placeOrder = async (req, res) => {
 
     if (itemsTotal > 2000) shippingCost = 0;
 
-    // discount logic
+    // discount logic (hard-coded coupon)
     let discount = 0;
-
-    // status one 
-    if (payment?.couponCode === "BOOK10") {
-      discount = itemsTotal * 0.1; // %10
-    }
-    //status one 
-    else if (itemsTotal > 1000) {
-      discount = 50; // 50 EGP 
+    if (payment?.couponCode === "BOOK10" && itemsTotal > 1000) {
+      discount = itemsTotal * 0.1 > 200 ? 200 : itemsTotal * 0.1; // %10 but not more than 200 EGP
     }
 
     const grandTotal = itemsTotal + shippingCost - discount;

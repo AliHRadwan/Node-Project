@@ -261,8 +261,11 @@
             <span class="fw-semibold">{{ shippingCost }} EGP</span>
           </div>
           <div *ngIf="couponCode.trim()" class="d-flex justify-content-between mb-1">
-            <span class="text-muted">Coupon</span>
-            <span class="fw-semibold text-primary">{{ couponCode }}</span>
+            <span class="text-muted">Coupon ({{ couponCode }})</span>
+            <span class="fw-semibold" [class.text-success]="couponDiscount > 0">
+              <ng-container *ngIf="couponDiscount > 0">-{{ couponDiscount }}</ng-container>
+              <ng-container *ngIf="couponDiscount === 0">—</ng-container> EGP
+            </span>
           </div>
           <hr class="my-2">
           <div class="d-flex justify-content-between">

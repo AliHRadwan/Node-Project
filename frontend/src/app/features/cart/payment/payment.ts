@@ -40,11 +40,11 @@ export class Payment implements OnInit, OnDestroy {
   ];
   readonly governorateOtherValue = '__OTHER__';
 
-  /** States with shipping cost 100 EGP; all others 60 EGP */
-  private readonly highShippingStates = [
-    'Faiyum', 'Beni Suef', 'Minya', 'Assiut', 'Sohag', 'Qena', 'Aswan', 'Luxor',
-    'Red Sea', 'New Valley', 'Matrouh', 'North Sinai', 'South Sinai'
-  ];
+  /** Shipping zones (lowercase) – must match backend orderController.js */
+  private readonly zoneD = ['cairo', 'giza', 'qalyubia'];
+  private readonly zoneA = ['alexandria', 'beheira', 'gharbia', 'monufia', 'kafr el-sheikh', 'damietta', 'dakahlia', 'sharqia', 'ismailia', 'port said', 'suez'];
+  private readonly zoneB = ['faiyum', 'beni suef', 'minya', 'assiut', 'sohag', 'qena', 'luxor', 'aswan', 'red sea', 'new valley', 'matrouh'];
+  private readonly zoneC = ['north sinai', 'south sinai'];
 
   checkoutLoading = false;
   private sub?: Subscription;
@@ -124,26 +124,57 @@ export class Payment implements OnInit, OnDestroy {
     return this.cart?.totals.subTotal || 0;
   }
 
-  /** Selected address state/governorate (for shipping calculation). */
+  /** Selected address state and country (for shipping calculation). */
   get selectedAddressState(): string {
     const addr = this.selectedAddressIndex >= 0 && this.addresses[this.selectedAddressIndex]
       ? this.addresses[this.selectedAddressIndex]
       : null;
-    return (addr?.state || addr?.governorate || '').trim();
+    return (addr?.state || addr?.governorate || '').toString().trim().toLowerCase();
   }
 
-  /** Shipping cost: 100 EGP for high-cost states, 60 EGP otherwise. */
+  get selectedAddressCountry(): string {
+    const addr = this.selectedAddressIndex >= 0 && this.addresses[this.selectedAddressIndex]
+      ? this.addresses[this.selectedAddressIndex]
+      : null;
+    return (addr?.country || '').toString().trim().toLowerCase();
+  }
+
+  /** Shipping cost – same logic as backend orderController.js */
   get shippingCost(): number {
-    const state = this.selectedAddressState;
-    if (!state) return 60;
-    const normalized = state.toLowerCase();
-    const isHigh = this.highShippingStates.some(s => s.toLowerCase() === normalized);
-    return isHigh ? 100 : 60;
+    const stateNorm = this.selectedAddressState;
+    const countryNorm = this.selectedAddressCountry;
+    const itemsTotal = this.subtotal;
+
+    let cost = 30;
+    if (countryNorm !== 'egypt') {
+      cost = 1000;
+    } else if (this.zoneD.includes(stateNorm)) {
+      cost = 30;
+    } else if (this.zoneA.includes(stateNorm)) {
+      cost = 50;
+    } else if (this.zoneB.includes(stateNorm)) {
+      cost = 70;
+    } else if (this.zoneC.includes(stateNorm)) {
+      cost = 100;
+    } else {
+      cost = 70;
+    }
+    if (itemsTotal > 2000) cost = 0;
+    return cost;
   }
 
-  /** Order total in modal: subtotal + shipping. */
+  /** Coupon discount – same logic as backend (BOOK10: 10% cap 200 EGP when subtotal > 1000). */
+  get couponDiscount(): number {
+    const code = (this.couponCode || '').trim();
+    const itemsTotal = this.subtotal;
+    if (code !== 'BOOK10' || itemsTotal <= 1000) return 0;
+    const tenPercent = itemsTotal * 0.1;
+    return tenPercent > 200 ? 200 : tenPercent;
+  }
+
+  /** Order total in modal: subtotal + shipping - discount. */
   get orderTotal(): number {
-    return this.subtotal + this.shippingCost;
+    return this.subtotal + this.shippingCost - this.couponDiscount;
   }
 
   selectAddress(index: number) {
