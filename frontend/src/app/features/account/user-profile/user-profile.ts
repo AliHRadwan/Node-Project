@@ -155,7 +155,7 @@ export class UserProfile implements OnInit, OnDestroy {
       city: ['', [Validators.required]],        
       stateDropdown: ['', [Validators.required]],       
       stateCustom: [''],       
-      country: ['Egypt'],     
+      country: ['Egypt', [Validators.required]],     
       postalCode: [''],  
       isDefault: [false]                         
     });

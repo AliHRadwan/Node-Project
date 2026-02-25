@@ -66,7 +66,7 @@ export class Payment implements OnInit, OnDestroy {
       city: ['', Validators.required],
       stateDropdown: ['', Validators.required],
       stateCustom: [''],
-      country: ['Egypt'],
+      country: ['Egypt', Validators.required],
       postalCode: [''],
     });
   }
