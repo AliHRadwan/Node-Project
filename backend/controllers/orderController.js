@@ -23,7 +23,7 @@ const shippingAddressSchema = Joi.object({
   line1: Joi.string().min(3).max(120).allow("", null),
   line2: Joi.string().max(120).allow("", null),
   city: Joi.string().min(2).max(60).required(),
-  state: Joi.string().max(60).allow("", null),
+  state: Joi.string().min(2).max(60).required(),
   country: Joi.string().min(2).max(60).required(),
   postalCode: Joi.string().max(20).allow("", null),
 });
@@ -85,9 +85,12 @@ export const placeOrder = async (req, res) => {
       if (user) {
         const existingAddress = user.addresses.find(
           (a) =>
+            a.fullName === shippingAddress.fullName &&
+            a.phone === shippingAddress.phone &&
             a.line1 === shippingAddress.line1 &&
             a.city === shippingAddress.city &&
-            a.country === shippingAddress.country
+            a.country === shippingAddress.country &&
+            a.state === shippingAddress.state
         );
 
 
@@ -134,10 +137,10 @@ export const placeOrder = async (req, res) => {
     }
 
     // payment info from body or default
-    const payment = req.body?.payment || { method: "cash", status: "unpaid" };
+    const payment = { ...req.body?.payment, method: "card", status: "unpaid" };
 
     // shipping cost logic
-    let shippingCost = 30; // default 
+    let shippingCost = 0;
     const stateNormalized = (shippingAddress?.state || shippingAddress?.governorate || "").toString().trim().toLowerCase();
     const countryNormalized = (shippingAddress?.country || "").toString().trim().toLowerCase();
 
