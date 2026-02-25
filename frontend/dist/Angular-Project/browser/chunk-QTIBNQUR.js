@@ -1,1 +1,0 @@
-import{D as r,G as e,Kb as i,Tb as o}from"./chunk-DBFZDN6M.js";var a=class t{constructor(n){this.http=n}API_URL=o.apiUrl+"/categories";getCategories(){return this.http.get(this.API_URL)}static \u0275fac=function(p){return new(p||t)(e(i))};static \u0275prov=r({token:t,factory:t.\u0275fac,providedIn:"root"})};export{a};

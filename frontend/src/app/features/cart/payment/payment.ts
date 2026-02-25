@@ -32,6 +32,20 @@ export class Payment implements OnInit, OnDestroy {
   newAddressForm: FormGroup;
   isAddingAddress = false;
 
+  readonly governorates: string[] = [
+    'Cairo', 'Giza', 'Alexandria', 'Port Said', 'Suez', 'Dakahlia', 'Sharqia',
+    'Qalyubia', 'Kafr El-Sheikh', 'Gharbia', 'Monufia', 'Beheira', 'Damietta',
+    'Ismailia', 'Faiyum', 'Beni Suef', 'Minya', 'Assiut', 'Sohag', 'Qena',
+    'Aswan', 'Luxor', 'Red Sea', 'New Valley', 'Matrouh', 'North Sinai', 'South Sinai'
+  ];
+  readonly governorateOtherValue = '__OTHER__';
+
+  /** States with shipping cost 100 EGP; all others 60 EGP */
+  private readonly highShippingStates = [
+    'Faiyum', 'Beni Suef', 'Minya', 'Assiut', 'Sohag', 'Qena', 'Aswan', 'Luxor',
+    'Red Sea', 'New Valley', 'Matrouh', 'North Sinai', 'South Sinai'
+  ];
+
   checkoutLoading = false;
   private sub?: Subscription;
 
@@ -50,9 +64,10 @@ export class Payment implements OnInit, OnDestroy {
       line1: ['', Validators.required],
       line2: [''],
       city: ['', Validators.required],
-      state: ['', Validators.required],
-      country: ['', Validators.required],
-      postalCode: ['', Validators.required],
+      stateDropdown: ['', Validators.required],
+      stateCustom: [''],
+      country: ['Egypt'],
+      postalCode: [''],
     });
   }
 
@@ -109,6 +124,28 @@ export class Payment implements OnInit, OnDestroy {
     return this.cart?.totals.subTotal || 0;
   }
 
+  /** Selected address state/governorate (for shipping calculation). */
+  get selectedAddressState(): string {
+    const addr = this.selectedAddressIndex >= 0 && this.addresses[this.selectedAddressIndex]
+      ? this.addresses[this.selectedAddressIndex]
+      : null;
+    return (addr?.state || addr?.governorate || '').trim();
+  }
+
+  /** Shipping cost: 100 EGP for high-cost states, 60 EGP otherwise. */
+  get shippingCost(): number {
+    const state = this.selectedAddressState;
+    if (!state) return 60;
+    const normalized = state.toLowerCase();
+    const isHigh = this.highShippingStates.some(s => s.toLowerCase() === normalized);
+    return isHigh ? 100 : 60;
+  }
+
+  /** Order total in modal: subtotal + shipping. */
+  get orderTotal(): number {
+    return this.subtotal + this.shippingCost;
+  }
+
   selectAddress(index: number) {
     this.selectedAddressIndex = index;
     this.addressError = '';
@@ -116,19 +153,51 @@ export class Payment implements OnInit, OnDestroy {
 
   toggleNewAddressForm() {
     this.showNewAddressForm = !this.showNewAddressForm;
-    if (!this.showNewAddressForm) {
+    if (this.showNewAddressForm) {
+      this.newAddressForm.reset({
+        label: '', fullName: '', phone: '', line1: '', line2: '',
+        city: '', stateDropdown: '', stateCustom: '', country: 'Egypt', postalCode: ''
+      });
+    } else {
       this.newAddressForm.reset();
     }
   }
 
   addNewAddress() {
-    if (!this.newAddressForm.valid) {
-      this.newAddressForm.markAllAsTouched();
+    const f = this.newAddressForm;
+    if (!f.get('stateDropdown')?.value) {
+      f.markAllAsTouched();
+      return;
+    }
+    if (f.get('stateDropdown')?.value === this.governorateOtherValue) {
+      const custom = (f.get('stateCustom')?.value || '').trim();
+      if (!custom) {
+        f.get('stateCustom')?.setErrors({ required: true });
+        f.markAllAsTouched();
+        return;
+      }
+    }
+    if (!f.valid) {
+      f.markAllAsTouched();
       return;
     }
 
     this.isAddingAddress = true;
-    const addressData = this.newAddressForm.value;
+    const v = f.value;
+    const state = v.stateDropdown === this.governorateOtherValue
+      ? (v.stateCustom || '').trim()
+      : (v.stateDropdown || '');
+    const addressData = {
+      label: v.label,
+      fullName: v.fullName,
+      phone: v.phone,
+      line1: v.line1,
+      line2: v.line2 || undefined,
+      city: v.city,
+      state,
+      country: (v.country || '').trim() || 'Egypt',
+      postalCode: (v.postalCode || '').trim() || undefined
+    };
 
     this.profileService.addAddress(addressData).subscribe({
       next: () => {

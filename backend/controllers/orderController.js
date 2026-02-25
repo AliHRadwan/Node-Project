@@ -51,7 +51,7 @@ export const placeOrder = async (req, res) => {
           details: error.details.map(d => d.message),
         });
       }
-      
+
       req.body.shippingAddress = value;
     }
 
@@ -74,10 +74,10 @@ export const placeOrder = async (req, res) => {
       });
     }
 
-     if (!shippingAddress.fullName) {
-      const user = await User.findById(userId).select("name"); 
+    if (!shippingAddress.fullName) {
+      const user = await User.findById(userId).select("name");
       shippingAddress.fullName = user?.name || "Unknown User";
-     }
+    }
 
 
     if (req.body?.shippingAddress) {
@@ -90,12 +90,12 @@ export const placeOrder = async (req, res) => {
             a.country === shippingAddress.country
         );
 
-       
+
         if (!existingAddress) {
           user.addresses.push({
             label: "From order",
             ...shippingAddress,
-            isDefault: user.addresses.length === 0, 
+            isDefault: user.addresses.length === 0,
           });
           await user.save();
         }
@@ -130,54 +130,43 @@ export const placeOrder = async (req, res) => {
         });
       }
 
-  itemsTotal += unitPrice * qty;
-}
-
-    // for (const item of items) {
-    //   if (isNaN(item.price) || isNaN(item.qty)) {
-    //     return res
-    //       .status(400)
-    //       .json({ message: "❌ Invalid price or quantity in cart." });
-    //   }
-    //   itemsTotal += item.price * item.qty;
-    // }
+      itemsTotal += unitPrice * qty;
+    }
 
     // payment info from body or default
-
     const payment = req.body?.payment || { method: "cash", status: "unpaid" };
-
 
     // shipping cost logic
     let shippingCost = 30; // default 
-    const city = shippingAddress?.city?.toLowerCase();
-    const country = shippingAddress?.country?.toLowerCase();
+    const stateNormalized = (shippingAddress?.state || shippingAddress?.governorate || "").toString().trim().toLowerCase();
+    const countryNormalized = (shippingAddress?.country || "").toString().trim().toLowerCase();
 
-    // وجه بحري 
-    let zoneA = ["alexandria", "beheira", "gharbia", "monufia", "kafr el-sheikh", "damietta", "dakahlia", "sharqia"]
-    // وجه قبلي
-    let zoneB = ["fayoum", "bani sweif", "minya", "assiut", "sohag", "qena", "luxor", "aswan"];
+    // وجه بحري  
+    let zoneA = ["alexandria", "beheira", "gharbia", "monufia", "kafr el-sheikh", "damietta", "dakahlia", "sharqia", "ismailia", "port said", "suez"];
+    // وجه قبلي والوادى الجديد والبحر الاحمر ومطروح
+    let zoneB = ["faiyum", "beni suef", "minya", "assiut", "sohag", "qena", "luxor", "aswan", "red sea", "new valley", "matrouh"];
     // سيناء
     let zoneC = ["north sinai", "south sinai"];
     // القاهره الكبري 
-    let zoneD = ["cairo", "giza", "qalyubia", "alexandria", "6th of october", "sheikh zayed"];
+    let zoneD = ["cairo", "giza", "qalyubia"];
 
-    if (country !== "egypt") {
+    if (countryNormalized !== "egypt") {
       shippingCost = 1000; // international
-    } else if (zoneD.includes(city)) {
+    } else if (zoneD.includes(stateNormalized)) {
       shippingCost = 30; // القاهره الكبري 
-    } else if (zoneA.includes(city)) {
+    } else if (zoneA.includes(stateNormalized)) {
       shippingCost = 50; // وجه بحري 
-    } else if (zoneB.includes(city)) {
+    } else if (zoneB.includes(stateNormalized)) {
       shippingCost = 70; // وجه قبلي
-    } else if (zoneC.includes(city)) {
+    } else if (zoneC.includes(stateNormalized)) {
       shippingCost = 100; // سيناء
     } else {
-      shippingCost = 60; // باقي المحافظات 
+      shippingCost = 70; // باقي المحافظات 
     }
-    if (itemsTotal > 5000) shippingCost = 0;
 
-    // discunt logic
+    if (itemsTotal > 2000) shippingCost = 0;
 
+    // discount logic
     let discount = 0;
 
     // status one 
@@ -203,7 +192,7 @@ export const placeOrder = async (req, res) => {
         discount,
         grandTotal,
       },
-      currency: PRICING_CURRENCY, 
+      currency: PRICING_CURRENCY,
       placedAt: new Date(),
       status: "pending",
     });
@@ -312,7 +301,7 @@ export const cancelOrderByUser = async (req, res) => {
       });
     }
 
-   
+
     if (order.status !== "pending") {
       return res.status(400).json({
         message: `Order is ${order.status}. Refunds are handled by support.`,
@@ -321,18 +310,18 @@ export const cancelOrderByUser = async (req, res) => {
       });
     }
 
-    
-    const sessionId = order?.payment?.sessionId; 
+
+    const sessionId = order?.payment?.sessionId;
     if (sessionId) {
       try { await releaseReservationBySessionId(sessionId); } catch (e) {
         console.warn("releaseReservationBySessionId warn:", e?.message);
       }
     }
 
-   
+
     order.status = "cancelled";
     order.cancelledAt = new Date();
-    order.cancelledBy = { id: userId, role: "user" }; 
+    order.cancelledBy = { id: userId, role: "user" };
     if (reason) order.cancelReason = reason;
     await order.save();
 
@@ -360,7 +349,7 @@ export const getAllOrders = async (req, res) => {
   try {
     const allOrders = await Order.find().sort({ placedAt: -1 });
     // const allOrders = await Order.find({}, "userId status amounts.grandTotal placedAt").sort({ placedAt: -1 });
-    
+
 
     res.status(200).json({
       message: "✅ done, all orders here",
@@ -420,7 +409,7 @@ export const cancelOrderByAdmin = async (req, res) => {
     }
 
     if (order.status === "pending") {
-     
+
       const sessionId = order?.payment?.sessionId;
       if (sessionId) {
         try { await releaseReservationBySessionId(sessionId); } catch (e) {
@@ -464,7 +453,7 @@ export const cancelOrderByAdmin = async (req, res) => {
       code: 400
     });
 
-  } 
+  }
   catch (err) {
     console.error("cancelOrderByAdmin error:", err);
     return res.status(500).json({
@@ -473,9 +462,9 @@ export const cancelOrderByAdmin = async (req, res) => {
       code: 500,
       error: err.message
     });
-  //    if (err?.code === 121 && err?.errInfo?.details) {
-  //   console.error('Schema details:\n', JSON.stringify(err.errInfo.details, null, 2));
-  // }
+    //    if (err?.code === 121 && err?.errInfo?.details) {
+    //   console.error('Schema details:\n', JSON.stringify(err.errInfo.details, null, 2));
+    // }
   }
 };
 
@@ -486,9 +475,9 @@ export const cancelOrderByAdmin = async (req, res) => {
 // mark order 
 export const assertTransition = (from, to) => {
   const allowed = {
-    pending:   new Set(["paid", "cancelled"]),
-    paid:      new Set(["shipped", "cancelled"]),
-    shipped:   new Set(["delivered"]),
+    pending: new Set(["paid", "cancelled"]),
+    paid: new Set(["shipped", "cancelled"]),
+    shipped: new Set(["delivered"]),
     delivered: new Set([]),
     cancelled: new Set([]),
     refunded: new Set(["paid"]),
@@ -519,7 +508,7 @@ export const markAsPaid = async (req, res) => {
     await order.save();
     res.json({ message: "✅ Order marked as paid", status: "success", code: 200, order });
   } catch (err) {
-    res.status(400).json({ status: "error", code: 400, message: err.message } );
+    res.status(400).json({ status: "error", code: 400, message: err.message });
   }
 };
 
@@ -541,7 +530,7 @@ export const markAsShipped = async (req, res) => {
 
     res.json({ message: "✅ Order marked as shipped", status: "success", code: 200, order });
   } catch (err) {
-    res.status(400).json({ message: err.message, status: "error", code: 400});
+    res.status(400).json({ message: err.message, status: "error", code: 400 });
   }
 };
 
@@ -550,7 +539,7 @@ export const markAsDelivered = async (req, res) => {
   try {
     const { orderId } = req.params;
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
-      return res.status(400).json({ message: "Invalid orderId" , status: "error", code: 400 });
+      return res.status(400).json({ message: "Invalid orderId", status: "error", code: 400 });
     }
 
     const order = await Order.findById(orderId);
@@ -561,8 +550,8 @@ export const markAsDelivered = async (req, res) => {
     order.status = "delivered";
     await order.save();
 
-    res.json({ message: "✅ Order marked as delivered",  status: "success", code: 200, order });
+    res.json({ message: "✅ Order marked as delivered", status: "success", code: 200, order });
   } catch (err) {
-    res.status(400).json({ status: "error", code: 400, message: err.message } );
+    res.status(400).json({ status: "error", code: 400, message: err.message });
   }
 };
