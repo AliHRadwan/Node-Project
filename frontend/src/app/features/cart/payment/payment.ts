@@ -278,6 +278,7 @@ export class Payment implements OnInit, OnDestroy {
         fullName: addr.fullName,
         phone: addr.phone,
         city: addr.city,
+        state: addr.state || addr.governorate || undefined,
         country: addr.country,
         line1: addr.line1,
         line2: addr.line2 || undefined,

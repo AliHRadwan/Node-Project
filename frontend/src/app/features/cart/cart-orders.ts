@@ -9,6 +9,7 @@ export interface PlaceOrderBody {
     fullName?: string;
     phone?: string;
     city?: string;
+    state?: string;
     country?: string;
     line1?: string;
     line2?: string;
