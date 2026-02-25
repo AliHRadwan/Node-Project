@@ -13,6 +13,16 @@
 
 .modal-backdrop { display: none !important; }
 
+/* Order details modal: solid background for contrast with underlying screen */
+#orderDetailsModal .modal-content {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
 /* Pagination styles */
 .pagination-container {
   display: flex;
