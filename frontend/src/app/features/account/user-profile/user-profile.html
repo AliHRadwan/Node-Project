@@ -643,25 +643,35 @@
                 </div>
                 <div class="col-md-6">
                   <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>State</mat-label>
-                    <input matInput formControlName="state" />
-                    <mat-error *ngIf="addressForm.get('state')?.errors?.['required']">State is required.</mat-error>
+                    <mat-label>State / Governorate</mat-label>
+                    <mat-select formControlName="stateDropdown">
+                      <mat-option *ngFor="let gov of governorates" [value]="gov">{{ gov }}</mat-option>
+                      <mat-option [value]="governorateOtherValue">Other (specify)</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="addressForm.get('stateDropdown')?.errors?.['required']">Required</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row g-2" *ngIf="addressForm.get('stateDropdown')?.value === governorateOtherValue">
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Governorate (custom)</mat-label>
+                    <input matInput formControlName="stateCustom" placeholder="Enter governorate" />
+                    <mat-error *ngIf="addressForm.get('stateCustom')?.errors?.['required']">Required when Other is selected</mat-error>
                   </mat-form-field>
                 </div>
               </div>
               <div class="row g-2">
                 <div class="col-md-6">
                   <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Country</mat-label>
+                    <mat-label>Country (optional)</mat-label>
                     <input matInput formControlName="country" />
-                    <mat-error *ngIf="addressForm.get('country')?.errors?.['required']">Country is required.</mat-error>
                   </mat-form-field>
                 </div>
                 <div class="col-md-6">
                   <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Postal Code</mat-label>
+                    <mat-label>Postal Code (optional)</mat-label>
                     <input matInput formControlName="postalCode" />
-                    <mat-error *ngIf="addressForm.get('postalCode')?.errors?.['required']">Postal code is required.</mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -711,25 +721,35 @@
                     </div>
                     <div class="col-md-6">
                       <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>State</mat-label>
-                        <input matInput formControlName="state" />
-                        <mat-error *ngIf="editAddressForm.get('state')?.errors?.['required']">State is required.</mat-error>
+                        <mat-label>State / Governorate</mat-label>
+                        <mat-select formControlName="stateDropdown">
+                          <mat-option *ngFor="let gov of governorates" [value]="gov">{{ gov }}</mat-option>
+                          <mat-option [value]="governorateOtherValue">Other (specify)</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="editAddressForm.get('stateDropdown')?.errors?.['required']">Required</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row g-2" *ngIf="editAddressForm.get('stateDropdown')?.value === governorateOtherValue">
+                    <div class="col-md-6">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Governorate (custom)</mat-label>
+                        <input matInput formControlName="stateCustom" placeholder="Enter governorate" />
+                        <mat-error *ngIf="editAddressForm.get('stateCustom')?.errors?.['required']">Required when Other is selected</mat-error>
                       </mat-form-field>
                     </div>
                   </div>
                   <div class="row g-2">
                     <div class="col-md-6">
                       <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Country</mat-label>
+                        <mat-label>Country (optional)</mat-label>
                         <input matInput formControlName="country" />
-                        <mat-error *ngIf="editAddressForm.get('country')?.errors?.['required']">Country is required.</mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-6">
                       <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Postal Code</mat-label>
+                        <mat-label>Postal Code (optional)</mat-label>
                         <input matInput formControlName="postalCode" />
-                        <mat-error *ngIf="editAddressForm.get('postalCode')?.errors?.['required']">Postal code is required.</mat-error>
                       </mat-form-field>
                     </div>
                   </div>

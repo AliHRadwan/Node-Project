@@ -72,6 +72,14 @@ export class UserProfile implements OnInit, OnDestroy {
   isLoadingAuthorStatus: boolean = false;
   authorProfile: any = null;
 
+  readonly governorates: string[] = [
+    'Cairo', 'Giza', 'Alexandria', 'Port Said', 'Suez', 'Dakahlia', 'Sharqia',
+    'Qalyubia', 'Kafr El-Sheikh', 'Gharbia', 'Monufia', 'Beheira', 'Damietta',
+    'Ismailia', 'Faiyum', 'Beni Suef', 'Minya', 'Assiut', 'Sohag', 'Qena',
+    'Aswan', 'Luxor', 'Red Sea', 'New Valley', 'Matrouh', 'North Sinai', 'South Sinai'
+  ];
+  readonly governorateOtherValue = '__OTHER__';
+
   private messageTimer: any = null;
   private destroy$ = new Subject<void>();
 
@@ -145,9 +153,10 @@ export class UserProfile implements OnInit, OnDestroy {
       line1: ['', [Validators.required]],       
       line2: [''],                               
       city: ['', [Validators.required]],        
-      state: ['', [Validators.required]],       
-      country: ['', [Validators.required]],     
-      postalCode: ['', [Validators.required]],  
+      stateDropdown: ['', [Validators.required]],       
+      stateCustom: [''],       
+      country: ['Egypt'],     
+      postalCode: [''],  
       isDefault: [false]                         
     });
   }
@@ -561,9 +570,11 @@ export class UserProfile implements OnInit, OnDestroy {
   }
 
   showAddAddress() {
-    this.showAddAddressForm = true; 
-    this.addressForm.reset(); 
-    this.addressForm.patchValue({ isDefault: false }); 
+    this.showAddAddressForm = true;
+    this.addressForm.reset({
+      label: '', fullName: '', phone: '', line1: '', line2: '',
+      city: '', stateDropdown: '', stateCustom: '', country: 'Egypt', postalCode: '', isDefault: false
+    });
   }
 
   cancelAddAddress() {
@@ -572,8 +583,21 @@ export class UserProfile implements OnInit, OnDestroy {
   }
 
   onAddAddress() {
-    if (!this.addressForm.valid) {
-      this.addressForm.markAllAsTouched();
+    const f = this.addressForm;
+    if (!f.get('stateDropdown')?.value) {
+      f.markAllAsTouched();
+      return;
+    }
+    if (f.get('stateDropdown')?.value === this.governorateOtherValue) {
+      const custom = (f.get('stateCustom')?.value || '').trim();
+      if (!custom) {
+        f.get('stateCustom')?.setErrors({ required: true });
+        f.markAllAsTouched();
+        return;
+      }
+    }
+    if (!f.valid) {
+      f.markAllAsTouched();
       return;
     }
 
@@ -605,7 +629,8 @@ export class UserProfile implements OnInit, OnDestroy {
   showEditAddress(index: number) {
     const address = this.user.addresses[index]; 
     this.editingAddressId = address._id || address.id || index.toString();
-    
+    const stateVal = address.state || address.governorate || '';
+    const inList = stateVal && this.governorates.includes(stateVal);
     this.editAddressForm.patchValue({
       label: address.label || '',
       fullName: address.fullName || '',
@@ -613,8 +638,9 @@ export class UserProfile implements OnInit, OnDestroy {
       line1: address.line1 || '',
       line2: address.line2 || '',
       city: address.city || '',
-      state: address.state || '',
-      country: address.country || '',
+      stateDropdown: inList ? stateVal : (stateVal ? this.governorateOtherValue : ''),
+      stateCustom: inList ? '' : stateVal,
+      country: address.country || 'Egypt',
       postalCode: address.postalCode || '',
       isDefault: address.isDefault || false
     });
@@ -626,8 +652,21 @@ export class UserProfile implements OnInit, OnDestroy {
   }
 
   onUpdateAddress() {
-    if (!this.editAddressForm.valid || !this.editingAddressId) {
-      this.editAddressForm.markAllAsTouched();
+    const f = this.editAddressForm;
+    if (!f.get('stateDropdown')?.value) {
+      f.markAllAsTouched();
+      return;
+    }
+    if (f.get('stateDropdown')?.value === this.governorateOtherValue) {
+      const custom = (f.get('stateCustom')?.value || '').trim();
+      if (!custom) {
+        f.get('stateCustom')?.setErrors({ required: true });
+        f.markAllAsTouched();
+        return;
+      }
+    }
+    if (!f.valid || !this.editingAddressId) {
+      f.markAllAsTouched();
       return;
     }
 
@@ -718,15 +757,18 @@ export class UserProfile implements OnInit, OnDestroy {
   }
 
   private buildAddressData(formData: any): any {
+    const state = formData.stateDropdown === this.governorateOtherValue
+      ? (formData.stateCustom || '').trim()
+      : (formData.stateDropdown || '');
     const addressData: any = {
       label: formData.label?.trim() || '',        
       fullName: formData.fullName?.trim() || '',  
       phone: formData.phone?.trim() || '',        
       line1: formData.line1?.trim() || '',        
       city: formData.city?.trim() || '',          
-      state: formData.state?.trim() || '',        
-      country: formData.country?.trim() || '',    
-      postalCode: formData.postalCode?.trim() || '', 
+      state,        
+      country: (formData.country || '').trim() || 'Egypt',    
+      postalCode: (formData.postalCode || '').trim() || '', 
       isDefault: formData.isDefault || false       
     };
     

@@ -29,7 +29,7 @@
 
         <div class="summary-row d-flex justify-content-between mb-1">
           <span>Shipping</span>
-          <span class="free text-success fw-semibold">Applied on checkout</span>
+          <span class="free text-success fw-semibold">to be calculated next step</span>
         </div>
 
         <mat-divider class="my-2"></mat-divider>
@@ -201,25 +201,35 @@
               </div>
             </div>
             <div class="row g-2">
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-6">
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>State</mat-label>
-                  <input matInput formControlName="state">
-                  <mat-error *ngIf="newAddressForm.get('state')?.errors?.['required']">Required</mat-error>
+                  <mat-label>State / Governorate</mat-label>
+                  <mat-select formControlName="stateDropdown">
+                    <mat-option *ngFor="let gov of governorates" [value]="gov">{{ gov }}</mat-option>
+                    <mat-option [value]="governorateOtherValue">Other (specify)</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="newAddressForm.get('stateDropdown')?.errors?.['required']">Required</mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-6" *ngIf="newAddressForm.get('stateDropdown')?.value === governorateOtherValue">
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Country</mat-label>
+                  <mat-label>Governorate (custom)</mat-label>
+                  <input matInput formControlName="stateCustom" placeholder="Enter governorate">
+                  <mat-error *ngIf="newAddressForm.get('stateCustom')?.errors?.['required']">Required when Other is selected</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-12 col-sm-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Country (optional)</mat-label>
                   <input matInput formControlName="country">
-                  <mat-error *ngIf="newAddressForm.get('country')?.errors?.['required']">Required</mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-6">
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Postal Code</mat-label>
+                  <mat-label>Postal Code (optional)</mat-label>
                   <input matInput formControlName="postalCode">
-                  <mat-error *ngIf="newAddressForm.get('postalCode')?.errors?.['required']">Required</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -247,7 +257,7 @@
           </div>
           <div class="d-flex justify-content-between mb-1">
             <span class="text-muted">Shipping</span>
-            <span class="text-success fw-semibold">Calculated at checkout</span>
+            <span class="fw-semibold">{{ shippingCost }} EGP</span>
           </div>
           <div *ngIf="couponCode.trim()" class="d-flex justify-content-between mb-1">
             <span class="text-muted">Coupon</span>
@@ -256,7 +266,7 @@
           <hr class="my-2">
           <div class="d-flex justify-content-between">
             <span class="fw-semibold">Estimated Total</span>
-            <span class="fw-bold">{{ subtotal }} EGP</span>
+            <span class="fw-bold">{{ orderTotal }} EGP</span>
           </div>
         </div>
       </div>

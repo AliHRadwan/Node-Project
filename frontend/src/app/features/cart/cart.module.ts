@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaymentSuccess } from './payment-success/payment-success';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { PaymentFailed } from './payment-failed/payment-failed';
 import { Payment } from './payment/payment';
@@ -44,8 +45,9 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule, 
-    MatInputModule, 
+    MatInputModule,
+    MatSelectModule,
     SharedModule
-]
+  ]
 })
 export class CartModule { }
