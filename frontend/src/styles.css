@@ -92,3 +92,7 @@ a,.btn-link{color:var(--brand);}
   align-items: center !important;
 }
 
+/* Ensure Material select/dropdown panels appear above Bootstrap modals (z-index 1050) */
+.cdk-overlay-container {
+  z-index: 1060 !important;
+}

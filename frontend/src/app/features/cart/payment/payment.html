@@ -222,8 +222,9 @@
             <div class="row g-2">
               <div class="col-12 col-sm-6">
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Country (optional)</mat-label>
+                  <mat-label>Country</mat-label>
                   <input matInput formControlName="country">
+                  <mat-error *ngIf="newAddressForm.get('country')?.errors?.['required']">Country is required</mat-error>
                 </mat-form-field>
               </div>
               <div class="col-12 col-sm-6">

@@ -664,8 +664,9 @@
               <div class="row g-2">
                 <div class="col-md-6">
                   <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Country (optional)</mat-label>
+                    <mat-label>Country</mat-label>
                     <input matInput formControlName="country" />
+                    <mat-error *ngIf="addressForm.get('country')?.errors?.['required']">Country is required.</mat-error>
                   </mat-form-field>
                 </div>
                 <div class="col-md-6">
@@ -742,8 +743,9 @@
                   <div class="row g-2">
                     <div class="col-md-6">
                       <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Country (optional)</mat-label>
+                        <mat-label>Country</mat-label>
                         <input matInput formControlName="country" />
+                        <mat-error *ngIf="editAddressForm.get('country')?.errors?.['required']">Country is required.</mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-6">
