@@ -145,6 +145,8 @@
 
 .content-body {
   padding: 2rem;
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
 }
 
 /* Field Cards */
